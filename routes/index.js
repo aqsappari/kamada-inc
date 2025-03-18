@@ -10,10 +10,9 @@ router.get("/get-started", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  const data = req;
-  console.log(req);
+  const data = req.body;
 
-  res.send({ msg: "Is this working?" });
+  res.send({ msg: "Is this working?", data: data });
 });
 
 router.post("/create", (req, res) => {
