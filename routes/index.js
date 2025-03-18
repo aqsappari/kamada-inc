@@ -9,10 +9,9 @@ router.get("/get-started", (req, res) => {
   res.render("auth");
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create", (req, res) => {
   const data = req.body;
-  await User.add(data);
-  res.send({ msg: "User added" });
+  res.send(data);
 });
 
 module.exports = router;
