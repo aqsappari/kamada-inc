@@ -12,7 +12,7 @@
         SIGN IN
       </h2>
 
-      <div id="signin-form">
+      <form method="POST" action="/login" id="signin-form">
         <div class="input-group mb-4">
           <input
             type="email"
@@ -38,6 +38,7 @@
         </div>
 
         <button
+          type="button"
           id="signin-button"
           class="w-full bg-white border border-teal-600 text-teal-600 font-medium p-2 mb-4 rounded hover:bg-teal-600 hover:text-white"
         >
@@ -71,9 +72,9 @@
           Don't have an account?
           <a href="#" id="toggle-signup" class="text-teal-600">Sign Up</a>
         </p>
-      </div>
+      </form>
 
-      <div id="signup-form" class="hidden">
+      <div method="POST" action="/signup" id="signup-form" class="hidden">
         <div class="input-group mb-4">
           <input
             type="text"
@@ -111,6 +112,7 @@
         <button
           id="signup-button"
           class="w-full bg-white border border-teal-600 text-teal-600 font-medium p-2 mb-4 rounded hover:bg-teal-600 hover:text-white"
+          type="button"
         >
           SUBMIT
         </button>
@@ -145,6 +147,25 @@
         </p>
       </div>
     </div>
+
+    <button
+      type="submit"
+      form="signin-form"
+      class="hidden"
+      id="submit-signin"
+      value="SIGNIN"
+    >
+      SIGN IN
+    </button>
+    <button
+      type="submit"
+      form="signup-form"
+      class="hidden"
+      id="submit-signup"
+      value="SIGNIP"
+    >
+      SIGN UP
+    </button>
 
     <script type="module" src="/js/auth.js"></script>
   </body>

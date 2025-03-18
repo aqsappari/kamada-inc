@@ -32,12 +32,14 @@ toggleSignin.addEventListener("click", (e) => {
 document.getElementById("signin-button").addEventListener("click", () => {
   const email = document.getElementById("signin-email").value;
   const password = document.getElementById("signin-password").value;
+  const submit = document.getElementById("submit-signin");
 
   if (!signinValidity(email, password)) {
     return;
   }
 
   alert("working....");
+  submit.click();
 
   console.log("Sign In:", email, password);
   // Add your actual sign-in logic here
@@ -47,13 +49,14 @@ document.getElementById("signup-button").addEventListener("click", () => {
   const name = document.getElementById("signup-name").value;
   const email = document.getElementById("signup-email").value;
   const password = document.getElementById("signup-password").value;
+  const submit = document.getElementById("submit-signin");
 
   if (!signupValidity(name, email, password)) {
     return;
   }
 
   alert("working....");
-
+  submit.click();
   console.log("Sign Up:", name, email, password);
   // Add your actual sign-up logic here
 });
