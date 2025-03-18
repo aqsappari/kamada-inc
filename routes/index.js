@@ -11,7 +11,9 @@ router.get("/get-started", (req, res) => {
 
 router.post("/login", (req, res) => {
   const data = req.body;
-  res.send(data);
+  console.log(data);
+
+  res.send({ msg: data });
 });
 
 router.post("/create", (req, res) => {
