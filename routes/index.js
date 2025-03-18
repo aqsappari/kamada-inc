@@ -9,6 +9,11 @@ router.get("/get-started", (req, res) => {
   res.render("auth");
 });
 
+router.post("/login", (req, res) => {
+  const data = req.body;
+  res.send(data);
+});
+
 router.post("/create", (req, res) => {
   const data = req.body;
   res.send(data);
