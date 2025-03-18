@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Basic EJS Example</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KAMADA</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body>
-    <h1>Hello, <%= name %>!</h1>
+  <body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-md p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="#" class="text-xl font-semibold text-teal">Your Brand</a>
+        <a
+          href="auth.html"
+          class="bg-white border-2 border-teal-600 text-teal-600 font-medium px-4 py-2 rounded hover:bg-teal-600 hover:text-white"
+          >Sign In</a
+        >
+      </div>
+    </nav>
 
-    <h2>Items:</h2>
-    <ul>
-      <% items.forEach(item => { %>
-      <li><%= item %></li>
-      <% }); %>
-    </ul>
+    <div class="container mx-auto mt-8 text-center">
+      <h1 class="text-4xl font-bold mb-4">
+        Welcome to Our T-Shirt Printing Service
+      </h1>
+      <p class="text-lg">More content will be added here...</p>
+    </div>
   </body>
 </html>
