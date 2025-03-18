@@ -1,3 +1,11 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+import { auth, provider, GoogleAuthProvider } from "./firebase";
+
 const signinForm = document.getElementById("signin-form");
 const signupForm = document.getElementById("signup-form");
 const toggleSignup = document.getElementById("toggle-signup");

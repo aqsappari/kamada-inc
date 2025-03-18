@@ -2,10 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   GoogleAuthProvider,
-  signInWithPopup,
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,4 +25,4 @@ const provider = new GoogleAuthProvider();
 const analytics = getAnalytics(app);
 
 // Export Firebase services
-export { app };
+export { app, auth, provider };
