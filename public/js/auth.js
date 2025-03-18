@@ -49,7 +49,7 @@ document.getElementById("signup-button").addEventListener("click", () => {
   const name = document.getElementById("signup-name").value;
   const email = document.getElementById("signup-email").value;
   const password = document.getElementById("signup-password").value;
-  const submit = document.getElementById("submit-signin");
+  const submit = document.getElementById("submit-signup");
 
   if (!signupValidity(name, email, password)) {
     return;
