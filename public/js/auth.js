@@ -1,11 +1,3 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-
-import { auth, provider, GoogleAuthProvider } from "./firebase";
-
 const signinForm = document.getElementById("signin-form");
 const signupForm = document.getElementById("signup-form");
 const toggleSignup = document.getElementById("toggle-signup");
@@ -16,26 +8,7 @@ const googleSignup = document.getElementById("signup-google");
 const googleSignin = document.getElementById("signin-google");
 
 googleSignin.addEventListener("click", (e) => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
+  alert("working....");
 });
 
 googleSignup.addEventListener("click", (e) => {
@@ -64,19 +37,7 @@ document.getElementById("signin-button").addEventListener("click", () => {
     return;
   }
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log(user);
-
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorMessage);
-    });
+  alert("working....");
 
   console.log("Sign In:", email, password);
   // Add your actual sign-in logic here
@@ -91,18 +52,7 @@ document.getElementById("signup-button").addEventListener("click", () => {
     return;
   }
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log(user);
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorMessage);
-    });
+  alert("working....");
 
   console.log("Sign Up:", name, email, password);
   // Add your actual sign-up logic here

@@ -6,9 +6,9 @@ router.get("/", (req, res) => {
 });
 
 router.get("/get-started", (req, res) => {
-  // const name = "User";
-  // const items = ["apple", "banana", "cherry"];
   res.render("auth");
 });
+
+router.post("/get-started", (req, res) => {});
 
 module.exports = router;
