@@ -12,6 +12,7 @@ const productsRouter = require("./routes/products");
 app.set("view engine", "ejs");
 
 // Set the views directory using path.join()
+app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 
 // Use route files
