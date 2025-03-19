@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -13,11 +13,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/aqsappari/kamada-inc/issues"
   },
   "homepage": "https://github.com/aqsappari/kamada-inc#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
   "dependencies": {
+    "@firebase/auth": "^1.9.1",
+    "@firebase/firestore": "^4.7.9",
+    "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "firebase": "^11.4.0"

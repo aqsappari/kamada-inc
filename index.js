@@ -1,22 +1,26 @@
-const express = require("express");
+// index.js
+import express from "express";
+import indexRouter from "./routes/index.js";
+import logger from "./middleware/logger.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import bodyParser from "body-parser";
+
 const app = express();
 const port = 3000;
-const path = require("path"); // Import the path module
 
-// Import route files
-const indexRouter = require("./routes/index");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Set EJS as the view engine
+app.use(logger);
+
 app.set("view engine", "ejs");
-
-// Set the views directory using path.join()
-app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 
-// Use route files
+app.use(bodyParser.urlencoded({ extended: false })); // Use body-parser
+
 app.use("/", indexRouter);
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
