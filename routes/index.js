@@ -109,4 +109,8 @@ router.get("/logout", async (req, res) => {
   }
 });
 
+router.get("/design-details", (req, res) => {
+  res.render("design-details");
+});
+
 export default router;

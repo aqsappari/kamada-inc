@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Your T-Shirt - KAMADA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <nav class="bg-white shadow-md p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="/" class="text-lg font-semibold text-gray-800 italic-bold-logo"
+          >KAMADA</a
+        >
+      </div>
+    </nav>
+
+    <div class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
+      <h1 class="text-3xl font-semibold mb-6">Design Your Custom T-Shirt</h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="h-[33vh]">
+          <div class="mb-6 h-full">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Design Notes:</label
+            >
+            <textarea
+              id="designNotes"
+              class="border rounded w-full h-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"
+              placeholder="Add any specific instructions or notes for your design"
+            ></textarea>
+          </div>
+        </div>
+        <div class="h-[33vh]">
+          <div class="mb-6 h-full">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Upload Your Design:</label
+            >
+            <div
+              id="uploadArea"
+              class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
+            >
+              <input
+                type="file"
+                id="designUpload"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div id="uploadContent" class="text-center">
+                <i
+                  class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
+                ></i>
+                <p class="text-gray-600">
+                  Drag and drop your file here or click to upload
+                </p>
+              </div>
+              <img
+                id="uploadedImage"
+                src="#"
+                alt="Uploaded Image"
+                class="hidden max-w-full max-h-full mx-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12">
+        <h2 class="text-2xl font-semibold mb-6 border-b pb-2">
+          Specify Details
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <h3 class="font-semibold mb-4">
+              Select Size, Color, and Quantity:
+            </h3>
+
+            <div class="mb-4 flex items-center justify-between">
+              <label
+                for="sizeSelect"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Size:</label
+              >
+              <button
+                id="sizeChartButton"
+                class="text-cyan-500 hover:underline text-sm"
+              >
+                View Size Chart
+              </button>
+            </div>
+            <select
+              id="sizeSelect"
+              class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+            >
+              <option value="">Select Size</option>
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="2XL">2XL</option>
+              <option value="3XL">3XL</option>
+              <option value="4XL">4XL</option>
+            </select>
+
+            <div class="mb-4">
+              <label
+                for="colorSelect"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Color:</label
+              >
+              <select
+                id="colorSelect"
+                class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              >
+                <option value="">Select Color</option>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="gray">Gray</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="yellow">Yellow</option>
+                <option value="orange">Orange</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="quantityInput"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Quantity:</label
+              >
+              <input
+                type="number"
+                id="quantityInput"
+                class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                min="0"
+                placeholder="Quantity"
+              />
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                id="addItemButton"
+                class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Add to Order
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-semibold mb-4">Order List:</h3>
+            <ul
+              id="orderList"
+              class="border rounded p-4 h-[300px] overflow-y-auto"
+            ></ul>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <button
+            id="generate3DButton"
+            class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Generate 3D Preview
+          </button>
+        </div>
+
+        <div id="3dPreviewArea" class="mt-8 hidden">
+          <h3 class="font-semibold mb-4">3D Preview:</h3>
+          <div id="3d-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-gray-200 py-8 text-center mt-8">
+      <p class="text-gray-600">
+        &copy; <%= new Date().getFullYear() %> KAMADA. All rights reserved.
+      </p>
+    </footer>
+
+    <div
+      id="sizeChartModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center min-h-screen"
+    >
+      <div class="bg-white rounded-lg p-8 w-11/12 md:w-3/4 lg:w-1/2">
+        <h2 class="text-2xl font-semibold mb-4">Size Chart</h2>
+        <div class="flex justify-end mb-4">
+          <button
+            id="toggleUnitsButton"
+            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Show Inches
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table id="sizeChartTable" class="w-full text-left table-auto">
+            <thead>
+              <tr>
+                <th class="py-2 px-4 border-b">Size</th>
+                <th class="py-2 px-4 border-b">Chest (cm)</th>
+                <th class="py-2 px-4 border-b">Sleeve (cm)</th>
+                <th class="py-2 px-4 border-b">Length (cm)</th>
+                <th class="py-2 px-4 border-b">Shoulder (cm)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="py-2 px-4 border-b">XS</td>
+                <td class="py-2 px-4 border-b">86</td>
+                <td class="py-2 px-4 border-b">60</td>
+                <td class="py-2 px-4 border-b">68</td>
+                <td class="py-2 px-4 border-b">40</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">S</td>
+                <td class="py-2 px-4 border-b">92</td>
+                <td class="py-2 px-4 border-b">62</td>
+                <td class="py-2 px-4 border-b">71</td>
+                <td class="py-2 px-4 border-b">42</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">M</td>
+                <td class="py-2 px-4 border-b">100</td>
+                <td class="py-2 px-4 border-b">64</td>
+                <td class="py-2 px-4 border-b">74</td>
+                <td class="py-2 px-4 border-b">44</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">L</td>
+                <td class="py-2 px-4 border-b">108</td>
+                <td class="py-2 px-4 border-b">66</td>
+                <td class="py-2 px-4 border-b">77</td>
+                <td class="py-2 px-4 border-b">46</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">XL</td>
+                <td class="py-2 px-4 border-b">116</td>
+                <td class="py-2 px-4 border-b">68</td>
+                <td class="py-2 px-4 border-b">80</td>
+                <td class="py-2 px-4 border-b">48</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">2XL</td>
+                <td class="py-2 px-4 border-b">124</td>
+                <td class="py-2 px-4 border-b">70</td>
+                <td class="py-2 px-4 border-b">83</td>
+                <td class="py-2 px-4 border-b">50</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">3XL</td>
+                <td class="py-2 px-4 border-b">132</td>
+                <td class="py-2 px-4 border-b">72</td>
+                <td class="py-2 px-4 border-b">86</td>
+                <td class="py-2 px-4 border-b">52</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-4 border-b">4XL</td>
+                <td class="py-2 px-4 border-b">140</td>
+                <td class="py-2 px-4 border-b">74</td>
+                <td class="py-2 px-4 border-b">89</td>
+                <td class="py-2 px-4 border-b">54</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button
+          id="closeModalButton"
+          class="mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // File Upload and Drag & Drop
+      const designUpload = document.getElementById("designUpload");
+      const uploadArea = document.getElementById("uploadArea");
+      const uploadContent = document.getElementById("uploadContent");
+      const uploadedImage = document.getElementById("uploadedImage");
+
+      designUpload.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            uploadedImage.src = e.target.result;
+            uploadedImage.classList.remove("hidden");
+            uploadContent.classList.add("hidden");
+          };
+          reader.readAsDataURL(file);
+        } else {
+          uploadedImage.src = "#";
+          uploadedImage.classList.add("hidden");
+          uploadContent.classList.remove("hidden");
+        }
+      });
+
+      uploadArea.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        uploadArea.classList.add("border-blue-400");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("border-blue-400");
+      });
+
+      uploadArea.addEventListener("drop", (event) => {
+        event.preventDefault();
+        uploadArea.classList.remove("border-blue-400");
+        designUpload.files = event.dataTransfer.files;
+        designUpload.dispatchEvent(new Event("change"));
+      });
+
+      // Order List Functionality
+      const addItemButton = document.getElementById("addItemButton");
+      const sizeSelect = document.getElementById("sizeSelect");
+      const colorSelect = document.getElementById("colorSelect");
+      const quantityInput = document.getElementById("quantityInput");
+      const orderList = document.getElementById("orderList");
+
+      quantityInput.addEventListener("input", () => {
+        if (parseInt(quantityInput.value) === 0) {
+          quantityInput.value = "";
+        }
+      });
+
+      addItemButton.addEventListener("click", () => {
+        const size = sizeSelect.value;
+        const color = colorSelect.value;
+        const quantity = parseInt(quantityInput.value);
+
+        if (size && color && quantity > 0) {
+          const itemKey = `${size}-${color}`; // Create a unique key for each item
+
+          // Find if the item already exists
+          const existingItem = Array.from(
+            orderList.querySelectorAll("li")
+          ).find((li) => {
+            return li.dataset.itemKey === itemKey;
+          });
+
+          if (existingItem) {
+            // Item exists, update quantity
+            const currentQuantity = parseInt(
+              existingItem
+                .querySelector("div:first-child")
+                .textContent.split("Quantity: ")[1]
+            );
+            const newQuantity = currentQuantity + quantity;
+            existingItem.querySelector(
+              "div:first-child"
+            ).textContent = `${size} - ${color} - Quantity: ${newQuantity}`;
+          } else {
+            // Item does not exist, add new item
+            const listItem = document.createElement("li");
+            listItem.dataset.itemKey = itemKey; // Store the item key
+            listItem.classList.add(
+              "border",
+              "rounded",
+              "p-4",
+              "mb-2",
+              "flex",
+              "items-center",
+              "justify-between"
+            );
+            listItem.innerHTML = `
+          <div>
+            ${size} - ${color} - Quantity: ${quantity}
+          </div>
+          <div>
+            <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
+            <button class="text-red-500 hover:underline delete-item">Delete</button>
+          </div>
+        `;
+            orderList.appendChild(listItem);
+
+            // Delete Item Functionality
+            const deleteButtons = listItem.querySelectorAll(".delete-item");
+            deleteButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                listItem.remove();
+              });
+            });
+
+            // Edit Item Functionality
+            const editButtons = listItem.querySelectorAll(".edit-item");
+            editButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                // Populate input fields with item data
+                const itemText =
+                  listItem.querySelector("div:first-child").textContent;
+                const itemParts = itemText.split(" - "); // Split by " - "
+                const itemSize = itemParts[0].trim(); // Size is the first part, trimmed
+                const itemColor = itemParts[1].trim(); // Color is the second part, trimmed
+                const itemQuantity = parseInt(
+                  itemParts[2].split("Quantity: ")[1]
+                ); // Quantity is the third part
+
+                sizeSelect.value = itemSize;
+                colorSelect.value = itemColor;
+                quantityInput.value = itemQuantity;
+
+                // Remove the item from the list
+                listItem.remove();
+              });
+            });
+          }
+
+          // Clear the input fields after adding to the list
+          sizeSelect.value = "";
+          colorSelect.value = "";
+          quantityInput.value = "";
+        }
+      });
+
+      // Size Chart Modal
+      const sizeChartButton = document.getElementById("sizeChartButton");
+      const sizeChartModal = document.getElementById("sizeChartModal");
+      const closeModalButton = document.getElementById("closeModalButton");
+      const toggleUnitsButton = document.getElementById("toggleUnitsButton");
+      const sizeChartTable = document.getElementById("sizeChartTable");
+      const body = document.querySelector("body"); // Get the body element
+
+      let isCm = true; // Track measurement units
+
+      sizeChartButton.addEventListener("click", () => {
+        sizeChartModal.classList.remove("hidden");
+        body.classList.add("overflow-hidden"); // Disable scrolling
+      });
+
+      closeModalButton.addEventListener("click", () => {
+        sizeChartModal.classList.add("hidden");
+        body.classList.remove("overflow-hidden"); // Enable scrolling
+      });
+
+      window.addEventListener("click", (event) => {
+        if (event.target === sizeChartModal) {
+          sizeChartModal.classList.add("hidden");
+          body.classList.remove("overflow-hidden"); // Enable scrolling
+        }
+      });
+
+      toggleUnitsButton.addEventListener("click", () => {
+        const headerCells = sizeChartTable.querySelectorAll("thead th");
+        if (isCm) {
+          // Convert cm to inches
+          const rows = sizeChartTable.querySelectorAll("tbody tr");
+          rows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            for (let i = 1; i < cells.length; i++) {
+              const cmValue = parseFloat(cells[i].textContent);
+              const inchValue = (cmValue / 2.54).toFixed(1);
+              cells[i].textContent = inchValue;
+            }
+          });
+          headerCells.forEach((cell, index) => {
+            if (index > 0) {
+              cell.textContent = cell.textContent.replace("(cm)", "(inches)");
+            }
+          });
+          toggleUnitsButton.textContent = "Show Centimeters";
+        } else {
+          // Convert inches back to cm
+          const rows = sizeChartTable.querySelectorAll("tbody tr");
+          rows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            for (let i = 1; i < cells.length; i++) {
+              const inchValue = parseFloat(cells[i].textContent);
+              const cmValue = (inchValue * 2.54).toFixed(0);
+              cells[i].textContent = cmValue;
+            }
+          });
+          headerCells.forEach((cell, index) => {
+            if (index > 0) {
+              cell.textContent = cell.textContent.replace("(inches)", "(cm)");
+            }
+          });
+          toggleUnitsButton.textContent = "Show Inches";
+        }
+        isCm = !isCm;
+      });
+
+      // 3D Preview (Placeholder)
+      const generate3DButton = document.getElementById("generate3DButton");
+      const previewArea = document.getElementById("3dPreviewArea");
+
+      generate3DButton.addEventListener("click", () => {
+        previewArea.classList.remove("hidden");
+        // Implement 3D model generation and display logic here (e.g., Three.js)
+        alert("3D Preview Placeholder"); // Replace with actual 3D rendering
+      });
+    </script>
+  </body>
+</html>
