@@ -34,19 +34,7 @@
       <h1 class="text-3xl font-semibold mb-6">Design Your Custom T-Shirt</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="h-[33vh]">
-          <div class="mb-6 h-full">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Design Notes:</label
-            >
-            <textarea
-              id="designNotes"
-              class="border rounded w-full h-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"
-              placeholder="Add any specific instructions or notes for your design"
-            ></textarea>
-          </div>
-        </div>
-        <div class="h-[33vh]">
+        <div class="order-1 lg:order-none h-[33vh]">
           <div class="mb-6 h-full">
             <label class="block text-gray-700 text-sm font-bold mb-2"
               >Upload Your Design:</label
@@ -77,6 +65,19 @@
             </div>
           </div>
         </div>
+
+        <div class="order-2 lg:order-none h-[33vh]">
+          <div class="mb-6 h-full">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Design Notes:</label
+            >
+            <textarea
+              id="designNotes"
+              class="border rounded w-full h-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"
+              placeholder="Add any specific instructions or notes for your design"
+            ></textarea>
+          </div>
+        </div>
       </div>
 
       <div class="mt-12">
@@ -85,7 +86,7 @@
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div>
+          <div class="order-3 lg:order-none">
             <h3 class="font-semibold mb-4">
               Select Size, Color, and Quantity:
             </h3>
@@ -165,7 +166,7 @@
             </div>
           </div>
 
-          <div>
+          <div class="order-4 lg:order-none">
             <h3 class="font-semibold mb-4">Order List:</h3>
             <ul
               id="orderList"
@@ -174,7 +175,7 @@
           </div>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-8 order-5 lg:order-none w-full">
           <button
             id="generate3DButton"
             class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -183,7 +184,7 @@
           </button>
         </div>
 
-        <div id="3dPreviewArea" class="mt-8 hidden">
+        <div id="3dPreviewArea" class="mt-8 hidden w-full">
           <h3 class="font-semibold mb-4">3D Preview:</h3>
           <div id="3d-container"></div>
         </div>
@@ -198,16 +199,22 @@
 
     <div
       id="sizeChartModal"
-      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center min-h-screen"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4"
     >
-      <div class="bg-white rounded-lg p-8 w-11/12 md:w-3/4 lg:w-1/2">
+      <div class="bg-white rounded-lg p-6 md:p-8 w-full max-w-2xl">
         <h2 class="text-2xl font-semibold mb-4">Size Chart</h2>
-        <div class="flex justify-end mb-4">
+        <div class="flex justify-between items-center mb-4">
           <button
             id="toggleUnitsButton"
-            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm md:text-base"
           >
             Show Inches
+          </button>
+          <button
+            id="closeModalButton"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm md:text-base"
+          >
+            Close
           </button>
         </div>
         <div class="overflow-x-auto">
@@ -281,12 +288,6 @@
             </tbody>
           </table>
         </div>
-        <button
-          id="closeModalButton"
-          class="mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Close
-        </button>
       </div>
     </div>
 
@@ -383,14 +384,14 @@
               "justify-between"
             );
             listItem.innerHTML = `
-          <div>
-            ${size} - ${color} - Quantity: ${quantity}
-          </div>
-          <div>
-            <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
-            <button class="text-red-500 hover:underline delete-item">Delete</button>
-          </div>
-        `;
+        <div>
+          ${size} - ${color} - Quantity: ${quantity}
+        </div>
+        <div>
+          <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
+          <button class="text-red-500 hover:underline delete-item">Delete</button>
+        </div>
+      `;
             orderList.appendChild(listItem);
 
             // Delete Item Functionality
