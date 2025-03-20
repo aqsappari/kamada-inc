@@ -18,268 +18,288 @@
       }
     </style>
   </head>
-  <body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-      <header class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Checkout</h1>
-      </header>
+</html>
 
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex flex-col md:flex-row h-auto md:h-[70vh]">
-          <div class="w-full md:w-1/2 pr-0 md:pr-4">
-            <section class="mb-4">
-              <h2 class="text-xl font-semibold mb-4">Uploaded Designs</h2>
-              <div class="flex overflow-x-auto space-x-4">
-                <div id="frontDesignPreview" class="min-w-[200px]">
-                  <h3 class="font-semibold">Front Design:</h3>
-                  <img
-                    id="frontDesignImage"
-                    src=""
-                    alt="Front Design"
-                    class="max-w-full"
-                  />
-                </div>
-                <div id="backDesignPreview" class="min-w-[200px]">
-                  <h3 class="font-semibold">Back Design:</h3>
-                  <img
-                    id="backDesignImage"
-                    src=""
-                    alt="Back Design"
-                    class="max-w-full"
-                  />
-                </div>
-                <div id="printDetailsPreview" class="min-w-[200px]">
-                  <h3 class="font-semibold">Print Details:</h3>
-                  <img
-                    id="printDetailsImage"
-                    src=""
-                    alt="Print Details"
-                    class="max-w-full"
-                  />
-                </div>
-              </div>
-            </section>
-            <div id="designNotesDisplay" class="mb-4">
-              <h3 class="font-semibold mb-2">Design Notes:</h3>
-              <p
-                id="designNotesContent"
-                class="border rounded p-2 h-full overflow-y-auto"
-              ></p>
-            </div>
-          </div>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4">
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Checkout</h1>
+    </header>
 
-          <div class="w-full md:w-1/2 pl-0 md:pl-4 mt-4 md:mt-0">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex flex-col md:flex-row h-auto md:h-[70vh]">
+        <div class="w-full md:w-1/2 pr-0 md:pr-4">
+          <section class="mb-4">
+            <h2 class="text-xl font-semibold mb-4">Uploaded Designs</h2>
             <div
-              id="shirtDetailsDisplay"
-              class="h-full bg-gray-100 rounded-lg p-4"
-            >
-              <h3 class="font-semibold mb-2">Shirt Details:</h3>
-              <div id="shirtDetailsList" class="h-full overflow-y-auto"></div>
-            </div>
+              class="flex flex-wrap gap-4"
+              id="uploadedImagesContainer"
+            ></div>
+          </section>
+          <div id="designNotesDisplay" class="mb-4">
+            <h3 class="font-semibold mb-2">Design Notes:</h3>
+            <p
+              id="designNotesContent"
+              class="border rounded p-2 h-full overflow-y-auto"
+            ></p>
           </div>
         </div>
 
-        <section id="personalDataSection" class="mt-4">
-          <h2 class="text-xl font-semibold mb-4">Personal Data</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label
-                for="fullName"
-                class="block text-sm font-medium text-gray-700"
-                >Full Name</label
-              >
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                for="companyName"
-                class="block text-sm font-medium text-gray-700"
-                >Company Name</label
-              >
-              <input
-                type="text"
-                id="companyName"
-                name="companyName"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700"
-                >Email</label
-              >
-              <input
-                type="email"
-                id="email"
-                name="email"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label for="phone" class="block text-sm font-medium text-gray-700"
-                >Phone Number</label
-              >
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-            <div class="md:col-span-2">
-              <label
-                for="address"
-                class="block text-sm font-medium text-gray-700"
-                >Address</label
-              >
-              <input
-                type="text"
-                id="address"
-                name="address"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-        </section>
-
-        <div class="mt-6 flex justify-center">
-          <button
-            id="confirmOrderBtn"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-5 rounded-lg focus:outline-none focus:shadow-outline"
+        <div class="w-full md:w-1/2 pl-0 md:pl-4 mt-4 md:mt-0">
+          <div
+            id="shirtDetailsDisplay"
+            class="h-full bg-gray-100 rounded-lg p-4"
           >
-            Confirm Order
-          </button>
+            <h3 class="font-semibold mb-2">Shirt Details:</h3>
+            <div id="shirtDetailsList" class="h-full overflow-y-auto"></div>
+          </div>
         </div>
       </div>
+
+      <section id="personalDataSection" class="mt-4">
+        <h2 class="text-xl font-semibold mb-4">Personal Data</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              for="fullName"
+              class="block text-sm font-medium text-gray-700"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label
+              for="companyName"
+              class="block text-sm font-medium text-gray-700"
+              >Company Name</label
+            >
+            <input
+              type="text"
+              id="companyName"
+              name="companyName"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700"
+              >Phone Number</label
+            >
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div class="md:col-span-2">
+            <label for="address" class="block text-sm font-medium text-gray-700"
+              >Address</label
+            >
+            <input
+              type="text"
+              id="address"
+              name="address"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+        </div>
+      </section>
+
+      <div class="mt-6 flex justify-center">
+        <button
+          id="confirmOrderBtn"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-5 rounded-lg focus:outline-none focus:shadow-outline"
+        >
+          Confirm Order
+        </button>
+      </div>
     </div>
+  </div>
 
-    <script>
-      // Retrieve data from sessionStorage
-      const frontDesignImage = document.getElementById("frontDesignImage");
-      const backDesignImage = document.getElementById("backDesignImage");
-      const printDetailsImage = document.getElementById("printDetailsImage");
-      const designNotesContent = document.getElementById("designNotesContent");
-      const shirtDetailsList = document.getElementById("shirtDetailsList");
-      const confirmOrderBtn = document.getElementById("confirmOrderBtn");
+  <script>
+    const uploadedImagesContainer = document.getElementById(
+      "uploadedImagesContainer"
+    );
+    const designNotesContent = document.getElementById("designNotesContent");
+    const shirtDetailsList = document.getElementById("shirtDetailsList");
+    const confirmOrderBtn = document.getElementById("confirmOrderBtn");
 
-      frontDesignImage.src = sessionStorage.getItem("frontDesignImage") || "";
-      backDesignImage.src = sessionStorage.getItem("backDesignImage") || "";
-      printDetailsImage.src = sessionStorage.getItem("printDetailsImage") || "";
-      designNotesContent.textContent =
-        sessionStorage.getItem("designNotes") || "";
+    // Get data from sessionStorage
+    const frontDesignImage = sessionStorage.getItem("frontDesignImage");
+    const backDesignImage = sessionStorage.getItem("backDesignImage");
+    const printDetailsImage = sessionStorage.getItem("printDetailsImage");
+    const shirtDetails =
+      JSON.parse(sessionStorage.getItem("shirtDetails")) || [];
+    const designNotes =
+      sessionStorage.getItem("designNotes") || "No design notes provided.";
 
-      //hide images if no data
-      if (!frontDesignImage.src) {
-        document.getElementById("frontDesignPreview").style.display = "none";
-      }
-      if (!backDesignImage.src) {
-        document.getElementById("backDesignPreview").style.display = "none";
-      }
-      if (!printDetailsImage.src) {
-        document.getElementById("printDetailsPreview").style.display = "none";
-      }
+    // Function to create an image element
+    function createImageElement(src, label) {
+      const container = document.createElement("div");
+      container.classList.add(
+        "flex",
+        "flex-col",
+        "items-center",
+        "mr-4",
+        "flex-shrink-0"
+      );
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = label;
+      img.classList.add("max-w-xs", "rounded-md", "shadow-sm", "mb-2");
+      const labelElement = document.createElement("p");
+      labelElement.textContent = label;
+      labelElement.classList.add("text-sm", "text-gray-500");
+      container.appendChild(img);
+      container.appendChild(labelElement);
+      return container;
+    }
 
-      try {
-        const shirtDetails = JSON.parse(sessionStorage.getItem("shirtDetails"));
-        shirtDetails.forEach((item) => {
-          const itemParts = item.split(" - ");
-          const size = itemParts[0];
-          const color = itemParts[1];
-          const fabric = itemParts[2];
-          const quantity = itemParts[3].split("Quantity: ")[1];
-          const pricePerShirt = 20;
-          const totalAmount = pricePerShirt * quantity;
+    // Display uploaded images
+    uploadedImagesContainer.classList.add(
+      "flex",
+      "overflow-x-auto",
+      "flex-nowrap"
+    ); // Added 'flex-nowrap'
+    if (frontDesignImage && frontDesignImage != "null") {
+      const frontImageElement = createImageElement(
+        frontDesignImage,
+        "Front Design"
+      );
+      uploadedImagesContainer.appendChild(frontImageElement);
+    }
+    if (backDesignImage && backDesignImage != "null") {
+      const backImageElement = createImageElement(
+        backDesignImage,
+        "Back Design"
+      );
+      uploadedImagesContainer.appendChild(backImageElement);
+    }
+    if (printDetailsImage && printDetailsImage != "null") {
+      const printDetailsImageElement = createImageElement(
+        printDetailsImage,
+        "Print Details"
+      );
+      uploadedImagesContainer.appendChild(printDetailsImageElement);
+    }
 
-          const card = document.createElement("div");
-          card.classList.add(
-            "bg-white",
-            "rounded-lg",
-            "shadow-md",
-            "p-4",
-            "mb-2",
-            "flex",
-            "items-center"
-          );
+    // Display design notes
+    designNotesContent.textContent = designNotes;
 
-          const colorHint = document.createElement("div");
-          colorHint.style.backgroundColor = color;
-          colorHint.classList.add(
-            "w-8",
-            "rounded-l-lg",
-            "flex-shrink-0",
-            "mr-4",
-            "border"
-          ); // Added border
+    // Display shirt details
+    try {
+      shirtDetails.forEach((item) => {
+        const itemParts = item.split(" - ");
+        const size = itemParts[0];
+        const color = itemParts[1];
+        const fabric = itemParts[2];
+        const quantity = itemParts[3].split("Quantity: ")[1];
+        const pricePerShirt = 20;
+        const totalAmount = pricePerShirt * quantity;
 
-          if (color === "white") {
-            colorHint.style.border = "1px solid #ccc"; // Light gray border for white
-          }
-          colorHint.style.minHeight = "2rem";
+        const card = document.createElement("div");
+        card.classList.add(
+          "bg-white",
+          "rounded-lg",
+          "shadow-md",
+          "p-4",
+          "mb-2",
+          "flex",
+          "items-center"
+        );
 
-          const detailsContainer = document.createElement("div");
-          detailsContainer.classList.add("flex", "flex-wrap", "flex-grow");
+        const colorHint = document.createElement("div");
+        colorHint.style.backgroundColor = color;
+        colorHint.classList.add(
+          "w-8",
+          "rounded-l-lg",
+          "flex-shrink-0",
+          "mr-4",
+          "border"
+        );
 
-          const labels = ["Fabric:", "Size:", "Color:", "Price:", "Quantity:"];
-          const values = [fabric, size, color, `$${pricePerShirt}`, quantity];
+        if (color === "white") {
+          colorHint.style.border = "1px solid #ccc";
+        }
+        colorHint.style.minHeight = "2rem";
 
-          for (let i = 0; i < labels.length; i++) {
-            const detailItem = document.createElement("div");
-            detailItem.classList.add("w-1/5", "p-2");
+        const detailsContainer = document.createElement("div");
+        detailsContainer.classList.add("flex", "flex-wrap", "flex-grow");
 
-            const label = document.createElement("div");
-            label.classList.add("text-sm", "font-semibold", "mb-1");
-            label.textContent = labels[i];
+        const labels = ["Fabric:", "Size:", "Color:", "Price:", "Quantity:"];
+        const values = [fabric, size, color, `$${pricePerShirt}`, quantity];
 
-            const value = document.createElement("div");
-            value.classList.add("text-sm");
-            value.textContent = values[i];
+        for (let i = 0; i < labels.length; i++) {
+          const detailItem = document.createElement("div");
+          detailItem.classList.add("w-1/5", "p-2");
 
-            detailItem.appendChild(label);
-            detailItem.appendChild(value);
-            detailsContainer.appendChild(detailItem);
-          }
+          const label = document.createElement("div");
+          label.classList.add("text-sm", "font-semibold", "mb-1");
+          label.textContent = labels[i];
 
-          const totalContainer = document.createElement("div");
-          totalContainer.classList.add("ml-auto", "text-right", "pr-4");
-          totalContainer.innerHTML = `<strong>Total:</strong> $${totalAmount}`;
+          const value = document.createElement("div");
+          value.classList.add("text-sm");
+          value.textContent = values[i];
 
-          // Ensure detailsContainer is added to card *before* inserting colorHint
-          card.appendChild(detailsContainer);
-          card.insertBefore(colorHint, detailsContainer);
-
-          shirtDetailsList.appendChild(card);
-        });
-      } catch (e) {
-        console.error("Error processing shirt details:", e);
-      }
-
-      confirmOrderBtn.addEventListener("click", function () {
-        const fullName = document.getElementById("fullName").value;
-        const email = document.getElementById("email").value;
-
-        if (!fullName || !email) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Please fill in your Full Name and Email.",
-          });
-          return;
+          detailItem.appendChild(label);
+          detailItem.appendChild(value);
+          detailsContainer.appendChild(detailItem);
         }
 
-        // Simulate email verification and tracking ID generation
-        setTimeout(() => {
-          // const trackingId = 'TRACK-' + Math.random().toString(36).substring(7).toUpperCase(); // Removed tracking ID here
-          Swal.fire({
-            icon: "success",
-            title: "Order Confirmed!",
-            html: `Your order has been confirmed. Please check your email: <strong>${email}</strong> for further instructions on how to obtain your tracking ID. Use this ID on the landing page to communicate with the administrator.`, // Modified message
-          });
-        }, 2000); // Simulate 2 seconds delay
+        const totalContainer = document.createElement("div");
+        totalContainer.classList.add("ml-auto", "text-right", "pr-4");
+        totalContainer.innerHTML = `<strong>Total:</strong> $${totalAmount}`;
+
+        card.appendChild(detailsContainer);
+        card.insertBefore(colorHint, detailsContainer);
+
+        shirtDetailsList.appendChild(card);
       });
-    </script>
-  </body>
-</html>
+    } catch (e) {
+      console.error("Error processing shirt details:", e);
+    }
+
+    confirmOrderBtn.addEventListener("click", function () {
+      const fullName = document.getElementById("fullName").value;
+      const email = document.getElementById("email").value;
+
+      if (!fullName || !email) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Please fill in your Full Name and Email.",
+        });
+        return;
+      }
+
+      setTimeout(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Order Confirmed!",
+          html: `Your order has been confirmed. Please check your email: <strong>${email}</strong> for further instructions on how to obtain your tracking ID. Use this ID on the landing page to communicate with the administrator.`,
+        }).then(() => {
+          // Clear sessionStorage
+          sessionStorage.clear();
+          // Redirect to home page
+          window.location.href = "/";
+        });
+      }, 2000);
+    });
+  </script>
+</body>
