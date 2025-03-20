@@ -113,4 +113,8 @@ router.get("/design-details", (req, res) => {
   res.render("design-details");
 });
 
+router.get("/checkout", (req, res) => {
+  res.render("checkout");
+});
+
 export default router;

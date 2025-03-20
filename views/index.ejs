@@ -39,7 +39,11 @@
   <body class="bg-gray-100">
     <nav id="navbar" class="navbar-blend fixed top-0 w-full p-4 z-10">
       <div class="container mx-auto flex justify-between items-center">
-        <a href="/" class="text-3xl font-bold text-white italic">KAMADA</a>
+        <a
+          href="/"
+          class="text-3xl font-bold text-white italic italic-bold-logo"
+          >KAMADA</a
+        >
         <div>
           <button
             id="getStartedButton"
@@ -159,13 +163,12 @@
           <div
             class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
           >
-            <i class="ri-eye-fill text-4xl text-cyan-500 mb-4"></i>
+            <i class="ri-chat-check-fill text-4xl text-cyan-500 mb-4"></i>
             <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Personalized Mockup Preview
+              Design Consultation
             </h3>
             <p class="text-gray-600">
-              Visualize your custom design on a t-shirt before placing your
-              order.
+              Get expert advice on your designs from our experienced team.
             </p>
           </div>
           <div
@@ -196,7 +199,7 @@
       const getStartedButton = document.getElementById('getStartedButton');
       getStartedButton.textContent = "Get Started";
       getStartedButton.addEventListener('click', () => {
-        window.location.href = "/design-details";
+          window.location.href = "/design-details";
       });
 
       const navbar = document.getElementById('navbar');
@@ -204,11 +207,15 @@
       const button = document.getElementById('getStartedButton');
 
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-          navbar.classList.add('navbar-scrolled');
-        } else {
-          navbar.classList.remove('navbar-scrolled');
-        }
+          if (window.scrollY > 100) {
+              navbar.classList.add('navbar-scrolled');
+              logo.classList.remove('text-white');
+              logo.classList.add('text-black');
+          } else {
+              navbar.classList.remove('navbar-scrolled');
+              logo.classList.remove('text-black');
+              logo.classList.add('text-white');
+          }
       });
     </script>
   </body>
