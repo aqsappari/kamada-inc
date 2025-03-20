@@ -19,6 +19,21 @@
       body {
         font-family: "Poppins", sans-serif;
       }
+      .info-box {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 8px;
+        border-radius: 4px;
+        z-index: 10; /* Ensure it's above other elements */
+        max-width: 300px; /* Limit width */
+      }
+
+      @media (max-width: 768px) {
+        .info-box {
+          max-width: 80%; /* Adjust for smaller screens */
+        }
+      }
     </style>
   </head>
   <body class="bg-gray-100">
@@ -34,48 +49,148 @@
       <h1 class="text-3xl font-semibold mb-6">Design Your Custom T-Shirt</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="order-1 lg:order-none h-[33vh]">
-          <div class="mb-6 h-full">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Upload Your Design:</label
-            >
+        <div class="order-1 lg:order-none h-[33vh] relative">
+          <div class="mb-6 h-full relative">
+            <div class="flex items-center justify-between">
+              <label class="block text-gray-700 text-sm font-bold mb-2"
+                >Upload Front Design:</label
+              >
+              <i
+                class="ri-information-line text-gray-500 cursor-pointer info-icon"
+                data-info="Upload the design you want to print at the front of the shirt (leave empty if there is none)"
+              ></i>
+            </div>
             <div
-              id="uploadArea"
+              id="uploadAreaFront"
               class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
             >
               <input
                 type="file"
-                id="designUpload"
+                id="designUploadFront"
                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <div id="uploadContent" class="text-center">
+              <div id="uploadContentFront" class="text-center">
                 <i
                   class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
                 ></i>
                 <p class="text-gray-600">
-                  Drag and drop your file here or click to upload
+                  Drag and drop your front design file here or click to upload
                 </p>
               </div>
               <img
-                id="uploadedImage"
+                id="uploadedImageFront"
                 src="#"
-                alt="Uploaded Image"
+                alt="Uploaded Front Image"
                 class="hidden max-w-full max-h-full mx-auto"
               />
             </div>
+            <div
+              class="absolute bg-white border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-0 left-0 info-box"
+            ></div>
           </div>
         </div>
 
-        <div class="order-2 lg:order-none h-[33vh]">
-          <div class="mb-6 h-full">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Design Notes:</label
+        <div class="order-2 lg:order-none h-[33vh] relative">
+          <div class="mb-6 h-full relative">
+            <div class="flex items-center justify-between">
+              <label class="block text-gray-700 text-sm font-bold mb-2"
+                >Upload Back Design:</label
+              >
+              <i
+                class="ri-information-line text-gray-500 cursor-pointer info-icon"
+                data-info="Upload the design you want to print at the back of the shirt (leave empty if there is none)"
+              ></i>
+            </div>
+            <div
+              id="uploadAreaBack"
+              class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
             >
+              <input
+                type="file"
+                id="designUploadBack"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div id="uploadContentBack" class="text-center">
+                <i
+                  class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
+                ></i>
+                <p class="text-gray-600">
+                  Drag and drop your back design file here or click to upload
+                </p>
+              </div>
+              <img
+                id="uploadedImageBack"
+                src="#"
+                alt="Uploaded Back Image"
+                class="hidden max-w-full max-h-full mx-auto"
+              />
+            </div>
+            <div
+              class="absolute bg-white border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-0 left-0 info-box"
+            ></div>
+          </div>
+        </div>
+
+        <div class="order-3 lg:order-none h-[33vh] relative">
+          <div class="mb-6 h-full relative">
+            <div class="flex items-center justify-between">
+              <label class="block text-gray-700 text-sm font-bold mb-2"
+                >Upload Print Details:</label
+              >
+              <i
+                class="ri-information-line text-gray-500 cursor-pointer info-icon"
+                data-info="Upload the design how you want the output should look like on the shirt (if you have not created one, leave empty and you can just chat with the admin for furthur information)"
+              ></i>
+            </div>
+            <div
+              id="uploadAreaPrint"
+              class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
+            >
+              <input
+                type="file"
+                id="designUploadPrint"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div id="uploadContentPrint" class="text-center">
+                <i
+                  class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
+                ></i>
+                <p class="text-gray-600">
+                  Drag and drop your print details file here or click to upload
+                </p>
+              </div>
+              <img
+                id="uploadedImagePrint"
+                src="#"
+                alt="Uploaded Print Image"
+                class="hidden max-w-full max-h-full mx-auto"
+              />
+            </div>
+            <div
+              class="absolute bg-white border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-0 left-0 info-box"
+            ></div>
+          </div>
+        </div>
+
+        <div class="order-4 lg:order-none h-[33vh] relative">
+          <div class="mb-6 h-full relative">
+            <div class="flex items-center justify-between">
+              <label class="block text-gray-700 text-sm font-bold mb-2"
+                >Design Notes:</label
+              >
+              <i
+                class="ri-information-line text-gray-500 cursor-pointer info-icon"
+                data-info="Explain how you want the design to be printed on the shirt."
+              ></i>
+            </div>
             <textarea
               id="designNotes"
               class="border rounded w-full h-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"
               placeholder="Add any specific instructions or notes for your design"
             ></textarea>
+            <div
+              class="absolute bg-white border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-0 left-0 info-box"
+            ></div>
           </div>
         </div>
       </div>
@@ -86,7 +201,7 @@
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="order-3 lg:order-none">
+          <div class="order-5 lg:order-none">
             <h3 class="font-semibold mb-4">
               Select Size, Color, and Quantity:
             </h3>
@@ -166,7 +281,7 @@
             </div>
           </div>
 
-          <div class="order-4 lg:order-none">
+          <div class="order-6 lg:order-none">
             <h3 class="font-semibold mb-4">Order List:</h3>
             <ul
               id="orderList"
@@ -175,18 +290,17 @@
           </div>
         </div>
 
-        <div class="mt-8 order-5 lg:order-none w-full">
-          <button
-            id="generate3DButton"
-            class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Generate 3D Preview
-          </button>
-        </div>
-
-        <div id="3dPreviewArea" class="mt-8 hidden w-full">
-          <h3 class="font-semibold mb-4">3D Preview:</h3>
-          <div id="3d-container"></div>
+        <div class="mt-8 order-7 flex justify-end w-full">
+          <div class="max-w-7xl mx-auto w-full px-4">
+            <div class="flex justify-end">
+              <button
+                id="proceedToCheckout"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Proceed to Checkout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -292,13 +406,136 @@
     </div>
 
     <script>
-      // File Upload and Drag & Drop
-      const designUpload = document.getElementById("designUpload");
-      const uploadArea = document.getElementById("uploadArea");
-      const uploadContent = document.getElementById("uploadContent");
-      const uploadedImage = document.getElementById("uploadedImage");
+      // Info Icon Hover Functionality
+      const infoIcons = document.querySelectorAll(".info-icon");
 
-      designUpload.addEventListener("change", (event) => {
+      infoIcons.forEach((icon) => {
+        const infoBox =
+          icon.parentElement.parentElement.querySelector(".info-box");
+        const info = icon.dataset.info;
+
+        icon.addEventListener("mouseenter", () => {
+          showInfoBox(infoBox, info);
+        });
+
+        icon.addEventListener("mouseleave", () => {
+          hideInfoBox(infoBox);
+        });
+      });
+
+      // Upload Area Hover Functionality
+      const uploadAreas = document.querySelectorAll("[id^='uploadArea']");
+
+      uploadAreas.forEach((area) => {
+        const infoBox =
+          area.parentElement.parentElement.querySelector(".info-box");
+        const infoIcon =
+          area.parentElement.parentElement.querySelector(".info-icon");
+        const info = infoIcon.dataset.info;
+
+        area.addEventListener("mouseenter", () => {
+          showInfoBox(infoBox, info);
+        });
+
+        area.addEventListener("mouseleave", () => {
+          hideInfoBox(infoBox);
+        });
+      });
+
+      // Helper Functions
+      function showInfoBox(infoBox, info) {
+        infoBox.textContent = info;
+        infoBox.classList.remove("hidden"); // Show using Tailwind
+      }
+
+      function hideInfoBox(infoBox) {
+        infoBox.classList.add("hidden"); // Hide using Tailwind
+      }
+
+      // File Upload and Drag & Drop
+      // Front Upload
+      const designUploadFront = document.getElementById("designUploadFront");
+      const uploadAreaFront = document.getElementById("uploadAreaFront");
+      const uploadContentFront = document.getElementById("uploadContentFront");
+      const uploadedImageFront = document.getElementById("uploadedImageFront");
+
+      designUploadFront.addEventListener("change", (event) => {
+        handleFileUpload(event, uploadedImageFront, uploadContentFront);
+      });
+
+      uploadAreaFront.addEventListener("dragover", (event) => {
+        handleDragOver(event, uploadAreaFront);
+      });
+
+      uploadAreaFront.addEventListener("dragleave", () => {
+        handleDragLeave(uploadAreaFront);
+      });
+
+      uploadAreaFront.addEventListener("drop", (event) => {
+        handleDrop(
+          event,
+          designUploadFront,
+          uploadedImageFront,
+          uploadContentFront
+        );
+      });
+
+      // Back Upload
+      const designUploadBack = document.getElementById("designUploadBack");
+      const uploadAreaBack = document.getElementById("uploadAreaBack");
+      const uploadContentBack = document.getElementById("uploadContentBack");
+      const uploadedImageBack = document.getElementById("uploadedImageBack");
+
+      designUploadBack.addEventListener("change", (event) => {
+        handleFileUpload(event, uploadedImageBack, uploadContentBack);
+      });
+
+      uploadAreaBack.addEventListener("dragover", (event) => {
+        handleDragOver(event, uploadAreaBack);
+      });
+
+      uploadAreaBack.addEventListener("dragleave", () => {
+        handleDragLeave(uploadAreaBack);
+      });
+
+      uploadAreaBack.addEventListener("drop", (event) => {
+        handleDrop(
+          event,
+          designUploadBack,
+          uploadedImageBack,
+          uploadContentBack
+        );
+      });
+
+      // Print Upload
+      const designUploadPrint = document.getElementById("designUploadPrint");
+      const uploadAreaPrint = document.getElementById("uploadAreaPrint");
+      const uploadContentPrint = document.getElementById("uploadContentPrint");
+      const uploadedImagePrint = document.getElementById("uploadedImagePrint");
+
+      designUploadPrint.addEventListener("change", (event) => {
+        handleFileUpload(event, uploadedImagePrint, uploadContentPrint);
+      });
+
+      uploadAreaPrint.addEventListener("dragover", (event) => {
+        handleDragOver(event, uploadAreaPrint);
+      });
+
+      uploadAreaPrint.addEventListener("dragleave", () => {
+        handleDragLeave(uploadAreaPrint);
+      });
+
+      uploadAreaPrint.addEventListener("drop", (event) => {
+        handleDrop(
+          event,
+          designUploadPrint,
+          uploadedImagePrint,
+          uploadContentPrint
+        );
+      });
+
+      // Helper Functions
+      function handleFileUpload(event, uploadedImage, uploadContent) {
         const file = event.target.files[0];
         if (file) {
           const reader = new FileReader();
@@ -313,23 +550,23 @@
           uploadedImage.classList.add("hidden");
           uploadContent.classList.remove("hidden");
         }
-      });
+      }
 
-      uploadArea.addEventListener("dragover", (event) => {
+      function handleDragOver(event, uploadArea) {
         event.preventDefault();
         uploadArea.classList.add("border-blue-400");
-      });
+      }
 
-      uploadArea.addEventListener("dragleave", () => {
+      function handleDragLeave(uploadArea) {
         uploadArea.classList.remove("border-blue-400");
-      });
+      }
 
-      uploadArea.addEventListener("drop", (event) => {
+      function handleDrop(event, designUpload, uploadedImage, uploadContent) {
         event.preventDefault();
-        uploadArea.classList.remove("border-blue-400");
         designUpload.files = event.dataTransfer.files;
         designUpload.dispatchEvent(new Event("change"));
-      });
+        uploadArea.classList.remove("border-blue-400");
+      }
 
       // Order List Functionality
       const addItemButton = document.getElementById("addItemButton");
@@ -500,14 +737,15 @@
         isCm = !isCm;
       });
 
-      // 3D Preview (Placeholder)
-      const generate3DButton = document.getElementById("generate3DButton");
-      const previewArea = document.getElementById("3dPreviewArea");
+      // Checkout functionality
+      const proceedToCheckoutButton =
+        document.getElementById("proceedToCheckout");
 
-      generate3DButton.addEventListener("click", () => {
-        previewArea.classList.remove("hidden");
-        // Implement 3D model generation and display logic here (e.g., Three.js)
-        alert("3D Preview Placeholder"); // Replace with actual 3D rendering
+      proceedToCheckoutButton.addEventListener("click", () => {
+        // Add your checkout logic here
+        alert("Proceed to Checkout clicked!");
+        // Example: Redirect to checkout page
+        // window.location.href = "/checkout";
       });
     </script>
   </body>
