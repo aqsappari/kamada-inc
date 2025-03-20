@@ -11,10 +11,32 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       body {
         font-family: "Poppins", sans-serif;
+      }
+      #map div.leaflet-map-pane {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+      }
+      .my-custom-marker {
+        width: 30px;
+        height: 42px;
+        background-image: url("https://maps.google.com/mapfiles/ms/icons/red-dot.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        transform: translateY(-42px);
+        transform-origin: 50% 100%;
       }
     </style>
   </head>
@@ -63,7 +85,7 @@
             <label
               for="fullName"
               class="block text-sm font-medium text-gray-700"
-              >Full Name</label
+              >Full Name <span class="text-red-500">*</span></label
             >
             <input
               type="text"
@@ -87,7 +109,7 @@
           </div>
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email</label
+              >Email <span class="text-red-500">*</span></label
             >
             <input
               type="email"
@@ -98,7 +120,7 @@
           </div>
           <div>
             <label for="phone" class="block text-sm font-medium text-gray-700"
-              >Phone Number</label
+              >Phone Number <span class="text-red-500">*</span></label
             >
             <input
               type="tel"
@@ -109,7 +131,7 @@
           </div>
           <div class="md:col-span-2">
             <label for="address" class="block text-sm font-medium text-gray-700"
-              >Address</label
+              >Address <span class="text-red-500">*</span></label
             >
             <input
               type="text"
@@ -119,6 +141,7 @@
             />
           </div>
         </div>
+        <div id="map" class="w-full h-[600px] mt-8 rounded-lg"></div>
       </section>
 
       <div class="mt-6 flex justify-center">
@@ -275,31 +298,162 @@
       console.error("Error processing shirt details:", e);
     }
 
+    // Map display
+    var map = L.map("map").setView([0, 0], 2);
+    const zamboangaCoords = [6.9021, 122.0792];
+
+    function onLocationFound(e) {
+      // var radius = e.accuracy / 2;  // Removed the radius variable
+      // L.circle(e.latlng, radius).addTo(map); // Removed the circle
+      map.setView(e.latlng, 17);
+    }
+
+    function onLocationError(e) {
+      console.log("Location access denied or error:", e.message);
+      map.setView(zamboangaCoords, 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+    }
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    map.on("locationfound", onLocationFound);
+    map.on("locationerror", onLocationError);
+
+    map.locate({ setView: true, maxZoom: 16, timeout: 10000 });
+
+    var currentMarker = null;
+    let markerLatLng = null;
+
+    function onMapClick(e) {
+      if (currentMarker !== null) {
+        map.removeLayer(currentMarker);
+      }
+      var myIcon = L.divIcon({
+        className: "my-custom-marker",
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30],
+      });
+      currentMarker = L.marker(e.latlng, { icon: myIcon }).addTo(map);
+      markerLatLng = e.latlng;
+      currentMarker.bindPopup("You are here").openPopup();
+      currentMarker.on("click", function () {
+        map.removeLayer(currentMarker);
+        currentMarker = null;
+        markerLatLng = null;
+      });
+    }
+    map.on("click", onMapClick);
+
+    // checkout functionality
     confirmOrderBtn.addEventListener("click", function () {
       const fullName = document.getElementById("fullName").value;
       const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value; // Get phone number
+      const address = document.getElementById("address").value;
+      let companyName = document.getElementById("companyName").value; // Get company name
 
-      if (!fullName || !email) {
+      let hasErrors = false;
+      let errorMessage = "";
+
+      // Validation checks
+      if (!fullName) {
+        errorMessage = "Please enter your Full Name.";
+        hasErrors = true;
+      } else if (!email) {
+        errorMessage = "Please enter your Email.";
+        hasErrors = true;
+      } else if (!isValidEmail(email)) {
+        errorMessage = "Please enter a valid Email address.";
+        hasErrors = true;
+      } else if (!phone) {
+        errorMessage = "Please enter your Phone Number.";
+        hasErrors = true;
+      } else if (!isValidPhone(phone)) {
+        errorMessage = "Please enter a valid Phone Number (e.g., 09123456789).";
+        hasErrors = true;
+      } else if (!address) {
+        errorMessage = "Please enter your Address.";
+        hasErrors = true;
+      } else if (markerLatLng === null) {
+        errorMessage = "Please click on the map to select your location.";
+        hasErrors = true;
+      }
+
+      if (hasErrors) {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Please fill in your Full Name and Email.",
+          text: errorMessage,
         });
-        return;
+        return; // Stop processing if there are errors
       }
 
+      // If all validations pass, proceed with order confirmation and data submission
+      // Simulate sending data to Firestore
+      // const orderData = {
+      //   fullName: fullName,
+      //   email: email,
+      //   phone: phone, // Include phone number
+      //   address: address,
+      //   companyName: companyName, // Include company name
+      //   frontDesignImage: frontDesignImage,
+      //   backDesignImage: backDesignImage,
+      //   printDetailsImage: printDetailsImage,
+      //   designNotes: designNotes,
+      //   shirtDetails: shirtDetails,
+      //   location: markerLatLng
+      //     ? {
+      //         latitude: markerLatLng.lat,
+      //         longitude: markerLatLng.lng,
+      //       }
+      //     : null, // Include the marker coordinates
+      //   timestamp: new Date().toISOString(), // Add a timestamp
+      // };
+
+      //   console.log("Order Data:", orderData); // Log the data to the console
+
+      // Simulate sending data to Firestore (replace with actual Firestore code)
       setTimeout(() => {
         Swal.fire({
           icon: "success",
           title: "Order Confirmed!",
-          html: `Your order has been confirmed. Please check your email: <strong>${email}</strong> for further instructions on how to obtain your tracking ID. Use this ID on the landing page to communicate with the administrator.`,
+          html: `Your order has been confirmed. Please check your email: <strong>${email}</strong> for further instructions.`,
         }).then(() => {
-          // Clear sessionStorage
-          sessionStorage.clear();
-          // Redirect to home page
-          window.location.href = "/";
+          //   // Clear sessionStorage
+          //   sessionStorage.clear();
+          //   // Redirect to home page
+          //   window.location.href = "/";
+
+          sessionStorage.setItem("fullname", fullName);
+          sessionStorage.setItem("email", email);
+          sessionStorage.setItem("phone", phone);
+          sessionStorage.setItem("address", address);
+          sessionStorage.setItem(
+            "companyName",
+            companyName == "" ? "null" : companyName
+          );
+          sessionStorage.setItem("locationLat", markerLatLng.lat);
+          sessionStorage.setItem("locationLng", markerLatLng.lng);
+          sessionStorage.setItem("timestamp", new Date().toISOString());
         });
       }, 2000);
     });
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function isValidPhone(phone) {
+      const phoneRegex = /^09\d{9}$/;
+      return phoneRegex.test(phone);
+    }
   </script>
 </body>
