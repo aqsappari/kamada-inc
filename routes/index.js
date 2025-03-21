@@ -1,13 +1,6 @@
-// routes/index.js
 import express from "express";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-  signOut,
-} from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
+import { getAuth, signOut } from "firebase/auth";
+import { collection, doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 import { app, db } from "../firebase/firebaseApp.js"; // Import app and db
 import bodyParser from "body-parser";
 
@@ -16,93 +9,74 @@ const auth = getAuth(app); // Pass the app
 router.use(bodyParser.urlencoded({ extended: false }));
 
 router.get("/", async (req, res) => {
-  const user = auth.currentUser;
-  let isVerified = false;
-
-  if (user) {
-    await user.reload();
-    isVerified = user.emailVerified;
-  }
-
-  res.render("index", { user: user, isVerified: isVerified });
+  res.render("index");
 });
 
-router.get("/login", (req, res) => {
-  res.render("login");
+// New /admin route for login
+router.get("/admin", (req, res) => {
+  res.render("admin-login"); // Create an admin-login.ejs file
 });
 
-router.get("/signup", (req, res) => {
-  res.render("signup");
-});
-
-router.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+// New /admin post route for authentication
+router.post("/admin", async (req, res) => {
+  const { username, password } = req.body;
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
+    // 1. Query Firestore for the user with the provided username.
+    const usersRef = collection(db, "admins"); // Use a separate 'admins' collection
+    const userDoc = doc(usersRef, username); // Use the username as the document ID.
+    const docSnap = await getDoc(userDoc);
 
-    await addDoc(collection(db, "users"), {
-      uid: user.uid,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-    });
-
-    // Send email verification
-    await sendEmailVerification(user);
-
-    console.log("User created and data stored:", user);
-    res.render("verify-email", { email: email }); // Render the verify-email view
-  } catch (error) {
-    console.error("Error creating user or storing data:", error);
-    res.status(500).send("Error creating user");
-  }
-});
-
-router.post("/resend-verification", async (req, res) => {
-  const { email } = req.body;
-  const user = auth.currentUser;
-
-  if (user && user.email === email) {
-    try {
-      await sendEmailVerification(user);
-      res.send("Verification email resent");
-    } catch (error) {
-      console.error("Error resending email:", error);
-      res.status(500).send("Error resending email");
+    // 2. Check if the user exists and the password matches.
+    if (docSnap.exists()) {
+      const adminData = docSnap.data();
+      // In a real application, you should NEVER store passwords in plain text.
+      //  Use a proper hashing algorithm like bcrypt.
+      if (adminData.password === password) {
+        // 3.  Successful authentication.
+        //   You might want to set a session here to keep the user logged in.
+        //   For this example, we'll just redirect to a success page.
+        console.log("Admin logged in:", username);
+        // Here, you might want to set up a session.  Example using express-session:
+        req.session.isAdmin = true; //  Store session data
+        res.redirect("/admin/dashboard"); //  redirect after successful login
+      } else {
+        // 4. Incorrect password.
+        console.error("Incorrect password for user:", username);
+        res.status(401).send("Incorrect password");
+      }
+    } else {
+      // 5. User not found.
+      console.error("User not found:", username);
+      res.status(401).send("User not found");
     }
-  } else {
-    res.status(400).send("Invalid request");
+  } catch (error) {
+    console.error("Error authenticating user:", error);
+    res.status(500).send("Error authenticating user");
   }
 });
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    console.log("User logged in:", user);
-    res.redirect("/");
-  } catch (error) {
-    console.error("Error logging in:", error);
-    res.status(401).send("Login failed");
+//  Example route for a protected admin dashboard
+router.get("/admin/dashboard", (req, res) => {
+  if (req.session && req.session.isAdmin) {
+    //  If the user is authenticated, render the dashboard
+    res.render("admin-dashboard");
+  } else {
+    //  Otherwise, redirect to the admin login page
+    res.redirect("/admin");
   }
 });
 
 router.get("/logout", async (req, res) => {
   try {
     await signOut(auth);
-    res.redirect("/"); // Redirect to index after logout
+    // Clear session on logout
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+      }
+      res.redirect("/"); // Redirect to index after logout
+    });
   } catch (error) {
     console.error("Error signing out:", error);
     res.status(500).send("Error signing out");

@@ -27,12 +27,27 @@
         background-color: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
       }
-      .navbar-scrolled .italic-bold-logo,
-      .navbar-scrolled #getStartedButton {
+      .navbar-scrolled .nav-link,
+      .navbar-scrolled .nav-link:hover,
+      .navbar-scrolled .nav-link.active {
         color: black;
       }
-      .navbar-scrolled #getStartedButton {
-        background-color: white;
+      .navbar-scrolled .italic-bold-logo {
+        color: black;
+      }
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        margin-left: 1rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+      .nav-link:hover {
+        color: #ddd;
+      }
+      .nav-link.active {
+        color: #fff;
+        font-weight: 600;
       }
     </style>
   </head>
@@ -44,40 +59,64 @@
           class="text-3xl font-bold text-white italic italic-bold-logo"
           >KAMADA</a
         >
-        <div>
+        <div class="hidden md:flex">
+          <a href="#home" class="nav-link active">Home</a>
+          <a href="#why-choose-us" class="nav-link">Why Choose Us</a>
+          <a href="#our-services" class="nav-link">Our Services</a>
+          <a href="/design-details" class="nav-link">Design</a>
+        </div>
+        <div class="md:hidden">
           <button
-            id="getStartedButton"
-            class="bg-white text-cyan-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            id="mobile-menu-button"
+            class="text-white focus:outline-none"
+            aria-label="Toggle Mobile Menu"
           >
-            Get Started
+            <i class="ri-menu-line text-2xl"></i>
           </button>
+          <div
+            id="mobile-menu"
+            class="hidden absolute top-16 right-0 bg-gray-800 shadow-lg rounded-md py-2 px-4 w-48"
+          >
+            <a
+              href="#home"
+              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
+              >Home</a
+            >
+            <a
+              href="#why-choose-us"
+              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
+              >Why Choose Us</a
+            >
+            <a
+              href="#our-services"
+              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
+              >Our Services</a
+            >
+            <a
+              href="/design-details"
+              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
+              >Design</a
+            >
+          </div>
         </div>
       </div>
     </nav>
-    <% if (user && !isVerified) { %>
-    <div
-      id="verificationAlert"
-      class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mt-16"
-      role="alert"
-    >
-      <strong class="font-bold">Verify Your Email!</strong>
-      <span class="block sm:inline"
-        >Please verify your email address to access all features.</span
-      >
-    </div>
-    <% } %>
 
-    <header class="bg-cyan-800 py-24 md:py-40 relative">
+    <header id="home" class="bg-cyan-800 py-24 md:py-40 relative">
       <div class="container mx-auto text-center px-4">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
           Design Your Dream T-Shirts with KAMADA
         </h1>
         <p class="text-lg md:text-xl text-white mb-10">
-          Unleash your creativity and bring your unique designs to life. We
-          offer premium custom t-shirt printing services for individuals,
-          groups, and businesses. Experience high-quality prints, fast
-          turnaround, and exceptional customer service. Start designing your
-          perfect t-shirt today!
+          Unleash your creativity and bring your unique designs to life with
+          KAMADA. We are your premier destination for custom t-shirt printing,
+          catering to individuals, groups, and businesses in Zamboanga City.
+          Express yourself, promote your brand, or create memorable gifts with
+          our easy-to-use design tools and high-quality printing services. From
+          vibrant colors to durable materials, we ensure your vision is realized
+          with exceptional attention to detail. Experience the perfect blend of
+          creativity, quality, and customer satisfaction. Start your design
+          journey with us today!
         </p>
         <a
           href="/design-details"
@@ -88,11 +127,46 @@
       </div>
     </header>
 
-    <section class="py-16 px-4">
+    <section class="bg-black py-12 px-4">
+      <div class="container mx-auto text-center">
+        <h2 class="text-2xl font-semibold text-white mb-6">
+          Have an Order? Track it Here
+        </h2>
+        <p class="text-gray-300 mb-4">
+          Enter your order's tracking ID to get the latest updates on its
+          status. We provide real-time tracking information, so you'll always
+          know where your custom t-shirts are and when to expect them. This
+          service is currently available for orders within Zamboanga City.
+        </p>
+        <div
+          class="flex flex-col sm:flex-row justify-center items-center gap-4"
+        >
+          <input
+            type="text"
+            id="trackingIdInput"
+            placeholder="Enter your tracking ID"
+            class="w-full sm:w-auto px-4 py-2 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <button
+            id="trackOrderButton"
+            class="bg-cyan-500 text-white font-bold py-2 px-6 rounded-md hover:bg-cyan-600 focus:outline-none focus:shadow-outline"
+          >
+            Track Order
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-choose-us" class="py-16 px-4">
       <div class="container mx-auto text-center">
         <h2 class="text-3xl font-semibold text-gray-800 mb-8">
           Why Choose KAMADA?
         </h2>
+        <p class="text-gray-700 mb-8">
+          At KAMADA, we're committed to providing an exceptional custom t-shirt
+          printing experience within Zamboanga City. Here's why you can trust us
+          with your next project:
+        </p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div
             class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
@@ -102,8 +176,11 @@
               High-Quality Printing
             </h3>
             <p class="text-gray-600">
-              We use state-of-the-art printing technology for vibrant and
-              durable prints.
+              We use state-of-the-art printing technology and premium inks to
+              ensure your designs are reproduced with stunning clarity, vibrant
+              colors, and exceptional durability. Our prints are made to last,
+              withstanding washes and wear without fading. We are proud to serve
+              the Zamboanga City area with our top-notch printing services.
             </p>
           </div>
           <div
@@ -114,8 +191,11 @@
               Easy Design Upload
             </h3>
             <p class="text-gray-600">
-              Our user-friendly platform makes it simple to upload and preview
-              your designs.
+              Our user-friendly platform makes it simple to upload your designs
+              in various formats. Preview your creation on our t-shirt mockups
+              and make adjustments with ease. We strive to make the design
+              process intuitive and hassle-free for our customers in Zamboanga
+              City.
             </p>
           </div>
           <div
@@ -126,16 +206,24 @@
               Fast Turnaround
             </h3>
             <p class="text-gray-600">
-              We offer quick printing and shipping to meet your deadlines.
+              We understand the importance of timely delivery. That's why we've
+              optimized our production process to provide fast printing and
+              shipping services. Choose KAMADA for quick turnaround times
+              without compromising on quality. We are committed to serving our
+              Zamboanga City customers efficiently.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-16 bg-gray-200 px-4">
+    <section id="our-services" class="py-16 bg-gray-200 px-4">
       <div class="container mx-auto text-center">
         <h2 class="text-3xl font-semibold text-gray-800 mb-8">Our Services</h2>
+        <p class="text-gray-700 mb-8">
+          We offer a comprehensive range of services to meet all your custom
+          t-shirt needs within Zamboanga City:
+        </p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div
             class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
@@ -145,8 +233,10 @@
               Custom Design Upload
             </h3>
             <p class="text-gray-600">
-              Easily upload your own designs and see them on our t-shirt
-              mockups.
+              Easily upload your own designs, including logos, artwork, and
+              images, and see them come to life on our virtual t-shirt mockups.
+              Our system supports various file formats for your convenience.
+              This service is available to customers in Zamboanga City.
             </p>
           </div>
           <div
@@ -157,7 +247,10 @@
               Mass Production
             </h3>
             <p class="text-gray-600">
-              Order in bulk for events, teams, or promotional purposes.
+              Need a large quantity of custom t-shirts? We specialize in mass
+              production for events, sports teams, corporate branding, and
+              resale within Zamboanga City. Get competitive pricing and
+              consistent quality on bulk orders.
             </p>
           </div>
           <div
@@ -168,7 +261,11 @@
               Design Consultation
             </h3>
             <p class="text-gray-600">
-              Get expert advice on your designs from our experienced team.
+              Not sure where to start with your design? Our experienced team
+              offers design consultation services to help you refine your ideas,
+              choose the right printing techniques, and create a t-shirt that
+              truly represents your vision. We are pleased to offer this service
+              to clients in the Zamboanga City area.
             </p>
           </div>
           <div
@@ -179,7 +276,10 @@
               Order Tracking
             </h3>
             <p class="text-gray-600">
-              Track your order status and stay updated on delivery.
+              Stay informed about the progress of your order with our
+              comprehensive order tracking system. From production to shipping,
+              we provide updates every step of the way, ensuring a smooth and
+              transparent experience for our Zamboanga City customers.
             </p>
           </div>
         </div>
@@ -189,34 +289,91 @@
     <footer class="bg-gray-200 py-8 text-center">
       <p class="text-gray-600">
         &copy; <%= new Date().getFullYear() %> KAMADA. All rights reserved.
+        Serving Zamboanga City.
       </p>
     </footer>
 
     <script>
-      console.log("User data:", <%= JSON.stringify(user) %>);
-      console.log("Is verified:", <%= isVerified %>);
+      const navLinks = document.querySelectorAll(".nav-link");
+      const sections = document.querySelectorAll("section");
 
-      const getStartedButton = document.getElementById('getStartedButton');
-      getStartedButton.textContent = "Get Started";
-      getStartedButton.addEventListener('click', () => {
-          window.location.href = "/design-details";
-      });
-
-      const navbar = document.getElementById('navbar');
-      const logo = document.querySelector('.italic-bold-logo');
-      const button = document.getElementById('getStartedButton');
-
-      window.addEventListener('scroll', () => {
-          if (window.scrollY > 100) {
-              navbar.classList.add('navbar-scrolled');
-              logo.classList.remove('text-white');
-              logo.classList.add('text-black');
-          } else {
-              navbar.classList.remove('navbar-scrolled');
-              logo.classList.remove('text-black');
-              logo.classList.add('text-white');
+      function updateActiveNavLink() {
+        let currentSectionId = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (
+            window.scrollY >= sectionTop - 100 &&
+            window.scrollY < sectionTop + sectionHeight - 100
+          ) {
+            currentSectionId = section.getAttribute("id");
           }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href").slice(1) === currentSectionId) {
+            link.classList.add("active");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", () => {
+        updateActiveNavLink();
+        const navbar = document.getElementById("navbar");
+        const logo = document.querySelector(".italic-bold-logo");
+        if (window.scrollY > 100) {
+          navbar.classList.add("navbar-scrolled");
+          logo.classList.remove("text-white");
+          logo.classList.add("text-black");
+        } else {
+          navbar.classList.remove("navbar-scrolled");
+          logo.classList.remove("text-black");
+          logo.classList.add("text-white");
+        }
       });
+
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      const trackingIdInput = document.getElementById("trackingIdInput");
+      const trackOrderButton = document.getElementById("trackOrderButton");
+
+      trackOrderButton.addEventListener("click", () => {
+        const trackingId = trackingIdInput.value.trim();
+        if (trackingId) {
+          window.location.href = `/track-order?id=${trackingId}`;
+        } else {
+          alert("Please enter your tracking ID.");
+        }
+      });
+
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+      }
+
+      // Close mobile menu when a link is clicked
+      if (mobileMenu) {
+        const mobileLinks = mobileMenu.querySelectorAll("a");
+        mobileLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.add("hidden");
+          });
+        });
+      }
     </script>
   </body>
 </html>

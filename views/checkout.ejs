@@ -442,8 +442,11 @@
           sessionStorage.setItem("locationLat", markerLatLng.lat);
           sessionStorage.setItem("locationLng", markerLatLng.lng);
           sessionStorage.setItem("timestamp", new Date().toISOString());
+
+          // Redirect to home page
+          window.location.href = "/";
         });
-      }, 2000);
+      }, 500);
     });
 
     function isValidEmail(email) {
