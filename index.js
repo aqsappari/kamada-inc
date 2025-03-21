@@ -1,6 +1,7 @@
 // index.js
 import express from "express";
 import indexRouter from "./routes/index.js";
+import adminRouter from "./routes/admin.js";
 import logger from "./middleware/logger.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -20,6 +21,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: false })); // Use body-parser
 
 app.use("/", indexRouter);
+app.use("/admin", adminRouter);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
