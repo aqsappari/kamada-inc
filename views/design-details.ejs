@@ -49,135 +49,48 @@
       <h1 class="text-3xl font-semibold mb-6">Design Your Custom T-Shirt</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="order-1 lg:order-none h-[33vh] relative">
-          <div class="mb-6 h-full relative">
+        <div class="order-1 lg:order-none relative h-[33vh]">
+          <div class="mb-6 h-full">
             <div class="flex items-center justify-between">
-              <label class="block text-gray-700 text-sm font-bold mb-2"
-                >Upload Front Design:</label
-              >
-              <i
-                class="ri-information-line text-gray-500 cursor-pointer info-icon"
-                data-info="Upload the design you want to print at the front of the shirt (leave empty if there is none)"
-              ></i>
-            </div>
-            <div
-              id="uploadAreaFront"
-              class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
-            >
-              <input
-                type="file"
-                id="designUploadFront"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div id="uploadContentFront" class="text-center">
+              <label class="block text-gray-700 text-sm font-bold mb-2">
+                Upload your design prints:
+              </label>
+              <div class="flex items-center">
                 <i
-                  class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
+                  class="ri-information-line text-gray-500 cursor-pointer info-icon mr-2"
+                  data-info="Upload all design files you want to print on the shirt, including front, back, and any other details."
                 ></i>
-                <p class="text-gray-600">
-                  Drag and drop your front design file here or click to upload
-                </p>
+                <button
+                  id="addFilesButton"
+                  class="flex items-center bg-cyan-500 text-white hover:text-cyan-500 hover:bg-slate-200 px-2 rounded gap-2"
+                >
+                  <i class="ri-add-line font-bold"></i>
+                  <span class="hidden lg:inline font-medium">Add Files</span>
+                </button>
               </div>
-              <img
-                id="uploadedImageFront"
-                src="#"
-                alt="Uploaded Front Image"
-                class="hidden max-w-full max-h-full mx-auto"
-              />
             </div>
+            <input
+              type="file"
+              id="designUploadPrints"
+              class="hidden"
+              multiple
+            />
+            <div
+              id="uploadedFilesList"
+              class="border border-gray-400 rounded-lg p-4 relative h-full overflow-y-auto"
+            ></div>
             <div
               class="absolute bg-blue-100 border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-7 right-0 info-box"
             ></div>
           </div>
         </div>
 
-        <div class="order-2 lg:order-none h-[33vh] relative">
-          <div class="mb-6 h-full relative">
+        <div class="order-2 lg:order-none relative h-[33vh]">
+          <div class="mb-6 h-full">
             <div class="flex items-center justify-between">
-              <label class="block text-gray-700 text-sm font-bold mb-2"
-                >Upload Back Design:</label
-              >
-              <i
-                class="ri-information-line text-gray-500 cursor-pointer info-icon"
-                data-info="Upload the design you want to print at the back of the shirt (leave empty if there is none)"
-              ></i>
-            </div>
-            <div
-              id="uploadAreaBack"
-              class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
-            >
-              <input
-                type="file"
-                id="designUploadBack"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div id="uploadContentBack" class="text-center">
-                <i
-                  class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
-                ></i>
-                <p class="text-gray-600">
-                  Drag and drop your back design file here or click to upload
-                </p>
-              </div>
-              <img
-                id="uploadedImageBack"
-                src="#"
-                alt="Uploaded Back Image"
-                class="hidden max-w-full max-h-full mx-auto"
-              />
-            </div>
-            <div
-              class="absolute bg-blue-100 border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-7 right-0 info-box"
-            ></div>
-          </div>
-        </div>
-
-        <div class="order-3 lg:order-none h-[33vh] relative">
-          <div class="mb-6 h-full relative">
-            <div class="flex items-center justify-between">
-              <label class="block text-gray-700 text-sm font-bold mb-2"
-                >Upload Print Details:</label
-              >
-              <i
-                class="ri-information-line text-gray-500 cursor-pointer info-icon"
-                data-info="Upload the design how you want the output should look like on the shirt (if you have not created one, leave empty and you can just chat with the admin for furthur information)"
-              ></i>
-            </div>
-            <div
-              id="uploadAreaPrint"
-              class="border-dashed border-2 border-gray-400 rounded-lg p-6 h-full cursor-pointer relative flex items-center justify-center"
-            >
-              <input
-                type="file"
-                id="designUploadPrint"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <div id="uploadContentPrint" class="text-center">
-                <i
-                  class="ri-upload-cloud-2-line text-4xl text-gray-500 mb-4"
-                ></i>
-                <p class="text-gray-600">
-                  Drag and drop your print details file here or click to upload
-                </p>
-              </div>
-              <img
-                id="uploadedImagePrint"
-                src="#"
-                alt="Uploaded Print Image"
-                class="hidden max-w-full max-h-full mx-auto"
-              />
-            </div>
-            <div
-              class="absolute bg-blue-100 border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-7 right-0 info-box"
-            ></div>
-          </div>
-        </div>
-
-        <div class="order-4 lg:order-none h-[33vh] relative">
-          <div class="mb-6 h-full relative">
-            <div class="flex items-center justify-between">
-              <label class="block text-gray-700 text-sm font-bold mb-2"
-                >Design Notes:</label
-              >
+              <label class="block text-gray-700 text-sm font-bold mb-2">
+                Design Notes:
+              </label>
               <i
                 class="ri-information-line text-gray-500 cursor-pointer info-icon"
                 data-info="Explain how you want the design to be printed on the shirt."
@@ -201,10 +114,68 @@
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div class="order-5 lg:order-none">
-            <h3 class="font-semibold mb-4">
-              Select Size, Color, and Quantity:
+          <div class="order-5 lg:order-none flex flex-col">
+            <h3 class="font-semibold mb-4 flex justify-between items-center">
+              Select Garment Details:
+              <button
+                id="priceChartButton"
+                class="text-cyan-500 hover:underline text-sm"
+              >
+                View Price Chart
+              </button>
             </h3>
+
+            <div class="mb-4">
+              <label
+                for="garmentTypeSelect"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Type of Garment:</label
+              >
+              <select
+                id="garmentTypeSelect"
+                class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              >
+                <option value="" class="text-slate-400">
+                  - - Select Garment Type - -
+                </option>
+                <option value="Classic" class="text-gray-700">
+                  Classic T-Shirt
+                </option>
+                <option value="V-Neck" class="text-gray-700">
+                  V-Neck T-Shirt
+                </option>
+                <option value="Polo" class="text-gray-700">Polo Shirt</option>
+                <option value="Hoodie" class="text-gray-700">Hoodie</option>
+                <option value="Zip-Up" class="text-gray-700">
+                  Zip-Up Hoodie
+                </option>
+                <option value="Sweater" class="text-gray-700">Sweater</option>
+                <option value="Long Sleeve" class="text-gray-700">
+                  Long Sleeve T-Shirt
+                </option>
+                <option value="Crewneck" class="text-gray-700">
+                  Crewneck Sweatshirt
+                </option>
+                <option value="Jacket" class="text-gray-700">Jacket</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="fabricsSelect"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Fabrics:</label
+              >
+              <select
+                id="fabricsSelect"
+                class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                disabled
+              >
+                <option value="" class="text-slate-400">
+                  - - Select Fabrics - -
+                </option>
+              </select>
+            </div>
 
             <div class="mb-4 flex items-center justify-between">
               <label
@@ -223,15 +194,17 @@
               id="sizeSelect"
               class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
             >
-              <option value="">Select Size</option>
-              <option value="XS">XS</option>
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-              <option value="2XL">2XL</option>
-              <option value="3XL">3XL</option>
-              <option value="4XL">4XL</option>
+              <option value="" class="text-slate-400">
+                - - Select Size - -
+              </option>
+              <option value="XS" class="text-gray-700">XS</option>
+              <option value="S" class="text-gray-700">S</option>
+              <option value="M" class="text-gray-700">M</option>
+              <option value="L" class="text-gray-700">L</option>
+              <option value="XL" class="text-gray-700">XL</option>
+              <option value="2XL" class="text-gray-700">2XL</option>
+              <option value="3XL" class="text-gray-700">3XL</option>
+              <option value="4XL" class="text-gray-700">4XL</option>
             </select>
 
             <div class="mb-4">
@@ -244,33 +217,17 @@
                 id="colorSelect"
                 class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option value="">Select Color</option>
-                <option value="white">White</option>
-                <option value="black">Black</option>
-                <option value="gray">Gray</option>
-                <option value="red">Red</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="yellow">Yellow</option>
-                <option value="orange">Orange</option>
-              </select>
-            </div>
-
-            <div class="mb-4">
-              <label
-                for="fabricsSelect"
-                class="block text-gray-700 text-sm font-bold mb-2"
-                >Fabrics:</label
-              >
-              <select
-                id="fabricsSelect"
-                class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              >
-                <option value="">Select Fabrics</option>
-                <option value="Cotton">Cotton</option>
-                <option value="Polyester">Polyester</option>
-                <option value="Blend">Blend</option>
-                <option value="Other">Other</option>
+                <option value="" class="text-slate-400">
+                  - - Select Color - -
+                </option>
+                <option value="white" class="text-gray-700">White</option>
+                <option value="black" class="text-gray-700">Black</option>
+                <option value="gray" class="text-gray-700">Gray</option>
+                <option value="red" class="text-gray-700">Red</option>
+                <option value="blue" class="text-gray-700">Blue</option>
+                <option value="green" class="text-gray-700">Green</option>
+                <option value="yellow" class="text-gray-700">Yellow</option>
+                <option value="orange" class="text-gray-700">Orange</option>
               </select>
             </div>
 
@@ -286,10 +243,12 @@
                 class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 min="0"
                 placeholder="Quantity"
+                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value.length > 1 && this.value.startsWith('0')) { this.value = this.value.substring(1); }"
+                onpaste="event.clipboardData && /[^0-9]/g.test(event.clipboardData.getData('text')) && event.preventDefault();"
               />
             </div>
 
-            <div class="flex justify-end">
+            <div class="flex justify-end mt-auto">
               <button
                 id="addItemButton"
                 class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -299,23 +258,65 @@
             </div>
           </div>
 
-          <div class="order-6 lg:order-none">
+          <div class="order-6 lg:order-none flex flex-col">
             <h3 class="font-semibold mb-4">Order List:</h3>
             <ul
               id="orderList"
-              class="border rounded p-4 h-[300px] overflow-y-auto"
+              class="border rounded p-4 flex-grow overflow-y-auto"
             ></ul>
           </div>
         </div>
 
-        <div class="mt-8 order-7 flex justify-end w-full">
-          <div class="max-w-7xl mx-auto w-full px-4">
-            <div class="flex justify-end">
-              <button
-                id="proceedToCheckout"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <div
+          id="priceChartModal"
+          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"
+        >
+          <div class="bg-white rounded-lg p-6 w-full max-w-4xl">
+            <h2 class="text-2xl font-semibold mb-4">Price Chart</h2>
+
+            <select
+              id="priceChartGarmentSelect"
+              class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+            >
+              <option value="Classic">Classic T-Shirt</option>
+              <option value="V-Neck">V-Neck T-Shirt</option>
+              <option value="Polo">Polo Shirt</option>
+              <option value="Hoodie">Hoodie</option>
+              <option value="Zip-Up">Zip-Up Hoodie</option>
+              <option value="Sweater">Sweater</option>
+              <option value="Long Sleeve">Long Sleeve T-Shirt</option>
+              <option value="Crewneck">Crewneck Sweatshirt</option>
+              <option value="Jacket">Jacket</option>
+            </select>
+
+            <div id="priceChartTableContainer" class="overflow-x-auto">
+              <table
+                id="priceChartTable"
+                class="min-w-full border-collapse border border-gray-400"
               >
-                Proceed to Checkout
+                <thead>
+                  <tr>
+                    <th class="border border-gray-400 p-2">Fabric</th>
+                    <th class="border border-gray-400 p-2">XS</th>
+                    <th class="border border-gray-400 p-2">S</th>
+                    <th class="border border-gray-400 p-2">M</th>
+                    <th class="border border-gray-400 p-2">L</th>
+                    <th class="border border-gray-400 p-2">XL</th>
+                    <th class="border border-gray-400 p-2">2XL</th>
+                    <th class="border border-gray-400 p-2">3XL</th>
+                    <th class="border border-gray-400 p-2">4XL</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="flex justify-end mt-4">
+              <button
+                id="closePriceChartModal"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+              >
+                Close
               </button>
             </div>
           </div>
@@ -442,309 +443,520 @@
     </div>
 
     <script>
-      // Info Icon Hover Functionality
+      const designUploadPrints = document.getElementById("designUploadPrints");
+      const uploadedFilesList = document.getElementById("uploadedFilesList");
+      const addFilesButton = document.getElementById("addFilesButton");
       const infoIcons = document.querySelectorAll(".info-icon");
+      const infoBoxes = document.querySelectorAll(".info-box");
 
-      infoIcons.forEach((icon) => {
-        const infoBox =
-          icon.parentElement.parentElement.querySelector(".info-box");
-        const info = icon.dataset.info;
+      let filesArray = [];
 
-        icon.addEventListener("mouseenter", () => {
-          showInfoBox(infoBox, info);
+      // Info Box Functionality
+      infoIcons.forEach((icon, index) => {
+        icon.addEventListener("mouseover", (event) => {
+          const infoText = icon.getAttribute("data-info");
+          infoBoxes[index].textContent = infoText;
+          infoBoxes[index].classList.remove("hidden");
         });
 
-        icon.addEventListener("mouseleave", () => {
-          hideInfoBox(infoBox);
-        });
-      });
-
-      // Upload Area Hover Functionality
-      const uploadAreas = document.querySelectorAll("[id^='uploadArea']");
-
-      uploadAreas.forEach((area) => {
-        const infoBox =
-          area.parentElement.parentElement.querySelector(".info-box");
-        const infoIcon =
-          area.parentElement.parentElement.querySelector(".info-icon");
-        const info = infoIcon.dataset.info;
-
-        area.addEventListener("mouseenter", () => {
-          showInfoBox(infoBox, info);
-        });
-
-        area.addEventListener("mouseleave", () => {
-          hideInfoBox(infoBox);
+        icon.addEventListener("mouseout", () => {
+          infoBoxes[index].classList.add("hidden");
         });
       });
 
-      // Helper Functions
-      function showInfoBox(infoBox, info) {
-        infoBox.textContent = info;
-        infoBox.classList.remove("hidden"); // Show using Tailwind
-      }
-
-      function hideInfoBox(infoBox) {
-        infoBox.classList.add("hidden"); // Hide using Tailwind
-      }
-
-      // File Upload and Drag & Drop
-      // Front Upload
-      const designUploadFront = document.getElementById("designUploadFront");
-      const uploadAreaFront = document.getElementById("uploadAreaFront");
-      const uploadContentFront = document.getElementById("uploadContentFront");
-      const uploadedImageFront = document.getElementById("uploadedImageFront");
-
-      designUploadFront.addEventListener("change", (event) => {
-        handleFileUpload(
-          event,
-          uploadedImageFront,
-          uploadContentFront,
-          "frontDesignImage"
-        );
+      // Upload Prints Functionality
+      addFilesButton.addEventListener("click", () => {
+        designUploadPrints.click();
       });
 
-      uploadAreaFront.addEventListener("dragover", (event) => {
-        handleDragOver(event, uploadAreaFront);
+      designUploadPrints.addEventListener("change", (event) => {
+        handleFileUpload(event.target.files);
       });
 
-      uploadAreaFront.addEventListener("dragleave", () => {
-        handleDragLeave(uploadAreaFront);
-      });
-
-      uploadAreaFront.addEventListener("drop", (event) => {
-        handleDrop(
-          event,
-          designUploadFront,
-          uploadedImageFront,
-          uploadContentFront,
-          "frontDesignImage"
-        );
-      });
-
-      // Back Upload
-      const designUploadBack = document.getElementById("designUploadBack");
-      const uploadAreaBack = document.getElementById("uploadAreaBack");
-      const uploadContentBack = document.getElementById("uploadContentBack");
-      const uploadedImageBack = document.getElementById("uploadedImageBack");
-
-      designUploadBack.addEventListener("change", (event) => {
-        handleFileUpload(
-          event,
-          uploadedImageBack,
-          uploadContentBack,
-          "backDesignImage"
-        );
-      });
-
-      uploadAreaBack.addEventListener("dragover", (event) => {
-        handleDragOver(event, uploadAreaBack);
-      });
-
-      uploadAreaBack.addEventListener("dragleave", () => {
-        handleDragLeave(uploadAreaBack);
-      });
-
-      uploadAreaBack.addEventListener("drop", (event) => {
-        handleDrop(
-          event,
-          designUploadBack,
-          uploadedImageBack,
-          uploadContentBack,
-          "backDesignImage"
-        );
-      });
-
-      // Print Upload
-      const designUploadPrint = document.getElementById("designUploadPrint");
-      const uploadAreaPrint = document.getElementById("uploadAreaPrint");
-      const uploadContentPrint = document.getElementById("uploadContentPrint");
-      const uploadedImagePrint = document.getElementById("uploadedImagePrint");
-
-      designUploadPrint.addEventListener("change", (event) => {
-        handleFileUpload(
-          event,
-          uploadedImagePrint,
-          uploadContentPrint,
-          "printDetailsImage"
-        );
-      });
-
-      uploadAreaPrint.addEventListener("dragover", (event) => {
-        handleDragOver(event, uploadAreaPrint);
-      });
-
-      uploadAreaPrint.addEventListener("dragleave", () => {
-        handleDragLeave(uploadAreaPrint);
-      });
-
-      uploadAreaPrint.addEventListener("drop", (event) => {
-        handleDrop(
-          event,
-          designUploadPrint,
-          uploadedImagePrint,
-          uploadContentPrint,
-          "printDetailsImage"
-        );
-      });
-
-      // Helper Functions
-      function handleFileUpload(
-        event,
-        uploadedImage,
-        uploadContent,
-        storageKey
-      ) {
-        const file = event ? event.target.files[0] : undefined; //handle null event
-        let fileDataURL = ""; // Declare a variable to store the Data URL
-
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            fileDataURL = e.target.result; // Store in the variable
-            uploadedImage.src = fileDataURL;
-            uploadedImage.classList.remove("hidden");
-            uploadContent.classList.add("hidden");
-            // IMPORTANT: Do NOT store in sessionStorage here!
-            // sessionStorage.setItem(storageKey, e.target.result);
-          };
-          reader.readAsDataURL(file);
-        } else {
-          uploadedImage.src = "#";
-          uploadedImage.classList.add("hidden");
-          uploadContent.classList.remove("hidden");
-          // sessionStorage.removeItem(storageKey); // Remove from sessionStorage if no file.  We don't want to remove here.
+      function handleFileUpload(files) {
+        if (files && files.length > 0) {
+          Array.from(files).forEach((file) => {
+            filesArray.push(file);
+          });
+          renderFiles();
         }
-        return fileDataURL; // Return the Data URL
       }
 
-      function handleDragOver(event, uploadArea) {
-        event.preventDefault();
-        uploadArea.classList.add("border-blue-400");
+      function renderFiles() {
+        uploadedFilesList.innerHTML = "";
+        filesArray.forEach((file, index) => {
+          const fileCard = createFileCard(file, index);
+          uploadedFilesList.appendChild(fileCard);
+        });
       }
 
-      function handleDragLeave(uploadArea) {
-        uploadArea.classList.remove("border-blue-400");
-      }
+      function createFileCard(file, index) {
+        const fileCard = document.createElement("div");
+        fileCard.classList.add(
+          "flex",
+          "items-center",
+          "justify-between",
+          "p-4",
+          "border",
+          "rounded-lg",
+          "mb-2"
+        );
 
-      function handleDrop(
-        event,
-        designUpload,
-        uploadedImage,
-        uploadContent,
-        storageKey
-      ) {
-        event.preventDefault();
-        designUpload.files = event.dataTransfer.files;
-        designUpload.dispatchEvent(new Event("change"));
-        uploadArea.classList.remove("border-blue-400");
-      }
+        const fileExtension = file.name.split(".").pop().toUpperCase();
+        const fileName =
+          file.name.length > 20
+            ? file.name.substring(0, 20) + "..."
+            : file.name;
+        const fileSize = (file.size / 1024).toFixed(2) + " KB";
 
-      // Order List Functionality
-      const addItemButton = document.getElementById("addItemButton");
-      const sizeSelect = document.getElementById("sizeSelect");
-      const colorSelect = document.getElementById("colorSelect");
-      const fabricsSelect = document.getElementById("fabricsSelect");
-      const quantityInput = document.getElementById("quantityInput");
-      const orderList = document.getElementById("orderList");
+        const extensionColor = getExtensionColor(fileExtension);
 
-      quantityInput.addEventListener("input", () => {
-        if (parseInt(quantityInput.value) === 0) {
-          quantityInput.value = "";
-        }
-      });
+        fileCard.innerHTML = `
+            <div class="flex items-center">
+                <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">${fileExtension}</div>
+                <div>
+                    <p>${fileName}</p>
+                    <p class="text-xs text-gray-500">${fileSize}</p>
+                </div>
+            </div>
+            <i class="ri-delete-bin-line cursor-pointer text-red-500" data-index="${index}"></i>
+        `;
 
-      addItemButton.addEventListener("click", () => {
-        const size = sizeSelect.value;
-        const color = colorSelect.value;
-        const fabrics = fabricsSelect.value;
-        const quantity = parseInt(quantityInput.value);
-
-        if (size && color && fabrics && quantity > 0) {
-          const itemKey = `${size}-${color}-${fabrics}`; // Create a unique key for each item
-
-          // Find if the item already exists
-          const existingItem = Array.from(
-            orderList.querySelectorAll("li")
-          ).find((li) => {
-            return li.dataset.itemKey === itemKey;
+        fileCard
+          .querySelector(".ri-delete-bin-line")
+          .addEventListener("click", (event) => {
+            removeFile(index);
           });
 
-          if (existingItem) {
-            // Item exists, update quantity
-            const currentQuantity = parseInt(
-              existingItem
-                .querySelector("div:first-child")
-                .textContent.split("Quantity: ")[1]
-            );
-            const newQuantity = currentQuantity + quantity;
-            existingItem.querySelector(
-              "div:first-child"
-            ).textContent = `${size} - ${color} - ${fabrics} - Quantity: ${newQuantity}`;
-          } else {
-            // Item does not exist, add new item
-            const listItem = document.createElement("li");
-            listItem.dataset.itemKey = itemKey; // Store the item key
-            listItem.classList.add(
-              "border",
-              "rounded",
-              "p-4",
-              "mb-2",
-              "flex",
-              "items-center",
-              "justify-between"
-            );
-            listItem.innerHTML = `
-                          <div>
-                              ${size} - ${color} - ${fabrics} - Quantity: ${quantity}
-                          </div>
-                          <div>
-                              <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
-                              <button class="text-red-500 hover:underline delete-item">Delete</button>
-                          </div>
-                      `;
-            orderList.appendChild(listItem);
+        return fileCard;
+      }
 
-            // Delete Item Functionality
-            const deleteButtons = listItem.querySelectorAll(".delete-item");
-            deleteButtons.forEach((button) => {
-              button.addEventListener("click", () => {
-                listItem.remove();
-              });
-            });
+      function getExtensionColor(extension) {
+        const colors = {
+          PSD: "#29ABE2",
+          AI: "#FF7300",
+          EPS: "#800080",
+          SVG: "#E91E63",
+          PDF: "#FF6347",
+          PNG: "#90EE90",
+          JPG: "#FFA07A",
+          JPEG: "#FFA07A",
+          GIF: "#DDA0DD",
+          TIFF: "#00CED1",
+          TIF: "#00CED1",
+          BMP: "#A9A9A9",
+          RAW: "#8B4513",
+          CR2: "#8B4513",
+          NEF: "#8B4513",
+          DNG: "#8B4513",
+          DOC: "#4682B4",
+          DOCX: "#4682B4",
+          TXT: "#20B2AA",
+          ZIP: "#FFD700",
+          RAR: "#FFD700",
+          CSV: "#778899",
+        };
+        return colors[extension] || "#808080";
+      }
 
-            // Edit Item Functionality
-            const editButtons = listItem.querySelectorAll(".edit-item");
-            editButtons.forEach((button) => {
-              button.addEventListener("click", () => {
-                // Populate input fields with item data
-                const itemText =
-                  listItem.querySelector("div:first-child").textContent;
-                const itemParts = itemText.split(" - "); // Split by " - "
-                const itemSize = itemParts[0].trim(); // Size is the first part, trimmed
-                const itemColor = itemParts[1].trim(); // Color is the second part, trimmed
-                const itemFabrics = itemParts[2].trim(); // Fabrics is the third part, trimmed
-                const itemQuantity = parseInt(
-                  itemParts[3].split("Quantity: ")[1]
-                ); // Quantity is the fourth part
+      function removeFile(index) {
+        filesArray.splice(index, 1);
+        renderFiles();
+      }
 
-                sizeSelect.value = itemSize;
-                colorSelect.value = itemColor;
-                fabricsSelect.value = itemFabrics;
-                quantityInput.value = itemQuantity;
+      // Garment and Fabric selection
+      const garmentTypeSelect = document.getElementById("garmentTypeSelect");
+      const fabricsSelect = document.getElementById("fabricsSelect");
+      const sizeSelect = document.getElementById("sizeSelect");
+      const colorSelect = document.getElementById("colorSelect");
 
-                // Remove the item from the list
-                listItem.remove();
-              });
+      const priceChartButton = document.getElementById("priceChartButton");
+      const priceChartModal = document.getElementById("priceChartModal");
+      const closePriceChartModal = document.getElementById(
+        "closePriceChartModal"
+      );
+      const priceChartGarmentSelect = document.getElementById(
+        "priceChartGarmentSelect"
+      );
+      const priceChartTableBody = document.querySelector(
+        "#priceChartTable tbody"
+      );
+
+      const fabricOptions = {
+        Classic: ["Cotton", "Polyester", "Blend"],
+        "V-Neck": ["Cotton", "Blend"],
+        Polo: ["Pique Cotton", "Cotton-Polyester Blend"],
+        Hoodie: ["Fleece", "Cotton", "Blend"],
+        "Zip-Up": ["Fleece", "Cotton", "Blend"],
+        Sweater: ["Wool", "Cotton", "Synthetic Knit"],
+        "Long Sleeve": ["Cotton", "Blend"],
+        Crewneck: ["Fleece", "Cotton", "Blend"],
+        Jacket: ["Denim", "Leather", "Nylon", "Synthetic Blend"],
+      };
+
+      const prices = {
+        Classic: {
+          Cotton: {
+            XS: 10,
+            S: 11,
+            M: 12,
+            L: 13,
+            XL: 14,
+            "2XL": 15,
+            "3XL": 16,
+            "4XL": 17,
+          },
+          Polyester: {
+            XS: 12,
+            S: 13,
+            M: 14,
+            L: 15,
+            XL: 16,
+            "2XL": 17,
+            "3XL": 18,
+            "4XL": 19,
+          },
+          Blend: {
+            XS: 11,
+            S: 12,
+            M: 13,
+            L: 14,
+            XL: 15,
+            "2XL": 16,
+            "3XL": 17,
+            "4XL": 18,
+          },
+        },
+        "V-Neck": {
+          Cotton: {
+            XS: 12,
+            S: 13,
+            M: 14,
+            L: 15,
+            XL: 16,
+            "2XL": 17,
+            "3XL": 18,
+            "4XL": 19,
+          },
+          Blend: {
+            XS: 13,
+            S: 14,
+            M: 15,
+            L: 16,
+            XL: 17,
+            "2XL": 18,
+            "3XL": 19,
+            "4XL": 20,
+          },
+        },
+        Polo: {
+          "Pique Cotton": {
+            XS: 15,
+            S: 16,
+            M: 17,
+            L: 18,
+            XL: 19,
+            "2XL": 20,
+            "3XL": 21,
+            "4XL": 22,
+          },
+          "Cotton-Polyester Blend": {
+            XS: 16,
+            S: 17,
+            M: 18,
+            L: 19,
+            XL: 20,
+            "2XL": 21,
+            "3XL": 22,
+            "4XL": 23,
+          },
+        },
+        Hoodie: {
+          Fleece: {
+            XS: 25,
+            S: 26,
+            M: 27,
+            L: 28,
+            XL: 29,
+            "2XL": 30,
+            "3XL": 31,
+            "4XL": 32,
+          },
+          Cotton: {
+            XS: 23,
+            S: 24,
+            M: 25,
+            L: 26,
+            XL: 27,
+            "2XL": 28,
+            "3XL": 29,
+            "4XL": 30,
+          },
+          Blend: {
+            XS: 24,
+            S: 25,
+            M: 26,
+            L: 27,
+            XL: 28,
+            "2XL": 29,
+            "3XL": 30,
+            "4XL": 31,
+          },
+        },
+        "Zip-Up": {
+          Fleece: {
+            XS: 28,
+            S: 29,
+            M: 30,
+            L: 31,
+            XL: 32,
+            "2XL": 33,
+            "3XL": 34,
+            "4XL": 35,
+          },
+          Cotton: {
+            XS: 26,
+            S: 27,
+            M: 28,
+            L: 29,
+            XL: 30,
+            "2XL": 31,
+            "3XL": 32,
+            "4XL": 33,
+          },
+          Blend: {
+            XS: 27,
+            S: 28,
+            M: 29,
+            L: 30,
+            XL: 31,
+            "2XL": 32,
+            "3XL": 33,
+            "4XL": 34,
+          },
+        },
+        Sweater: {
+          Wool: {
+            XS: 30,
+            S: 31,
+            M: 32,
+            L: 33,
+            XL: 34,
+            "2XL": 35,
+            "3XL": 36,
+            "4XL": 37,
+          },
+          Cotton: {
+            XS: 28,
+            S: 29,
+            M: 30,
+            L: 31,
+            XL: 32,
+            "2XL": 33,
+            "3XL": 34,
+            "4XL": 35,
+          },
+          "Synthetic Knit": {
+            XS: 29,
+            S: 30,
+            M: 31,
+            L: 32,
+            XL: 33,
+            "2XL": 34,
+            "3XL": 35,
+            "4XL": 36,
+          },
+        },
+        "Long Sleeve": {
+          Cotton: {
+            XS: 13,
+            S: 14,
+            M: 15,
+            L: 16,
+            XL: 17,
+            "2XL": 18,
+            "3XL": 19,
+            "4XL": 20,
+          },
+          Blend: {
+            XS: 14,
+            S: 15,
+            M: 16,
+            L: 17,
+            XL: 18,
+            "2XL": 19,
+            "3XL": 20,
+            "4XL": 21,
+          },
+        },
+        Crewneck: {
+          Fleece: {
+            XS: 26,
+            S: 27,
+            M: 28,
+            L: 29,
+            XL: 30,
+            "2XL": 31,
+            "3XL": 32,
+            "4XL": 33,
+          },
+          Cotton: {
+            XS: 24,
+            S: 25,
+            M: 26,
+            L: 27,
+            XL: 28,
+            "2XL": 29,
+            "3XL": 30,
+            "4XL": 31,
+          },
+          Blend: {
+            XS: 25,
+            S: 26,
+            M: 27,
+            L: 28,
+            XL: 29,
+            "2XL": 30,
+            "3XL": 31,
+            "4XL": 32,
+          },
+        },
+        Jacket: {
+          Denim: {
+            XS: 40,
+            S: 41,
+            M: 42,
+            L: 43,
+            XL: 44,
+            "2XL": 45,
+            "3XL": 46,
+            "4XL": 47,
+          },
+          Leather: {
+            XS: 60,
+            S: 62,
+            M: 64,
+            L: 66,
+            XL: 68,
+            "2XL": 70,
+            "3XL": 72,
+            "4XL": 74,
+          },
+          Nylon: {
+            XS: 35,
+            S: 36,
+            M: 37,
+            L: 38,
+            XL: 39,
+            "2XL": 40,
+            "3XL": 41,
+            "4XL": 42,
+          },
+          "Synthetic Blend": {
+            XS: 38,
+            S: 39,
+            M: 40,
+            L: 41,
+            XL: 42,
+            "2XL": 43,
+            "3XL": 44,
+            "4XL": 45,
+          },
+        },
+      };
+
+      function updateSelectColor(selectElement) {
+        if (selectElement.value === "") {
+          selectElement.classList.add("text-slate-400");
+        } else {
+          selectElement.classList.remove("text-slate-400");
+        }
+      }
+
+      function updatePriceTable(garmentType) {
+        priceChartTableBody.innerHTML = "";
+        const garmentPrices = prices[garmentType];
+
+        if (garmentPrices) {
+          Object.keys(garmentPrices).forEach((fabric) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                    <td class="border border-gray-400 p-2">${fabric}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric].XS}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric].S}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric].M}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric].L}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric].XL}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric]["2XL"]}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric]["3XL"]}</td>
+                    <td class="border border-gray-400 p-2">${garmentPrices[fabric]["4XL"]}</td>
+                `;
+            priceChartTableBody.appendChild(row);
+          });
+        }
+      }
+
+      garmentTypeSelect.addEventListener("change", () => {
+        const selectedGarment = garmentTypeSelect.value;
+        fabricsSelect.innerHTML =
+          '<option value="" class="text-slate-400"> - - Select Fabrics - - </option>';
+
+        if (selectedGarment) {
+          fabricsSelect.disabled = false;
+          if (fabricOptions[selectedGarment]) {
+            fabricOptions[selectedGarment].forEach((fabric) => {
+              const option = document.createElement("option");
+              option.value = fabric;
+              option.textContent = fabric;
+              fabricsSelect.appendChild(option);
             });
           }
-          // Clear the input fields after adding to the list
-          sizeSelect.value = "";
-          colorSelect.value = "";
-          fabricsSelect.value = "";
-          quantityInput.value = "";
+        } else {
+          fabricsSelect.disabled = true;
+        }
+        updateSelectColor(garmentTypeSelect);
+      });
+
+      fabricsSelect.addEventListener("change", () => {
+        updateSelectColor(fabricsSelect);
+      });
+
+      sizeSelect.addEventListener("change", () => {
+        updateSelectColor(sizeSelect);
+      });
+
+      colorSelect.addEventListener("change", () => {
+        updateSelectColor(colorSelect);
+      });
+
+      priceChartButton.addEventListener("click", () => {
+        priceChartModal.classList.remove("hidden");
+        updatePriceTable(priceChartGarmentSelect.value);
+        document.body.style.overflow = "hidden"; // Prevent scrolling
+      });
+
+      closePriceChartModal.addEventListener("click", () => {
+        priceChartModal.classList.add("hidden");
+        document.body.style.overflow = ""; // Restore scrolling
+      });
+
+      priceChartGarmentSelect.addEventListener("change", () => {
+        updatePriceTable(priceChartGarmentSelect.value);
+      });
+
+      // Close modal on click outside
+      window.addEventListener("click", (event) => {
+        if (event.target === priceChartModal) {
+          priceChartModal.classList.add("hidden");
+          document.body.style.overflow = ""; // Restore scrolling
         }
       });
+
+      // Initialize select colors on page load
+      updateSelectColor(garmentTypeSelect);
+      updateSelectColor(fabricsSelect);
+      updateSelectColor(sizeSelect);
+      updateSelectColor(colorSelect);
 
       // Size Chart Modal
       const sizeChartButton = document.getElementById("sizeChartButton");
@@ -810,6 +1022,132 @@
           toggleUnitsButton.textContent = "Show Inches";
         }
         isCm = !isCm;
+      });
+
+      // Order List Functionality
+      const addItemButton = document.getElementById("addItemButton");
+      const quantityInput = document.getElementById("quantityInput");
+      const orderList = document.getElementById("orderList");
+
+      quantityInput.addEventListener("input", () => {
+        if (parseInt(quantityInput.value) === 0) {
+          quantityInput.value = "";
+        }
+      });
+
+      addItemButton.addEventListener("click", () => {
+        const garment = garmentTypeSelect.value;
+        const size = sizeSelect.value;
+        const color = colorSelect.value;
+        const fabrics = fabricsSelect.value;
+        const quantity = parseInt(quantityInput.value);
+
+        if (garment && size && color && fabrics && quantity > 0) {
+          const itemKey = `${garment}-${size}-${color}-${fabrics}`; // Create a unique key for each item
+
+          // Find if the item already exists
+          const existingItem = Array.from(
+            orderList.querySelectorAll("li")
+          ).find((li) => {
+            return li.dataset.itemKey === itemKey;
+          });
+
+          if (existingItem) {
+            // Item exists, update quantity
+            const currentQuantity = parseInt(
+              existingItem.querySelector(".quantity").textContent.split(": ")[1]
+            );
+            const newQuantity = currentQuantity + quantity;
+            existingItem.querySelector(
+              ".quantity"
+            ).textContent = `Quantity: ${newQuantity}`;
+          } else {
+            // Item does not exist, add new item
+            const listItem = document.createElement("li");
+            listItem.dataset.itemKey = itemKey; // Store the item key
+            listItem.classList.add(
+              "flex",
+              "items-center",
+              "justify-between",
+              "mb-2",
+              "p-4",
+              "border",
+              "rounded"
+            );
+            listItem.innerHTML = `
+                <div class="flex items-center">
+                    <div class="shadow-md rounded-full w-10 h-10 flex items-center justify-center mr-4" style="background-color: ${color}; color: white;">
+                        ${size}
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500">${fabrics}</div>
+                        <div>${garment}</div>
+                        <div class="text-xs text-gray-700">Color: ${color}, <span class="quantity">Quantity: ${quantity}</span></div>
+                    </div>
+                </div>
+                <div>
+                    <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
+                    <button class="text-red-500 hover:underline delete-item">Delete</button>
+                </div>
+            `;
+            orderList.appendChild(listItem);
+
+            // Delete Item Functionality
+            const deleteButtons = listItem.querySelectorAll(".delete-item");
+            deleteButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                listItem.remove();
+              });
+            });
+
+            // Edit Item Functionality
+            const editButtons = listItem.querySelectorAll(".edit-item");
+            editButtons.forEach((button) => {
+              button.addEventListener("click", () => {
+                // Populate input fields with item data
+                const itemText = listItem.querySelector(
+                  "div:nth-child(1) div:nth-child(2)"
+                ).textContent;
+                const itemParts = itemText
+                  .split("Color: ")[0]
+                  .split("\n")
+                  .map((part) => part.trim());
+                const itemGarment = itemParts[0];
+                const itemFabrics = listItem.querySelector(
+                  "div:nth-child(1) div:nth-child(1)"
+                ).textContent;
+                const itemColor = listItem
+                  .querySelector("div:nth-child(1) div:nth-child(3)")
+                  .textContent.split("Color: ")[1]
+                  .split(",")[0];
+                const itemQuantity = parseInt(
+                  listItem
+                    .querySelector("div:nth-child(1) div:nth-child(3)")
+                    .textContent.split("Quantity: ")[1]
+                );
+
+                garmentTypeSelect.value = itemGarment;
+                sizeSelect.value = size;
+                colorSelect.value = itemColor;
+                fabricsSelect.value = itemFabrics;
+                quantityInput.value = itemQuantity;
+
+                // Remove the item from the list
+                listItem.remove();
+              });
+            });
+          }
+          // Clear the input fields after adding to the list
+          garmentTypeSelect.value = "";
+          sizeSelect.value = "";
+          colorSelect.value = "";
+          fabricsSelect.value = "";
+          quantityInput.value = "";
+          updateSelectColor(garmentTypeSelect);
+          updateSelectColor(fabricsSelect);
+          updateSelectColor(sizeSelect);
+          updateSelectColor(colorSelect);
+        }
       });
 
       // Checkout functionality
