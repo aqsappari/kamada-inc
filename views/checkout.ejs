@@ -492,6 +492,7 @@
 
         // Create necessaryData object
         const necessaryData = {
+          guestId: sessionStorage.getItem("guestId"),
           filesArray: filesArray, // Assuming filesArray is accessible
           orderItems: orderListItems, // Assuming orderItems is accessible
           designNotes: designNotes, // Assuming designNotes is accessible
@@ -508,8 +509,32 @@
           },
         };
 
-        // Close loading modal (replace with actual processing logic)
-        Swal.close();
+        console.log("Necessary Data:", necessaryData);
+
+        // Send data to server
+        fetch("/save-to-firestore", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(necessaryData),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Firestore save successful:", data);
+            Swal.close(); // Close loading modal
+            // Proceed with further actions (e.g., show success message)
+          })
+          .catch((error) => {
+            console.error("Firestore save failed:", error);
+            Swal.close(); // Close loading modal
+            // Show error message to user
+          });
       }
 
       function showErrorModal(message) {

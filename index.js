@@ -8,8 +8,9 @@ import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import multer from "multer";
 import { cloudinary } from "./cloudinary/cloudinaryConfig.js";
-import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
+import { db } from "./firebase/firebaseApp.js"; // Import db
+import { doc, setDoc } from "firebase/firestore";
 
 const app = express();
 const port = 3000;
@@ -22,6 +23,7 @@ app.use(logger);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false })); // Use body-parser
 
 // Serve static files from the 'public' folder
@@ -110,6 +112,24 @@ app.post("/upload", upload.array("files"), async (req, res) => {
   } catch (error) {
     console.error("Cloudinary upload error:", error);
     res.status(500).json({ error: "Cloudinary upload failed" });
+  }
+});
+
+// Firestore save route
+app.post("/save-to-firestore", async (req, res) => {
+  try {
+    const necessaryData = req.body;
+    console.log(necessaryData);
+    const guestId = necessaryData.guestId;
+
+    // Add data to Firestore
+    const clientDocRef = doc(db, "client-details", guestId);
+    await setDoc(clientDocRef, necessaryData);
+
+    res.json({ message: "Data saved to Firestore successfully!" });
+  } catch (error) {
+    console.error("Error saving to Firestore:", error);
+    res.status(500).json({ error: "Failed to save data to Firestore" });
   }
 });
 
