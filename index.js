@@ -12,6 +12,7 @@ import fs from "fs";
 import { db } from "./firebase/firebaseApp.js"; // Import db
 import { doc, setDoc } from "firebase/firestore";
 import nodemailer from "nodemailer";
+import { Readable } from "stream";
 
 const app = express();
 const port = 3000;
@@ -90,50 +91,50 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
-// Upload route
-app.post("/upload", upload.array("files"), async (req, res) => {
-  console.log("Received files:", req.files);
+// // Upload route
+// app.post("/upload", upload.array("files"), async (req, res) => {
+//   console.log("Received files:", req.files);
 
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ error: "No files uploaded" });
-  }
+//   if (!req.files || req.files.length === 0) {
+//     return res.status(400).json({ error: "No files uploaded" });
+//   }
 
-  const guestId = req.body.guestId;
-  const guestUploadDir = path.join(__dirname, "public", "uploads", guestId);
+//   const guestId = req.body.guestId;
+//   const guestUploadDir = path.join(__dirname, "public", "uploads", guestId);
 
-  try {
-    const uploadedFiles = await Promise.all(
-      req.files.map(async (file) => {
-        const result = await cloudinary.uploader.upload(file.path, {
-          public_id: `${guestId}_${file.filename}`,
-          use_filename: false,
-          unique_filename: false,
-        });
-        return {
-          filename: file.filename,
-          cloudinaryUrl: result.secure_url, // Include Cloudinary URL
-          publicId: result.public_id, // Include Cloudinary public ID
-        };
-      })
-    );
+//   try {
+//     const uploadedFiles = await Promise.all(
+//       req.files.map(async (file) => {
+//         const result = await cloudinary.uploader.upload(file.path, {
+//           public_id: `${guestId}_${file.filename}`,
+//           use_filename: false,
+//           unique_filename: false,
+//         });
+//         return {
+//           filename: file.filename,
+//           cloudinaryUrl: result.secure_url, // Include Cloudinary URL
+//           publicId: result.public_id, // Include Cloudinary public ID
+//         };
+//       })
+//     );
 
-    // Delete local folder
-    fs.rm(guestUploadDir, { recursive: true }, (err) => {
-      if (err) {
-        console.error("Error deleting local folder:", err);
-      } else {
-        console.log("Local folder deleted:", guestUploadDir);
-      }
-    });
+//     // Delete local folder
+//     fs.rm(guestUploadDir, { recursive: true }, (err) => {
+//       if (err) {
+//         console.error("Error deleting local folder:", err);
+//       } else {
+//         console.log("Local folder deleted:", guestUploadDir);
+//       }
+//     });
 
-    res.json({ files: uploadedFiles });
-  } catch (error) {
-    console.error("Cloudinary upload error:", error);
-    res.status(500).json({ error: "Cloudinary upload failed" });
-  }
-});
+//     res.json({ files: uploadedFiles });
+//   } catch (error) {
+//     console.error("Cloudinary upload error:", error);
+//     res.status(500).json({ error: "Cloudinary upload failed" });
+//   }
+// });
 
 // Firestore save route
 app.post("/save-to-firestore", async (req, res) => {
@@ -190,6 +191,47 @@ app.post("/save-to-firestore", async (req, res) => {
     res
       .status(500)
       .json({ error: "Failed to save data to Firestore or send email" });
+  }
+});
+
+const upload = multer().array("files", 10);
+app.post("/upload", upload, async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded." });
+    }
+
+    const uploadedFiles = await Promise.all(
+      req.files.map(async (file) => {
+        const stream = Readable.from(file.buffer);
+
+        const result = await new Promise((resolve, reject) => {
+          const cloudinaryStream = cloudinary.uploader.upload_stream(
+            { resource_type: "auto" }, // Detect file type automatically
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result);
+              }
+            }
+          );
+
+          stream.pipe(cloudinaryStream);
+        });
+
+        return {
+          filename: file.originalname,
+          cloudinaryUrl: result.secure_url,
+          publicId: result.public_id,
+        };
+      })
+    );
+
+    res.json({ files: uploadedFiles });
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    res.status(500).json({ error: "Cloudinary upload failed." });
   }
 });
 
