@@ -1,6 +1,5 @@
 import express from "express";
 import { getAuth, signOut } from "firebase/auth";
-import { collection, doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 import { app, db } from "../firebase/firebaseApp.js"; // Import app and db
 import bodyParser from "body-parser";
 

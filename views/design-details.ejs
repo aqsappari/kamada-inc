@@ -136,7 +136,7 @@
                 class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="" class="text-slate-400">
-                  - - Select Garment Type - -
+                  -- Select Garment Type --
                 </option>
                 <option value="Classic" class="text-gray-700">
                   Classic T-Shirt
@@ -172,7 +172,7 @@
                 disabled
               >
                 <option value="" class="text-slate-400">
-                  - - Select Fabrics - -
+                  -- Select Fabrics --
                 </option>
               </select>
             </div>
@@ -194,9 +194,7 @@
               id="sizeSelect"
               class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
             >
-              <option value="" class="text-slate-400">
-                - - Select Size - -
-              </option>
+              <option value="" class="text-slate-400">-- Select Size --</option>
               <option value="XS" class="text-gray-700">XS</option>
               <option value="S" class="text-gray-700">S</option>
               <option value="M" class="text-gray-700">M</option>
@@ -218,7 +216,7 @@
                 class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="" class="text-slate-400">
-                  - - Select Color - -
+                  -- Select Color --
                 </option>
                 <option value="white" class="text-gray-700">White</option>
                 <option value="black" class="text-gray-700">Black</option>
@@ -253,7 +251,7 @@
                 id="addItemButton"
                 class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
-                Add to Order
+                Add to List
               </button>
             </div>
           </div>
@@ -321,6 +319,15 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="mt-4 flex justify-end">
+        <button
+          id="checkoutButton"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Go to Checkout
+        </button>
       </div>
     </div>
 
@@ -443,6 +450,19 @@
     </div>
 
     <script>
+      sessionStorage.clear();
+
+      // create unique id functionality
+      function uniqid(prefix = "", random = false) {
+        const sec = Date.now() * 1000 + Math.random() * 1000;
+        const id = sec.toString(16).replace(/\./g, "").padEnd(14, "0");
+        return `${prefix}${id}${
+          random ? `.${Math.trunc(Math.random() * 100000000)}` : ""
+        }`;
+      }
+
+      sessionStorage.setItem("guestId", uniqid("guest_", true));
+      // Upload Files Functionality
       const designUploadPrints = document.getElementById("designUploadPrints");
       const uploadedFilesList = document.getElementById("uploadedFilesList");
       const addFilesButton = document.getElementById("addFilesButton");
@@ -467,6 +487,8 @@
       // Upload Prints Functionality
       addFilesButton.addEventListener("click", () => {
         designUploadPrints.click();
+
+        console.log(filesArray);
       });
 
       designUploadPrints.addEventListener("change", (event) => {
@@ -476,21 +498,34 @@
       function handleFileUpload(files) {
         if (files && files.length > 0) {
           Array.from(files).forEach((file) => {
-            filesArray.push(file);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const fileExtension = file.name.split(".").pop().toUpperCase();
+              const { size, unit } = formatFileSize(file.size);
+
+              filesArray.push({
+                file: file, // For Multer upload
+                dataURL: e.target.result,
+                name: file.name,
+                size: `${size} ${unit}`,
+                extension: fileExtension,
+              });
+              renderFiles();
+            };
+            reader.readAsDataURL(file);
           });
-          renderFiles();
         }
       }
 
       function renderFiles() {
         uploadedFilesList.innerHTML = "";
-        filesArray.forEach((file, index) => {
-          const fileCard = createFileCard(file, index);
+        filesArray.forEach((fileObj, index) => {
+          const fileCard = createFileCard(fileObj, index);
           uploadedFilesList.appendChild(fileCard);
         });
       }
 
-      function createFileCard(file, index) {
+      function createFileCard(fileObj, index) {
         const fileCard = document.createElement("div");
         fileCard.classList.add(
           "flex",
@@ -502,25 +537,23 @@
           "mb-2"
         );
 
-        const fileExtension = file.name.split(".").pop().toUpperCase();
         const fileName =
-          file.name.length > 20
-            ? file.name.substring(0, 20) + "..."
-            : file.name;
-        const fileSize = (file.size / 1024).toFixed(2) + " KB";
+          fileObj.name.length > 20
+            ? fileObj.name.substring(0, 20) + "..."
+            : fileObj.name;
 
-        const extensionColor = getExtensionColor(fileExtension);
+        const extensionColor = getExtensionColor(fileObj.extension);
 
         fileCard.innerHTML = `
-            <div class="flex items-center">
-                <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">${fileExtension}</div>
-                <div>
-                    <p>${fileName}</p>
-                    <p class="text-xs text-gray-500">${fileSize}</p>
-                </div>
+        <div class="flex items-center">
+            <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">${fileObj.extension}</div>
+            <div>
+                <p>${fileName}</p>
+                <p class="text-xs text-gray-500">${fileObj.size}</p>
             </div>
-            <i class="ri-delete-bin-line cursor-pointer text-red-500" data-index="${index}"></i>
-        `;
+        </div>
+        <i class="ri-delete-bin-line cursor-pointer text-red-500" data-index="${index}"></i>
+    `;
 
         fileCard
           .querySelector(".ri-delete-bin-line")
@@ -529,6 +562,26 @@
           });
 
         return fileCard;
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes < 1024) {
+          return { size: bytes.toFixed(2), unit: "B" };
+        } else if (bytes < 1024 * 1024) {
+          return { size: (bytes / 1024).toFixed(2), unit: "KB" };
+        } else if (bytes < 1024 * 1024 * 1024) {
+          return { size: (bytes / (1024 * 1024)).toFixed(2), unit: "MB" };
+        } else if (bytes < 1024 * 1024 * 1024 * 1024) {
+          return {
+            size: (bytes / (1024 * 1024 * 1024)).toFixed(2),
+            unit: "GB",
+          };
+        } else {
+          return {
+            size: (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2),
+            unit: "TB",
+          };
+        }
       }
 
       function getExtensionColor(extension) {
@@ -899,7 +952,7 @@
       garmentTypeSelect.addEventListener("change", () => {
         const selectedGarment = garmentTypeSelect.value;
         fabricsSelect.innerHTML =
-          '<option value="" class="text-slate-400"> - - Select Fabrics - - </option>';
+          '<option value="" class="text-slate-400"> -- Select Fabrics -- </option>';
 
         if (selectedGarment) {
           fabricsSelect.disabled = false;
@@ -908,6 +961,7 @@
               const option = document.createElement("option");
               option.value = fabric;
               option.textContent = fabric;
+              option.classList.add("text-gray-700");
               fabricsSelect.appendChild(option);
             });
           }
@@ -1029,6 +1083,9 @@
       const quantityInput = document.getElementById("quantityInput");
       const orderList = document.getElementById("orderList");
 
+      // Initialize orderListArray
+      let orderListArray = [];
+
       quantityInput.addEventListener("input", () => {
         if (parseInt(quantityInput.value) === 0) {
           quantityInput.value = "";
@@ -1043,101 +1100,34 @@
         const quantity = parseInt(quantityInput.value);
 
         if (garment && size && color && fabrics && quantity > 0) {
-          const itemKey = `${garment}-${size}-${color}-${fabrics}`; // Create a unique key for each item
+          const itemKey = `${garment}-${size}-${color}-${fabrics}`;
 
-          // Find if the item already exists
-          const existingItem = Array.from(
-            orderList.querySelectorAll("li")
-          ).find((li) => {
-            return li.dataset.itemKey === itemKey;
-          });
+          const existingItemIndex = orderListArray.findIndex(
+            (item) => item.itemKey === itemKey
+          );
 
-          if (existingItem) {
-            // Item exists, update quantity
-            const currentQuantity = parseInt(
-              existingItem.querySelector(".quantity").textContent.split(": ")[1]
+          if (existingItemIndex !== -1) {
+            // Update quantity if item exists
+            orderListArray[existingItemIndex].quantity += quantity;
+            updateListItem(
+              orderList.children[existingItemIndex],
+              orderListArray[existingItemIndex]
             );
-            const newQuantity = currentQuantity + quantity;
-            existingItem.querySelector(
-              ".quantity"
-            ).textContent = `Quantity: ${newQuantity}`;
           } else {
-            // Item does not exist, add new item
-            const listItem = document.createElement("li");
-            listItem.dataset.itemKey = itemKey; // Store the item key
-            listItem.classList.add(
-              "flex",
-              "items-center",
-              "justify-between",
-              "mb-2",
-              "p-4",
-              "border",
-              "rounded"
-            );
-            listItem.innerHTML = `
-                <div class="flex items-center">
-                    <div class="shadow-md rounded-full w-10 h-10 flex items-center justify-center mr-4" style="background-color: ${color}; color: white;">
-                        ${size}
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">${fabrics}</div>
-                        <div>${garment}</div>
-                        <div class="text-xs text-gray-700">Color: ${color}, <span class="quantity">Quantity: ${quantity}</span></div>
-                    </div>
-                </div>
-                <div>
-                    <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
-                    <button class="text-red-500 hover:underline delete-item">Delete</button>
-                </div>
-            `;
+            // Add new item
+            const newItem = {
+              garment,
+              size,
+              color,
+              fabrics,
+              quantity,
+              itemKey,
+            };
+            orderListArray.push(newItem);
+            const listItem = createListItem(newItem);
             orderList.appendChild(listItem);
-
-            // Delete Item Functionality
-            const deleteButtons = listItem.querySelectorAll(".delete-item");
-            deleteButtons.forEach((button) => {
-              button.addEventListener("click", () => {
-                listItem.remove();
-              });
-            });
-
-            // Edit Item Functionality
-            const editButtons = listItem.querySelectorAll(".edit-item");
-            editButtons.forEach((button) => {
-              button.addEventListener("click", () => {
-                // Populate input fields with item data
-                const itemText = listItem.querySelector(
-                  "div:nth-child(1) div:nth-child(2)"
-                ).textContent;
-                const itemParts = itemText
-                  .split("Color: ")[0]
-                  .split("\n")
-                  .map((part) => part.trim());
-                const itemGarment = itemParts[0];
-                const itemFabrics = listItem.querySelector(
-                  "div:nth-child(1) div:nth-child(1)"
-                ).textContent;
-                const itemColor = listItem
-                  .querySelector("div:nth-child(1) div:nth-child(3)")
-                  .textContent.split("Color: ")[1]
-                  .split(",")[0];
-                const itemQuantity = parseInt(
-                  listItem
-                    .querySelector("div:nth-child(1) div:nth-child(3)")
-                    .textContent.split("Quantity: ")[1]
-                );
-
-                garmentTypeSelect.value = itemGarment;
-                sizeSelect.value = size;
-                colorSelect.value = itemColor;
-                fabricsSelect.value = itemFabrics;
-                quantityInput.value = itemQuantity;
-
-                // Remove the item from the list
-                listItem.remove();
-              });
-            });
           }
-          // Clear the input fields after adding to the list
+
           garmentTypeSelect.value = "";
           sizeSelect.value = "";
           colorSelect.value = "";
@@ -1147,12 +1137,118 @@
           updateSelectColor(fabricsSelect);
           updateSelectColor(sizeSelect);
           updateSelectColor(colorSelect);
+
+          updateSessionStorage(); // Update sessionStorage
         }
       });
 
-      // Checkout functionality
-      const proceedToCheckoutButton =
-        document.getElementById("proceedToCheckout");
+      function createListItem(item) {
+        const listItem = document.createElement("li");
+        listItem.dataset.itemKey = item.itemKey;
+        listItem.classList.add(
+          "flex",
+          "items-center",
+          "justify-between",
+          "mb-2",
+          "p-4",
+          "border",
+          "rounded"
+        );
+
+        const textColor =
+          item.color.toLowerCase() === "white" ? "black" : "white";
+
+        listItem.innerHTML = `
+    <div class="flex items-center">
+      <div class="shadow-md rounded-full w-10 h-10 flex items-center justify-center mr-4" style="background-color: ${item.color}; color: ${textColor};">
+        ${item.size}
+      </div>
+      <div>
+        <div class="text-xs text-gray-500">Fabric: ${item.fabrics}</div>
+        <div>${item.garment}</div>
+        <div class="text-xs text-gray-700">Size: ${item.size}, Color: ${item.color}, <span class="quantity">Quantity: ${item.quantity}</span></div>
+      </div>
+    </div>
+    <div>
+      <button class="text-blue-500 hover:underline mr-2 edit-item">Edit</button>
+      <button class="text-red-500 hover:underline delete-item">Delete</button>
+    </div>
+  `;
+
+        const deleteButton = listItem.querySelector(".delete-item");
+        deleteButton.addEventListener("click", () => {
+          deleteItem(listItem);
+        });
+
+        const editButton = listItem.querySelector(".edit-item");
+        editButton.addEventListener("click", () => {
+          editItem(listItem);
+        });
+
+        return listItem;
+      }
+
+      function updateListItem(listItem, item) {
+        listItem.querySelector(
+          ".quantity"
+        ).textContent = `Quantity: ${item.quantity}`;
+      }
+
+      function deleteItem(listItem) {
+        const itemKey = listItem.dataset.itemKey;
+        orderListArray = orderListArray.filter(
+          (item) => item.itemKey !== itemKey
+        );
+        listItem.remove();
+        updateSessionStorage();
+      }
+
+      function editItem(listItem) {
+        const itemKey = listItem.dataset.itemKey;
+        const item = orderListArray.find((item) => item.itemKey === itemKey);
+
+        garmentTypeSelect.value = item.garment;
+        sizeSelect.value = item.size;
+        colorSelect.value = item.color;
+        fabricsSelect.value = item.fabrics;
+        quantityInput.value = item.quantity;
+
+        updateSelectColor(garmentTypeSelect);
+        updateSelectColor(sizeSelect);
+        updateSelectColor(colorSelect);
+        updateSelectColor(fabricsSelect);
+
+        deleteItem(listItem); // Remove the item from the list and array
+      }
+
+      function updateSelectColor(selectElement) {
+        if (selectElement.value) {
+          selectElement.classList.remove("text-slate-400");
+          selectElement.classList.add("text-gray-700");
+        } else {
+          selectElement.classList.remove("text-gray-700");
+          selectElement.classList.add("text-slate-400");
+        }
+      }
+
+      function updateSessionStorage() {
+        sessionStorage.setItem(
+          "orderListItems",
+          JSON.stringify(orderListArray)
+        );
+      }
+
+      // Load orderListArray from sessionStorage if available
+      const storedOrderListItems = sessionStorage.getItem("orderListItems");
+      if (storedOrderListItems) {
+        orderListArray = JSON.parse(storedOrderListItems);
+        orderListArray.forEach((item) => {
+          const listItem = createListItem(item);
+          orderList.appendChild(listItem);
+        });
+      }
+
+      // Modal functionality
       const modal = document.getElementById("customModal");
       const modalMessage = document.getElementById("modalMessage");
       const modalCloseButton = document.getElementById("modalCloseButton");
@@ -1181,63 +1277,124 @@
         }
       });
 
-      proceedToCheckoutButton.addEventListener("click", () => {
-        // 1. Read uploaded images
-        const frontDesignImage = uploadedImageFront.src;
-        const backDesignImage = uploadedImageBack.src;
-        const printDetailsImage = uploadedImagePrint.src;
+      // Checkout functionality
+      const checkoutButton = document.getElementById("checkoutButton");
 
-        const defaultImageSrc = window.location.href + "#";
+      checkoutButton.addEventListener("click", () => {
+        // 1. Retrieve Data
+        const orderListItems = document.querySelectorAll("#orderList li");
+        let designNotes = document.getElementById("designNotes").value;
+        const filesToUpload = filesArray; // Use the modified filesArray
+        const guestId = sessionStorage.getItem("guestId");
 
-        // 2. Validate front and back design
-        if (
-          frontDesignImage === defaultImageSrc &&
-          backDesignImage === defaultImageSrc
-        ) {
+        // Default design notes
+        if (!designNotes.trim()) {
+          designNotes = "The design notes were left empty";
+        }
+
+        // Validation (for now)
+        if (orderListItems.length === 0) {
           showModal(
-            "Please upload at least a front or back design image before proceeding to checkout."
+            "Please add items to your order before proceeding to checkout."
           );
           return;
         }
 
-        // 3. Get print details
-        const printDetails =
-          printDetailsImage !== defaultImageSrc ? printDetailsImage : null; // No validation needed, get the value
+        if (filesToUpload.length === 0) {
+          showModal(
+            "Please upload at least one design file before proceeding to checkout."
+          );
+          return;
+        }
 
-        // 4. Validate design notes and order list
-        const designNotes = document.getElementById("designNotes").value;
-        const orderItems = [];
-        Array.from(orderList.querySelectorAll("li")).forEach((listItem) => {
-          const itemText =
-            listItem.querySelector("div:first-child").textContent;
-          orderItems.push(itemText);
+        // 2. Upload Files using Multer
+        const uploadPromises = filesToUpload.map((fileObj) => {
+          return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append("guestId", guestId);
+            formData.append("files", fileObj.file);
+
+            // Show modal with loading message
+            showModal("Processing upload... Please wait.");
+
+            fetch("/upload", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  reject(new Error(`HTTP error! status: ${response.status}`));
+                }
+                return response.json();
+              })
+              .then((data) => {
+                hideModal(); // Hide loading modal
+
+                if (data && data.files && data.files.length > 0) {
+                  resolve({
+                    filename: data.files[0].filename,
+                    path: data.files[0].path,
+                    cloudinaryUrl: data.files[0].cloudinaryUrl, // Capture Cloudinary URL
+                    publicId: data.files[0].publicId, // Capture Cloudinary public ID
+                  });
+                } else {
+                  reject(
+                    new Error("File upload failed or no files in response")
+                  );
+                }
+              })
+              .catch(reject);
+          });
         });
 
-        if (orderItems.length === 0) {
-          showModal(
-            "Please add at least one item to your order before proceeding to checkout."
-          );
-          return;
-        }
+        Promise.all(uploadPromises)
+          .then((uploadedFiles) => {
+            console.log("Uploaded Files:", uploadedFiles);
 
-        // 5. Store data in sessionStorage
-        sessionStorage.setItem(
-          "frontDesignImage",
-          frontDesignImage === defaultImageSrc ? null : frontDesignImage
-        );
-        sessionStorage.setItem(
-          "backDesignImage",
-          backDesignImage === defaultImageSrc ? null : backDesignImage
-        );
-        sessionStorage.setItem("printDetailsImage", printDetails);
-        sessionStorage.setItem(
-          "designNotes",
-          designNotes || "Design notes were left empty"
-        ); // Store default message if empty
-        sessionStorage.setItem("shirtDetails", JSON.stringify(orderItems));
+            // 1. Gather filesArray data with Cloudinary info
+            const filesArray = uploadedFiles.map((uploadedFile, index) => {
+              const originalFile = filesToUpload[index].file;
 
-        // 6. Redirect to checkout
-        window.location.href = "/checkout";
+              return {
+                name: originalFile.name,
+                size: originalFile.size,
+                extension: originalFile.name.split(".").pop(),
+                path: uploadedFile.path,
+                cloudinaryUrl: uploadedFile.cloudinaryUrl, // Include Cloudinary URL
+                publicId: uploadedFile.publicId, // Include Cloudinary public ID
+              };
+            });
+
+            // 2. Gather design notes data
+            const designNotesData = designNotes || "No design notes provided."; // Use default if empty
+
+            // 3. Gather orderListItems data
+            const orderListItemsData = orderListArray; // Use the orderListArray directly
+
+            // 4. Store data in sessionStorage
+            sessionStorage.setItem("filesArray", JSON.stringify(filesArray));
+            sessionStorage.setItem("designNotes", designNotesData);
+            sessionStorage.setItem(
+              "orderListItems",
+              JSON.stringify(orderListItemsData)
+            );
+
+            window.location.href = "/checkout";
+          })
+          .catch((error) => {
+            console.error("File upload failed:", error);
+            if (error instanceof TypeError) {
+              showModal(
+                "Network error during file upload. Please check your connection."
+              );
+            } else if (error instanceof Error) {
+              showModal(
+                "Server error during file upload. Please try again later."
+              );
+            } else {
+              showModal("File upload failed. Please try again.");
+            }
+          });
       });
     </script>
   </body>

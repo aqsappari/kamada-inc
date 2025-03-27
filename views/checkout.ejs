@@ -40,423 +40,506 @@
       }
     </style>
   </head>
-</html>
 
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <header class="mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Checkout</h1>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-white shadow-md p-4">
+      <div class="container mx-auto">
+        <nav class="flex items-center justify-start">
+          <a href="#" class="text-xl font-bold">Kamada</a>
+        </nav>
+      </div>
     </header>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <div class="flex flex-col md:flex-row h-auto md:h-[70vh]">
-        <div class="w-full md:w-1/2 pr-0 md:pr-4">
-          <section class="mb-4">
-            <h2 class="text-xl font-semibold mb-4">Uploaded Designs</h2>
-            <div
-              class="flex flex-wrap gap-4"
-              id="uploadedImagesContainer"
-            ></div>
-          </section>
-          <div id="designNotesDisplay" class="mb-4">
-            <h3 class="font-semibold mb-2">Design Notes:</h3>
-            <p
-              id="designNotesContent"
-              class="border rounded p-2 h-full overflow-y-auto"
-            ></p>
-          </div>
-        </div>
-
-        <div class="w-full md:w-1/2 pl-0 md:pl-4 mt-4 md:mt-0">
+    <main class="flex-grow p-6">
+      <div class="bg-white rounded-lg shadow-md p-6 lg:mx-32 xl:mx-56">
+        <div class="flex flex-col md:flex-row h-full sm:h-[70vh]">
           <div
-            id="shirtDetailsDisplay"
-            class="h-full bg-gray-100 rounded-lg p-4"
+            class="w-full md:w-1/2 pr-0 md:pr-4 flex flex-col sm:w-full h-full"
           >
-            <h3 class="font-semibold mb-2">Shirt Details:</h3>
-            <div id="shirtDetailsList" class="h-full overflow-y-auto"></div>
+            <section class="mb-4 grow flex flex-col h-1/2 max-h-1/2 min-h-1/2">
+              <h2 class="text-xl font-semibold mb-4">Uploaded Files</h2>
+              <div
+                id="uploadedFilesContainer"
+                class="grow flex flex-col gap-2 overflow-y-auto border border-gray-300 p-4 rounded-md h-full"
+              ></div>
+            </section>
+
+            <div
+              id="designNotesDisplay"
+              class="mb-4 grow flex flex-col h-1/2 max-h-1/2 min-h-1/2"
+            >
+              <h3 class="font-semibold mb-2">Design Notes:</h3>
+              <p
+                id="designNotesContent"
+                class="border rounded p-2 flex-grow overflow-y-auto h-full"
+              ></p>
+            </div>
+          </div>
+
+          <div
+            class="w-full md:w-1/2 pl-0 md:pl-4 mt-4 md:mt-0 sm:w-full h-full"
+          >
+            <div
+              id="orderListDisplay"
+              class="h-full bg-gray-100 rounded-lg p-4 h-full"
+            >
+              <h3 class="font-semibold mb-2">Order List:</h3>
+              <div id="orderList" class="h-full overflow-y-auto"></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <section id="personalDataSection" class="mt-4">
+      <section
+        id="personalDataSection"
+        class="mt-4 bg-white p-6 lg:mx-32 xl:mx-56 rounded-md"
+      >
         <h2 class="text-xl font-semibold mb-4">Personal Data</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label
-              for="fullName"
-              class="block text-sm font-medium text-gray-700"
-              >Full Name <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+        <form id="personalDataForm">
+          <input type="hidden" id="guestId" name="guestId" />
+          <input type="hidden" id="coordinates" name="coordinates" required />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                for="fullName"
+                class="block text-sm font-medium text-gray-700"
+                >Full Name <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="companyName"
+                class="block text-sm font-medium text-gray-700"
+                >Company Name
+                <span class="text-gray-500">(Optional)</span></label
+              >
+              <input
+                type="text"
+                id="companyName"
+                name="companyName"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700"
+                >Email <span class="text-red-500">*</span></label
+              >
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700"
+                >Contact Number <span class="text-red-500">*</span></label
+              >
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="street"
+                class="block text-sm font-medium text-gray-700"
+                >Street <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="street"
+                name="street"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="barangay"
+                class="block text-sm font-medium text-gray-700"
+                >Barangay <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="barangay"
+                name="barangay"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700"
+                >City <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="city"
+                name="city"
+                value="Zamboanga City"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100 text-gray-500"
+                readonly
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="postalCode"
+                class="block text-sm font-medium text-gray-700"
+                >Postal Code <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="postalCode"
+                name="postalCode"
+                value="7000"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100 text-gray-500"
+                readonly
+                required
+              />
+            </div>
           </div>
-          <div>
-            <label
-              for="companyName"
-              class="block text-sm font-medium text-gray-700"
-              >Company Name</label
-            >
-            <input
-              type="text"
-              id="companyName"
-              name="companyName"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email <span class="text-red-500">*</span></label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700"
-              >Phone Number <span class="text-red-500">*</span></label
-            >
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div class="md:col-span-2">
-            <label for="address" class="block text-sm font-medium text-gray-700"
-              >Address <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              id="address"
-              name="address"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-        </div>
+          <button
+            type="submit"
+            id="hiddenSubmit"
+            style="display: none"
+          ></button>
+        </form>
         <div id="map" class="w-full h-[600px] mt-8 rounded-lg"></div>
       </section>
+    </main>
 
-      <div class="mt-6 flex justify-center">
+    <footer class="bg-black p-4 shadow-inner mt-auto">
+      <div
+        class="container text-white mx-auto flex justify-between items-center"
+      >
+        <div id="totalPriceBreakdown">
+          <p>Total: Php 0.00</p>
+        </div>
         <button
-          id="confirmOrderBtn"
-          class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-5 rounded-lg focus:outline-none focus:shadow-outline"
+          id="confirmCheckoutButton"
+          class="bg-white hover:bg-slate-200 text-black font-bold py-2 px-4 rounded"
         >
-          Confirm Order
+          Confirm Checkout
         </button>
       </div>
-    </div>
-  </div>
+    </footer>
 
-  <script>
-    const uploadedImagesContainer = document.getElementById(
-      "uploadedImagesContainer"
-    );
-    const designNotesContent = document.getElementById("designNotesContent");
-    const shirtDetailsList = document.getElementById("shirtDetailsList");
-    const confirmOrderBtn = document.getElementById("confirmOrderBtn");
-
-    // Get data from sessionStorage
-    const frontDesignImage = sessionStorage.getItem("frontDesignImage");
-    const backDesignImage = sessionStorage.getItem("backDesignImage");
-    const printDetailsImage = sessionStorage.getItem("printDetailsImage");
-    const shirtDetails =
-      JSON.parse(sessionStorage.getItem("shirtDetails")) || [];
-    const designNotes =
-      sessionStorage.getItem("designNotes") || "No design notes provided.";
-
-    // Function to create an image element
-    function createImageElement(src, label) {
-      const container = document.createElement("div");
-      container.classList.add(
-        "flex",
-        "flex-col",
-        "items-center",
-        "mr-4",
-        "flex-shrink-0"
+    <script>
+      // Get data from sessionStorage
+      const designNotes = sessionStorage.getItem("designNotes");
+      const filesArray = JSON.parse(sessionStorage.getItem("filesArray"));
+      const orderListItems = JSON.parse(
+        sessionStorage.getItem("orderListItems")
       );
-      const img = document.createElement("img");
-      img.src = src;
-      img.alt = label;
-      img.classList.add("max-w-xs", "rounded-md", "shadow-sm", "mb-2");
-      const labelElement = document.createElement("p");
-      labelElement.textContent = label;
-      labelElement.classList.add("text-sm", "text-gray-500");
-      container.appendChild(img);
-      container.appendChild(labelElement);
-      return container;
-    }
 
-    // Display uploaded images
-    uploadedImagesContainer.classList.add(
-      "flex",
-      "overflow-x-auto",
-      "flex-nowrap"
-    ); // Added 'flex-nowrap'
-    if (frontDesignImage && frontDesignImage != "null") {
-      const frontImageElement = createImageElement(
-        frontDesignImage,
-        "Front Design"
+      if (!designNotes || !filesArray || !orderListItems) {
+        window.location.href = "/design-details";
+      }
+
+      // Get the container element
+      const uploadedFilesContainer = document.getElementById(
+        "uploadedFilesContainer"
       );
-      uploadedImagesContainer.appendChild(frontImageElement);
-    }
-    if (backDesignImage && backDesignImage != "null") {
-      const backImageElement = createImageElement(
-        backDesignImage,
-        "Back Design"
-      );
-      uploadedImagesContainer.appendChild(backImageElement);
-    }
-    if (printDetailsImage && printDetailsImage != "null") {
-      const printDetailsImageElement = createImageElement(
-        printDetailsImage,
-        "Print Details"
-      );
-      uploadedImagesContainer.appendChild(printDetailsImageElement);
-    }
 
-    // Display design notes
-    designNotesContent.textContent = designNotes;
-
-    // Display shirt details
-    try {
-      shirtDetails.forEach((item) => {
-        const itemParts = item.split(" - ");
-        const size = itemParts[0];
-        const color = itemParts[1];
-        const fabric = itemParts[2];
-        const quantity = itemParts[3].split("Quantity: ")[1];
-        const pricePerShirt = 20;
-        const totalAmount = pricePerShirt * quantity;
-
-        const card = document.createElement("div");
-        card.classList.add(
-          "bg-white",
-          "rounded-lg",
-          "shadow-md",
-          "p-4",
-          "mb-2",
+      // Function to create a file card
+      function createFileCard(fileObj) {
+        const fileCard = document.createElement("div");
+        fileCard.classList.add(
           "flex",
-          "items-center"
+          "items-center",
+          "justify-between",
+          "p-4",
+          "border",
+          "rounded-lg",
+          "mb-2"
         );
 
-        const colorHint = document.createElement("div");
-        colorHint.style.backgroundColor = color;
-        colorHint.classList.add(
-          "w-8",
-          "rounded-l-lg",
-          "flex-shrink-0",
-          "mr-4",
-          "border"
+        const fileName =
+          fileObj.name.length > 20
+            ? fileObj.name.substring(0, 20) + "..."
+            : fileObj.name;
+
+        const extensionColor = getExtensionColor(
+          fileObj.extension.toUpperCase()
         );
 
-        if (color === "white") {
-          colorHint.style.border = "1px solid #ccc";
+        const { size, unit } = formatFileSize(fileObj.size);
+
+        fileCard.innerHTML = `
+                <div class="flex items-center">
+                  <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">
+                    ${fileObj.extension.toUpperCase()}
+                  </div>
+                  <div>
+                    <p>${fileName}</p>
+                    <p class="text-xs text-gray-500">${size} ${unit.toLocaleUpperCase()}</p>
+                  </div>
+                </div>
+              `;
+
+        return fileCard;
+      }
+
+      // Function to get appropriate file size unit
+      function formatFileSize(bytes) {
+        if (bytes < 1024) {
+          return { size: bytes.toFixed(2), unit: "B" };
+        } else if (bytes < 1024 * 1024) {
+          return { size: (bytes / 1024).toFixed(2), unit: "KB" };
+        } else if (bytes < 1024 * 1024 * 1024) {
+          return { size: (bytes / (1024 * 1024)).toFixed(2), unit: "MB" };
+        } else if (bytes < 1024 * 1024 * 1024 * 1024) {
+          return {
+            size: (bytes / (1024 * 1024 * 1024)).toFixed(2),
+            unit: "GB",
+          };
+        } else {
+          return {
+            size: (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2),
+            unit: "TB",
+          };
         }
-        colorHint.style.minHeight = "2rem";
+      }
 
-        const detailsContainer = document.createElement("div");
-        detailsContainer.classList.add("flex", "flex-wrap", "flex-grow");
+      // Function to get extension color (same as before)
+      function getExtensionColor(extension) {
+        const colors = {
+          PSD: "#29ABE2",
+          AI: "#FF7300",
+          EPS: "#800080",
+          SVG: "#E91E63",
+          PDF: "#FF6347",
+          PNG: "#90EE90",
+          JPG: "#FFA07A",
+          JPEG: "#FFA07A",
+          GIF: "#DDA0DD",
+          TIFF: "#00CED1",
+          TIF: "#00CED1",
+          BMP: "#A9A9A9",
+          RAW: "#8B4513",
+          CR2: "#8B4513",
+          NEF: "#8B4513",
+          DNG: "#8B4513",
+          DOC: "#4682B4",
+          DOCX: "#4682B4",
+          TXT: "#20B2AA",
+          ZIP: "#FFD700",
+          RAR: "#FFD700",
+          CSV: "#778899",
+        };
+        return colors[extension] || "#808080";
+      }
 
-        const labels = ["Fabric:", "Size:", "Color:", "Price:", "Quantity:"];
-        const values = [fabric, size, color, `$${pricePerShirt}`, quantity];
-
-        for (let i = 0; i < labels.length; i++) {
-          const detailItem = document.createElement("div");
-          detailItem.classList.add("w-1/5", "p-2");
-
-          const label = document.createElement("div");
-          label.classList.add("text-sm", "font-semibold", "mb-1");
-          label.textContent = labels[i];
-
-          const value = document.createElement("div");
-          value.classList.add("text-sm");
-          value.textContent = values[i];
-
-          detailItem.appendChild(label);
-          detailItem.appendChild(value);
-          detailsContainer.appendChild(detailItem);
-        }
-
-        const totalContainer = document.createElement("div");
-        totalContainer.classList.add("ml-auto", "text-right", "pr-4");
-        totalContainer.innerHTML = `<strong>Total:</strong> $${totalAmount}`;
-
-        card.appendChild(detailsContainer);
-        card.insertBefore(colorHint, detailsContainer);
-
-        shirtDetailsList.appendChild(card);
+      // Display the files
+      filesArray.forEach((file) => {
+        const fileCard = createFileCard(file);
+        uploadedFilesContainer.appendChild(fileCard);
       });
-    } catch (e) {
-      console.error("Error processing shirt details:", e);
-    }
 
-    // Map display
-    var map = L.map("map").setView([0, 0], 2);
-    const zamboangaCoords = [6.9021, 122.0792];
+      // Display the design notes
+      designNotesContent.textContent = designNotes;
 
-    function onLocationFound(e) {
-      // var radius = e.accuracy / 2;  // Removed the radius variable
-      // L.circle(e.latlng, radius).addTo(map); // Removed the circle
-      map.setView(e.latlng, 17);
-    }
+      // Get the order list container element
+      const orderListContainer = document.getElementById("orderList");
 
-    function onLocationError(e) {
-      console.log("Location access denied or error:", e.message);
-      map.setView(zamboangaCoords, 13);
+      // Function to create an order item card (modified)
+      function createOrderItemCard(item) {
+        const itemCard = document.createElement("div");
+        itemCard.classList.add(
+          "flex",
+          "items-center",
+          "p-4",
+          "border",
+          "rounded-lg",
+          "mb-2",
+          "bg-white" // Added white background
+        );
+
+        const itemName = item.garment;
+        const quantity = item.quantity;
+        const size = item.size; // Assuming you have size in your item object
+        const color = item.color; // Assuming you have color in your item object
+        const fabric = item.fabrics; // Assuming you have fabric in your item object
+
+        // Determine text color based on item color
+        const textColor = color.toLowerCase() === "white" ? "black" : "white";
+
+        itemCard.innerHTML = `
+        <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4" style="background-color: ${color}; color: ${textColor}; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                ${size.substring(0, 2).toUpperCase()} 
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Fabric: ${fabric}</p>
+                <p class="font-semibold">${itemName}</p>
+                <p class="text-sm text-gray-500">Size: ${size}, Color: ${color}, Quantity: ${quantity}</p>
+            </div>
+        </div>
+    `;
+
+        return itemCard;
+      }
+
+      // Display the order list items
+      orderListItems.forEach((item) => {
+        const itemCard = createOrderItemCard(item);
+        orderListContainer.appendChild(itemCard);
+      });
+
+      // Initialize the map
+      const map = L.map("map").setView(
+        [6.9439865896984365, 122.07140922546388],
+        13
+      ); // Default to Zamboanga City
+
+      // Add a tile layer (OpenStreetMap)
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
-    }
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
+      // Get the coordinates input field
+      const coordinatesInput = document.getElementById("coordinates");
 
-    map.on("locationfound", onLocationFound);
-    map.on("locationerror", onLocationError);
+      let marker = null; // Store the marker instance
 
-    map.locate({ setView: true, maxZoom: 16, timeout: 10000 });
-
-    var currentMarker = null;
-    let markerLatLng = null;
-
-    function onMapClick(e) {
-      if (currentMarker !== null) {
-        map.removeLayer(currentMarker);
-      }
-      var myIcon = L.divIcon({
-        className: "my-custom-marker",
-        iconSize: [30, 30],
-        iconAnchor: [15, 30],
-        popupAnchor: [0, -30],
+      // Handle map clicks
+      map.on("click", function (event) {
+        if (marker) {
+          // Remove existing marker
+          map.removeLayer(marker);
+          marker = null;
+          coordinatesInput.value = ""; // Clear coordinates
+        } else {
+          // Create new marker
+          marker = L.marker(event.latlng).addTo(map);
+          coordinatesInput.value = `${event.latlng.lat},${event.latlng.lng}`;
+        }
       });
-      currentMarker = L.marker(e.latlng, { icon: myIcon }).addTo(map);
-      markerLatLng = e.latlng;
-      currentMarker.bindPopup("You are here").openPopup();
-      currentMarker.on("click", function () {
-        map.removeLayer(currentMarker);
-        currentMarker = null;
-        markerLatLng = null;
+
+      // confirm checkout functionaity
+      const confirmCheckoutButton = document.getElementById(
+        "confirmCheckoutButton"
+      );
+
+      confirmCheckoutButton.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent form submission (for now)
+        validateForm();
       });
-    }
-    map.on("click", onMapClick);
 
-    // checkout functionality
-    confirmOrderBtn.addEventListener("click", function () {
-      const fullName = document.getElementById("fullName").value;
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value; // Get phone number
-      const address = document.getElementById("address").value;
-      let companyName = document.getElementById("companyName").value; // Get company name
+      function validateForm() {
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const street = document.getElementById("street").value.trim();
+        const barangay = document.getElementById("barangay").value.trim();
+        const coordinates = document.getElementById("coordinates").value.trim();
 
-      let hasErrors = false;
-      let errorMessage = "";
+        if (!fullName) {
+          showErrorModal("Full Name is required.");
+          return;
+        }
 
-      // Validation checks
-      if (!fullName) {
-        errorMessage = "Please enter your Full Name.";
-        hasErrors = true;
-      } else if (!email) {
-        errorMessage = "Please enter your Email.";
-        hasErrors = true;
-      } else if (!isValidEmail(email)) {
-        errorMessage = "Please enter a valid Email address.";
-        hasErrors = true;
-      } else if (!phone) {
-        errorMessage = "Please enter your Phone Number.";
-        hasErrors = true;
-      } else if (!isValidPhone(phone)) {
-        errorMessage = "Please enter a valid Phone Number (e.g., 09123456789).";
-        hasErrors = true;
-      } else if (!address) {
-        errorMessage = "Please enter your Address.";
-        hasErrors = true;
-      } else if (markerLatLng === null) {
-        errorMessage = "Please click on the map to select your location.";
-        hasErrors = true;
+        if (!email) {
+          showErrorModal("Email is required.");
+          return;
+        }
+
+        if (!validateEmail(email)) {
+          showErrorModal("Please enter a valid email address.");
+          return;
+        }
+
+        if (!phone) {
+          showErrorModal("Contact Number is required.");
+          return;
+        }
+
+        if (!validatePhone(phone)) {
+          showErrorModal("Please enter a valid phone number (09XXXXXXXXX).");
+          return;
+        }
+
+        if (!street) {
+          showErrorModal("Street is required.");
+          return;
+        }
+
+        if (!barangay) {
+          showErrorModal("Barangay is required.");
+          return;
+        }
+
+        if (!coordinates) {
+          showErrorModal("Please select a location on the map.");
+          return;
+        }
+
+        // If all validations pass, proceed with checkout
+        showLoadingModal();
+
+        // Create necessaryData object
+        const necessaryData = {
+          filesArray: filesArray, // Assuming filesArray is accessible
+          orderItems: orderListItems, // Assuming orderItems is accessible
+          designNotes: designNotes, // Assuming designNotes is accessible
+          client: {
+            fullName: document.getElementById("fullName").value.trim(),
+            companyName: document.getElementById("companyName").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            street: document.getElementById("street").value.trim(),
+            barangay: document.getElementById("barangay").value.trim(),
+            city: document.getElementById("city").value.trim(),
+            postalCode: document.getElementById("postalCode").value.trim(),
+            coordinates: document.getElementById("coordinates").value.trim(),
+          },
+        };
+
+        // Close loading modal (replace with actual processing logic)
+        Swal.close();
       }
 
-      if (hasErrors) {
+      function showErrorModal(message) {
         Swal.fire({
           icon: "error",
-          title: "Error",
-          text: errorMessage,
+          title: "Validation Error",
+          text: message,
         });
-        return; // Stop processing if there are errors
       }
 
-      // If all validations pass, proceed with order confirmation and data submission
-      // Simulate sending data to Firestore
-      // const orderData = {
-      //   fullName: fullName,
-      //   email: email,
-      //   phone: phone, // Include phone number
-      //   address: address,
-      //   companyName: companyName, // Include company name
-      //   frontDesignImage: frontDesignImage,
-      //   backDesignImage: backDesignImage,
-      //   printDetailsImage: printDetailsImage,
-      //   designNotes: designNotes,
-      //   shirtDetails: shirtDetails,
-      //   location: markerLatLng
-      //     ? {
-      //         latitude: markerLatLng.lat,
-      //         longitude: markerLatLng.lng,
-      //       }
-      //     : null, // Include the marker coordinates
-      //   timestamp: new Date().toISOString(), // Add a timestamp
-      // };
+      function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
 
-      //   console.log("Order Data:", orderData); // Log the data to the console
+      function validatePhone(phone) {
+        const phoneRegex = /^09\d{9}$/;
+        return phoneRegex.test(phone);
+      }
 
-      // Simulate sending data to Firestore (replace with actual Firestore code)
-      setTimeout(() => {
+      function showLoadingModal() {
         Swal.fire({
-          icon: "success",
-          title: "Order Confirmed!",
-          html: `Your order has been confirmed. Please check your email: <strong>${email}</strong> for further instructions.`,
-        }).then(() => {
-          //   // Clear sessionStorage
-          //   sessionStorage.clear();
-          //   // Redirect to home page
-          //   window.location.href = "/";
-
-          sessionStorage.setItem("fullname", fullName);
-          sessionStorage.setItem("email", email);
-          sessionStorage.setItem("phone", phone);
-          sessionStorage.setItem("address", address);
-          sessionStorage.setItem(
-            "companyName",
-            companyName == "" ? "null" : companyName
-          );
-          sessionStorage.setItem("locationLat", markerLatLng.lat);
-          sessionStorage.setItem("locationLng", markerLatLng.lng);
-          sessionStorage.setItem("timestamp", new Date().toISOString());
-
-          // Redirect to home page
-          window.location.href = "/";
+          title: "Please Wait",
+          text: "We are processing your order...",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
         });
-      }, 500);
-    });
-
-    function isValidEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    }
-
-    function isValidPhone(phone) {
-      const phoneRegex = /^09\d{9}$/;
-      return phoneRegex.test(phone);
-    }
-  </script>
-</body>
+      }
+    </script>
+  </body>
+</html>
