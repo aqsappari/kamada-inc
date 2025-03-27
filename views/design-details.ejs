@@ -1284,7 +1284,7 @@
         // 1. Retrieve Data
         const orderListItems = document.querySelectorAll("#orderList li");
         let designNotes = document.getElementById("designNotes").value;
-        const filesToUpload = filesArray; // Use the modified filesArray
+        const filesToUpload = filesArray;
         const guestId = sessionStorage.getItem("guestId");
 
         // Default design notes
@@ -1294,16 +1294,20 @@
 
         // Validation (for now)
         if (orderListItems.length === 0) {
-          showModal(
-            "Please add items to your order before proceeding to checkout."
-          );
+          Swal.fire({
+            icon: "warning",
+            title: "Missing Order Items",
+            text: "Please add items to your order before proceeding to checkout.",
+          });
           return;
         }
 
         if (filesToUpload.length === 0) {
-          showModal(
-            "Please upload at least one design file before proceeding to checkout."
-          );
+          Swal.fire({
+            icon: "warning",
+            title: "Missing Design Files",
+            text: "Please upload at least one design file before proceeding to checkout.",
+          });
           return;
         }
 
@@ -1314,8 +1318,16 @@
             formData.append("guestId", guestId);
             formData.append("files", fileObj.file);
 
-            // Show modal with loading message
-            showModal("Processing upload... Please wait.");
+            // Show SweetAlert2 waiting modal
+            Swal.fire({
+              title: "Processing Upload...",
+              text: "Please wait while we upload your files.",
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
 
             fetch("/upload", {
               method: "POST",
@@ -1328,14 +1340,13 @@
                 return response.json();
               })
               .then((data) => {
-                hideModal(); // Hide loading modal
-
+                Swal.close(); // Hide loading modal
                 if (data && data.files && data.files.length > 0) {
                   resolve({
                     filename: data.files[0].filename,
                     path: data.files[0].path,
-                    cloudinaryUrl: data.files[0].cloudinaryUrl, // Capture Cloudinary URL
-                    publicId: data.files[0].publicId, // Capture Cloudinary public ID
+                    cloudinaryUrl: data.files[0].cloudinaryUrl,
+                    publicId: data.files[0].publicId,
                   });
                 } else {
                   reject(
@@ -1351,7 +1362,6 @@
           .then((uploadedFiles) => {
             console.log("Uploaded Files:", uploadedFiles);
 
-            // 1. Gather filesArray data with Cloudinary info
             const filesArray = uploadedFiles.map((uploadedFile, index) => {
               const originalFile = filesToUpload[index].file;
 
@@ -1360,18 +1370,14 @@
                 size: originalFile.size,
                 extension: originalFile.name.split(".").pop(),
                 path: uploadedFile.path,
-                cloudinaryUrl: uploadedFile.cloudinaryUrl, // Include Cloudinary URL
-                publicId: uploadedFile.publicId, // Include Cloudinary public ID
+                cloudinaryUrl: uploadedFile.cloudinaryUrl,
+                publicId: uploadedFile.publicId,
               };
             });
 
-            // 2. Gather design notes data
-            const designNotesData = designNotes || "No design notes provided."; // Use default if empty
+            const designNotesData = designNotes || "No design notes provided.";
+            const orderListItemsData = orderListArray;
 
-            // 3. Gather orderListItems data
-            const orderListItemsData = orderListArray; // Use the orderListArray directly
-
-            // 4. Store data in sessionStorage
             sessionStorage.setItem("filesArray", JSON.stringify(filesArray));
             sessionStorage.setItem("designNotes", designNotesData);
             sessionStorage.setItem(
@@ -1383,16 +1389,25 @@
           })
           .catch((error) => {
             console.error("File upload failed:", error);
+            Swal.close(); // Close loading modal
             if (error instanceof TypeError) {
-              showModal(
-                "Network error during file upload. Please check your connection."
-              );
+              Swal.fire({
+                icon: "error",
+                title: "Network Error",
+                text: "Network error during file upload. Please check your connection.",
+              });
             } else if (error instanceof Error) {
-              showModal(
-                "Server error during file upload. Please try again later."
-              );
+              Swal.fire({
+                icon: "error",
+                title: "Server Error",
+                text: "Server error during file upload. Please try again later.",
+              });
             } else {
-              showModal("File upload failed. Please try again.");
+              Swal.fire({
+                icon: "error",
+                title: "Upload Failed",
+                text: "File upload failed. Please try again.",
+              });
             }
           });
       });
