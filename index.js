@@ -11,6 +11,7 @@ import { cloudinary } from "./cloudinary/cloudinaryConfig.js";
 import fs from "fs";
 import { db } from "./firebase/firebaseApp.js"; // Import db
 import { doc, setDoc } from "firebase/firestore";
+import nodemailer from "nodemailer";
 
 const app = express();
 const port = 3000;
@@ -42,6 +43,25 @@ function generateSignature(publicId, callback) {
     "yETPJGnQFiyMvkusIkRahIixSX4"
   );
   callback(signature, timestamp);
+}
+
+// Nodemailer configuration (replace with your Gmail credentials)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "sappari.aq@gmail.com",
+    pass: "crvj bpnh wviq garr",
+  },
+});
+
+function generateTrackingId() {
+  const now = new Date();
+  const timestamp = now
+    .toISOString()
+    .replace(/[-:T.]/g, "")
+    .substring(0, 14); // Format: YYYYMMDDHHMMSS
+  const random = Math.random().toString(36).substring(2, 8).toUpperCase(); // Shorter random part
+  return `TRACK-${timestamp}-${random}`;
 }
 
 // Example route for generating signature
@@ -119,17 +139,57 @@ app.post("/upload", upload.array("files"), async (req, res) => {
 app.post("/save-to-firestore", async (req, res) => {
   try {
     const necessaryData = req.body;
-    console.log(necessaryData);
-    const guestId = necessaryData.guestId;
+    const trackingId = generateTrackingId();
 
-    // Add data to Firestore
-    const clientDocRef = doc(db, "client-details", guestId);
+    // Add trackingId to necessaryData
+    necessaryData.trackingId = trackingId;
+
+    // Add data to Firestore with trackingId as document name
+    const clientDocRef = doc(db, "client-details", trackingId);
     await setDoc(clientDocRef, necessaryData);
 
-    res.json({ message: "Data saved to Firestore successfully!" });
+    // Send email
+    const mailOptions = {
+      from: {
+        name: "KAMADA ZC",
+        address: "sappari.aq@gmail.com",
+      },
+      replyTo: "sappari.aq@example.com",
+      to: necessaryData.client.email,
+      subject: "Your Order Tracking ID",
+      html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Your Order Tracking ID</title>
+          </head>
+          <body>
+              <div style="font-family: Arial, sans-serif; padding: 20px;">
+                  <h1 style="font-weight: bold; text-style: italic">KAMADA</h1>
+                  <h2>Your Order Tracking ID</h2>
+                  <p>Dear ${necessaryData.client.fullName},</p>
+                  <p>Thank you for your order! Your tracking ID is:</p>
+                  <h3 style="background-color: #f0f0f0; padding: 10px;">${trackingId}</h3>
+                  <p>You can use this ID to track your order on our website.</p>
+                  <p>If you have any questions, please contact us.</p>
+                  <p>Sincerely,<br>KAMADA ZC</p>
+              </div>
+          </body>
+          </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.json({
+      message: "Data saved to Firestore and email sent successfully!",
+      trackingId: trackingId,
+    });
   } catch (error) {
-    console.error("Error saving to Firestore:", error);
-    res.status(500).json({ error: "Failed to save data to Firestore" });
+    console.error("Error saving to Firestore or sending email:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to save data to Firestore or send email" });
   }
 });
 

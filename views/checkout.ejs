@@ -528,12 +528,23 @@
           .then((data) => {
             console.log("Firestore save successful:", data);
             Swal.close(); // Close loading modal
-            // Proceed with further actions (e.g., show success message)
+            Swal.fire({
+              icon: "success",
+              title: "Order Successful!",
+              text: "A tracking ID has been sent to your email address.",
+              confirmButtonText: "Okay",
+            }).then(() => {
+              window.location.href = "/"; // Redirect to home page
+            });
           })
           .catch((error) => {
             console.error("Firestore save failed:", error);
             Swal.close(); // Close loading modal
-            // Show error message to user
+            Swal.fire({
+              icon: "error",
+              title: "Order Failed!",
+              text: "There was an error processing your order. Please try again.",
+            });
           });
       }
 
