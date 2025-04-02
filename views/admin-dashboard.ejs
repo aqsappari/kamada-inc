@@ -1,228 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: "Poppins", sans-serif;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-100">
-    <div class="flex h-screen">
-      <div
-        class="bg-white w-64 p-4 shadow-md transition-transform duration-300 ease-in-out"
-        id="sidebar"
+    <header class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800">
+        Welcome to Dashboard
+      </h2>
+      <button
+        id="sidebarToggle"
+        class="lg:hidden text-gray-600 hover:text-cyan-600 focus:outline-none focus:shadow-outline rounded-md p-1 z-50"
       >
-        <div class="flex items-center mb-6">
-          <img
-            src="https://placehold.co/40x40/EEE/31343C"
-            alt="Logo"
-            class="mr-2 rounded-md"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
           />
-          <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
-        </div>
-        <nav>
-          <ul class="space-y-2">
-            <li>
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-cyan-600 rounded-md transition-colors duration-200"
-                >Home</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-cyan-600 rounded-md transition-colors duration-200"
-                >Users</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-cyan-600 rounded-md transition-colors duration-200"
-                >Products</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-cyan-600 rounded-md transition-colors duration-200"
-                >Orders</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-cyan-600 rounded-md transition-colors duration-200"
-                >Settings</a
-              >
-            </li>
-            <li>
-              <a
-                href="/logout"
-                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-cyan-600 rounded-md transition-colors duration-200"
-                >Logout</a
-              >
-            </li>
-          </ul>
-        </nav>
-      </div>
+        </svg>
+      </button>
+    </header>
 
-      <div class="flex-1 p-6 overflow-y-auto">
-        <header class="flex justify-between items-center mb-8">
-          <h2 class="text-2xl font-semibold text-gray-800">
-            Welcome to Dashboard
-          </h2>
-          <button
-            id="sidebarToggle"
-            class="lg:hidden text-gray-600 hover:text-cyan-600 focus:outline-none focus:shadow-outline rounded-md p-1"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          </button>
-        </header>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div class="bg-white rounded-md shadow-md p-4">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">
-              Total Users
-            </h3>
-            <p class="text-2xl font-bold text-cyan-600">1,250</p>
-          </div>
-          <div class="bg-white rounded-md shadow-md p-4">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">
-              Total Products
-            </h3>
-            <p class="text-2xl font-bold text-cyan-600">500</p>
-          </div>
-          <div class="bg-white rounded-md shadow-md p-4">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">
-              Total Orders
-            </h3>
-            <p class="text-2xl font-bold text-cyan-600">800</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-md shadow-md p-6">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">
-            Recent Orders
-          </h3>
-          <div class="overflow-x-auto">
-            <table
-              class="min-w-full leading-normal shadow-md rounded-lg overflow-hidden"
-            >
-              <thead class="bg-gray-200 text-gray-700">
-                <tr>
-                  <th
-                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
-                  >
-                    Order ID
-                  </th>
-                  <th
-                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
-                  >
-                    Customer
-                  </th>
-                  <th
-                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
-                  >
-                    Date
-                  </th>
-                  <th
-                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
-                  >
-                    Status
-                  </th>
-                  <th
-                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
-                  >
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="bg-white">
-                <tr>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    12345
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    John Doe
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    2024-07-28
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    <span
-                      class="relative inline-block px-3 py-1 font-semibold text-green-500 leading-tight rounded-full bg-green-100"
-                    >
-                      <span
-                        class="absolute inset-0 rounded-full opacity-50"
-                      ></span>
-                      <span class="relative">Shipped</span>
-                    </span>
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    $150.00
-                  </td>
-                </tr>
-                <tr>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    12346
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    Jane Smith
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    2024-07-27
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    <span
-                      class="relative inline-block px-3 py-1 font-semibold text-yellow-500 leading-tight rounded-full bg-yellow-100"
-                    >
-                      <span
-                        class="absolute inset-0 rounded-full opacity-50"
-                      ></span>
-                      <span class="relative">Pending</span>
-                    </span>
-                  </td>
-                  <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                    $250.00
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">
+          Total Orders
+        </h3>
+        <p class="text-2xl font-bold text-cyan-600">800</p>
+      </div>
+      <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">
+          Pending Orders
+        </h3>
+        <p class="text-2xl font-bold text-yellow-600">150</p>
+      </div>
+      <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">
+          Completed Orders
+        </h3>
+        <p class="text-2xl font-bold text-green-600">650</p>
+      </div>
+      <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Revenue</h3>
+        <p class="text-2xl font-bold text-blue-600">$45,000</p>
       </div>
     </div>
-    <script>
-      const sidebarToggle = document.getElementById("sidebarToggle");
-      const sidebar = document.getElementById("sidebar");
 
-      if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener("click", () => {
-          sidebar.classList.toggle("-translate-x-full");
-        });
-      }
-    </script>
-  </body>
-</html>
+    <div class="bg-white rounded-md shadow-md p-6 mb-8">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">
+        Recent Orders
+      </h3>
+      <div class="overflow-x-auto">
+        <table
+          class="min-w-full leading-normal shadow-md rounded-lg overflow-hidden"
+          id="ordersTable"
+        >
+          <thead class="bg-gray-200 text-gray-700">
+            <tr>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Order ID
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Tracking ID
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Date
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
+              >
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white" id="ordersTableBody"></tbody>
+        </table>
+      </div>
+      <div class="flex justify-center mt-4 items-center">
+        <button
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2"
+          id="prevPageBtn"
+        >
+          &lt;
+        </button>
+        <div id="pageNumbers" class="flex space-x-2"></div>
+        <button
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-2"
+          id="nextPageBtn"
+        >
+          &gt;
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-md shadow-md p-6">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">
+        Quick Actions
+      </h3>
+      <div class="flex space-x-4">
+        <button
+          class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Add Product
+        </button>
+        <button
+          class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+        >
+          View Orders
+        </button>
+      </div>
+    </div>
+  </div>

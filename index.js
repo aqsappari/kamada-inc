@@ -19,6 +19,7 @@ const port = 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(logger);
 
@@ -90,51 +91,6 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname); // Generate unique filename
   },
 });
-
-// const upload = multer({ storage: storage });
-
-// // Upload route
-// app.post("/upload", upload.array("files"), async (req, res) => {
-//   console.log("Received files:", req.files);
-
-//   if (!req.files || req.files.length === 0) {
-//     return res.status(400).json({ error: "No files uploaded" });
-//   }
-
-//   const guestId = req.body.guestId;
-//   const guestUploadDir = path.join(__dirname, "public", "uploads", guestId);
-
-//   try {
-//     const uploadedFiles = await Promise.all(
-//       req.files.map(async (file) => {
-//         const result = await cloudinary.uploader.upload(file.path, {
-//           public_id: `${guestId}_${file.filename}`,
-//           use_filename: false,
-//           unique_filename: false,
-//         });
-//         return {
-//           filename: file.filename,
-//           cloudinaryUrl: result.secure_url, // Include Cloudinary URL
-//           publicId: result.public_id, // Include Cloudinary public ID
-//         };
-//       })
-//     );
-
-//     // Delete local folder
-//     fs.rm(guestUploadDir, { recursive: true }, (err) => {
-//       if (err) {
-//         console.error("Error deleting local folder:", err);
-//       } else {
-//         console.log("Local folder deleted:", guestUploadDir);
-//       }
-//     });
-
-//     res.json({ files: uploadedFiles });
-//   } catch (error) {
-//     console.error("Cloudinary upload error:", error);
-//     res.status(500).json({ error: "Cloudinary upload failed" });
-//   }
-// });
 
 // Firestore save route
 app.post("/save-to-firestore", async (req, res) => {
