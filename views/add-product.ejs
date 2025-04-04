@@ -128,9 +128,12 @@
       </div>
 
       <div class="flex justify-end mt-4 gap-2">
+        <%- if (!hide) { %>
         <button id="deleteButton" class="bg-red-500 text-white p-3 rounded-md">
           Delete Product
         </button>
+
+        <% - } %>
         <button id="saveButton" class="bg-green-500 text-white p-3 rounded-md">
           Save Product
         </button>

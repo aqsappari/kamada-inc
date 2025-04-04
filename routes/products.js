@@ -61,7 +61,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/add-product", (req, res) => {
-  res.render("add-product", { title: "Add Product" });
+  res.render("add-product", { title: "Add Product", hide: true });
 });
 
 // Multer setup
@@ -214,7 +214,7 @@ router.delete("/delete-firestore/:productId", async (req, res) => {
 
 router.get("/:productId", async (req, res) => {
   const productID = req.params.productId;
-  res.render("add-product", { title: productID }); // Pass data to add-product.ejs
+  res.render("add-product", { title: productID, hide: false }); // Pass data to add-product.ejs
 });
 
 router.get("/:productId/retrieve", async (req, res) => {
