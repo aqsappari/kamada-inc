@@ -47,25 +47,6 @@ function generateSignature(publicId, callback) {
   callback(signature, timestamp);
 }
 
-// Nodemailer configuration (replace with your Gmail credentials)
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "sappari.aq@gmail.com",
-    pass: "crvj bpnh wviq garr",
-  },
-});
-
-function generateTrackingId() {
-  const now = new Date();
-  const timestamp = now
-    .toISOString()
-    .replace(/[-:T.]/g, "")
-    .substring(0, 14); // Format: YYYYMMDDHHMMSS
-  const random = Math.random().toString(36).substring(2, 8).toUpperCase(); // Shorter random part
-  return `TRACK-${timestamp}-${random}`;
-}
-
 // Example route for generating signature
 app.get("/signature", (req, res) => {
   generateSignature("kamada", (signature, timestamp) => {
@@ -91,6 +72,25 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname); // Generate unique filename
   },
 });
+
+// Nodemailer configuration (replace with your Gmail credentials)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "sappari.aq@gmail.com",
+    pass: "crvj bpnh wviq garr",
+  },
+});
+
+function generateTrackingId() {
+  const now = new Date();
+  const timestamp = now
+    .toISOString()
+    .replace(/[-:T.]/g, "")
+    .substring(0, 14); // Format: YYYYMMDDHHMMSS
+  const random = Math.random().toString(36).substring(2, 8).toUpperCase(); // Shorter random part
+  return `TRACK-${timestamp}-${random}`;
+}
 
 // Firestore save route
 app.post("/save-to-firestore", async (req, res) => {

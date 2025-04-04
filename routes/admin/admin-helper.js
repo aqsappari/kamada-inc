@@ -127,255 +127,48 @@ const dashboardContent = `
 `;
 
 const productsContent = `
-<div class="p-6 flex flex-col h-full">
-          <h1 class="text-3xl font-semibold mb-6">Products</h1>
+<div class="h-full flex flex-col gap-4">
+    <header class="p-4 flex justify-between items-center">
+        <h1 class="text-3xl font-semibold">Products</h1>
+        <button id="sidebarToggle" class="lg:hidden">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
 
-          <div class="bg-white rounded-md p-4 mb-6 flex-1 overflow-y-auto">
-            <table
-              class="min-w-full min-h-full border-collapse border border-gray-300 table-fixed"
-            >
-              <thead>
-                <tr class="text-left bg-indigo-100">
-                  <th class="p-2 font-semibold border border-gray-300 w-1/4">
-                    Garments
-                    <button
-                      id="addGarment"
-                      class="float-right cursor-pointer text-gray-500 hover:text-gray-700"
-                    >
-                      &#43;
-                    </button>
-                  </th>
-                  <th class="p-2 font-semibold border border-gray-300 w-1/4">
-                    Fabrics
-                    <button
-                      id="addFabric"
-                      class="float-right cursor-pointer text-gray-500 hover:text-gray-700 hidden"
-                    >
-                      &#43;
-                    </button>
-                  </th>
-                  <th class="p-2 font-semibold border border-gray-300 w-1/4">
-                    Sizes
-                    <button
-                      id="addSize"
-                      class="float-right cursor-pointer text-gray-500 hover:text-gray-700 hidden"
-                    >
-                      &#43;
-                    </button>
-                  </th>
-                  <th class="p-2 font-semibold border border-gray-300 w-1/4">
-                    Colors
-                    <button
-                      id="addColor"
-                      class="float-right cursor-pointer text-gray-500 hover:text-gray-700 hidden"
-                    >
-                      &#43;
-                    </button>
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="h-full">
-                <tr>
-                  <td class="p-2 border border-gray-300 align-top w-1/4">
-                    <ul id="garmentsList" class="list-none"></ul>
-                  </td>
-                  <td class="p-2 border border-gray-300 align-top w-1/4">
-                    <ul id="fabricsList" class="list-none"></ul>
-                  </td>
-                  <td class="p-2 border border-gray-300 align-top w-1/4">
-                    <ul id="sizesList" class="list-none"></ul>
-                  </td>
-                  <td class="p-2 border border-gray-300 align-top w-1/4">
-                    <ul id="colorsList" class="list-none"></ul>
-                  </td>
-                </tr>
-              </tbody>
+    <div class="p-4 bg-white shadow-md rounded-lg flex justify-end">
+        <button id="addProductButton" class="bg-cyan-500 text-white px-4 py-2 rounded-md">
+            Add Product
+        </button>
+    </div>
+
+    <div class="p-4 flex-1 flex flex-col">
+        <div class="w-full flex flex-col lg:flex-row gap-4 items-center lg:justify-between mb-4">
+            <div class="flex items-center space-x-2">
+                <button id="prevPage" class="px-3 py-1 rounded-md border border-gray-300 bg-indigo-200 text-white">&lt;</button>
+                <div id="pageNumbers" class="flex space-x-1"></div>
+                <button id="nextPage" class="px-3 py-1 rounded-md border border-gray-300 bg-indigo-200 text-white">&gt;</button>
+            </div>
+            <div class="flex items-center">
+                <input type="text" id="searchInput" class="border border-gray-300 p-2 rounded-md" placeholder="Search" />
+            </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md flex-1 flex flex-col">
+            <table id="productsTable" class="w-full table table-fixed">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="border-b border-gray-200 p-3 text-left hidden sm:table-cell">Product ID</th>
+                        <th class="border-b border-gray-200 p-3 text-left">Product Name</th>
+                        <th class="border-b border-gray-200 p-3 text-left">Total Orders</th>
+                        <th class="border-b border-gray-200 p-3 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody" class="overflow-y-auto w-full">
+                </tbody>
             </table>
-          </div>
         </div>
-
-        <div
-          id="modalOverlay"
-          class="fixed inset-0 bg-black opacity-50 z-40 hidden"
-        ></div>
-
-        <div
-          id="garmentModal"
-          class="fixed inset-0 flex items-center justify-center hidden z-50"
-        >
-          <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-            <h2 class="text-lg font-semibold mb-4">Add New Garment</h2>
-            <div id="garmentError" class="text-red-500 mb-2 hidden"></div>
-            <div class="mb-4">
-              <label
-                for="newGarmentName"
-                class="block font-medium text-sm text-gray-700"
-                >Garment Name</label
-              >
-              <input
-                id="newGarmentName"
-                class="w-full border p-2 mt-1"
-                placeholder="Enter garment name"
-                required
-              />
-            </div>
-            <div class="flex justify-end">
-              <button
-                id="cancelGarment"
-                class="bg-gray-300 px-4 py-2 rounded-md mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                id="confirmGarment"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          id="fabricModal"
-          class="fixed inset-0 flex items-center justify-center hidden z-[99]"
-        >
-          <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-            <h2 class="text-lg font-semibold mb-4">Add New Fabric(s)</h2>
-            <div id="fabricError" class="text-red-500 mb-2 hidden"></div>
-            <div id="fabricInputs">
-              <div class="flex space-x-2 mb-2">
-                <input
-                  class="w-1/2 border p-2"
-                  placeholder="Fabric Name"
-                  required
-                />
-                <input
-                  type="number"
-                  class="w-1/2 border p-2"
-                  placeholder="Price"
-                  required
-                />
-                <button
-                  type="button"
-                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-            <button
-              id="addFabricInput"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md mt-2"
-            >
-              Add Fabric
-            </button>
-            <div class="flex justify-end mt-4">
-              <button
-                id="cancelFabric"
-                class="bg-gray-300 px-4 py-2 rounded-md mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                id="confirmFabric"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          id="sizeModal"
-          class="fixed inset-0 flex items-center justify-center hidden z-50"
-        >
-          <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-            <h2 class="text-lg font-semibold mb-4">Add New Size</h2>
-            <div id="sizeError" class="text-red-500 mb-2 hidden"></div>
-            <div class="mb-4">
-              <label
-                for="sizeInitials"
-                class="block font-medium text-sm text-gray-700"
-                >Size Initials (e.g., S)</label
-              >
-              <input
-                id="sizeInitials"
-                class="w-full border p-2 mt-1"
-                required
-              />
-            </div>
-            <div id="sizeMeasurements">
-              <div class="flex space-x-2 mb-2">
-                <input
-                  class="w-1/2 border p-2"
-                  placeholder="Measurement Name (e.g., Chest)"
-                  required
-                />
-                <input
-                  class="w-1/2 border p-2"
-                  placeholder="Measurement Value (e.g., 37)"
-                  required
-                />
-                <button
-                  type="button"
-                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-            <button
-              id="addMeasurement"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md mt-2"
-            >
-              Add Measurement
-            </button>
-            <div class="flex justify-end mt-4">
-              <button
-                id="cancelSize"
-                class="bg-gray-300 px-4 py-2 rounded-md mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                id="confirmSize"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          id="colorModal"
-          class="fixed inset-0 flex items-center justify-center hidden z-[99]"
-        >
-          <div class="bg-white p-6 rounded-md shadow-lg w-1/3">
-            <h2 class="text-lg font-semibold mb-4">Add New Color</h2>
-            <input
-              id="newColorName"
-              class="w-full border p-2 mb-4"
-              placeholder="Enter color name"
-            />
-            <div class="flex justify-end">
-              <button
-                id="cancelColor"
-                class="bg-gray-300 px-4 py-2 rounded-md mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                id="confirmColor"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
+    </div>
+</div>
 `;
 
 export { dashboardContent, productsContent };
