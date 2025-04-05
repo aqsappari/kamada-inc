@@ -1,35 +1,16 @@
 import express from "express";
 import bodyParser from "body-parser";
-import catalogRouter from "./catalog.js";
-import trackRouter from "./track.js";
 import { db } from "../firebase/firebaseApp.js"; // Import db
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: false }));
 
-router.get("/", async (req, res) => {
-  res.render("index");
-});
-
-router.get("/design-details", (req, res) => {
-  res.render("design-details");
-});
-
-router.get("/checkout", (req, res) => {
-  res.render("checkout");
-});
-
-router.use("/products", catalogRouter);
-
-router.use("/track-order", trackRouter);
-
-router.get("/track-order", (req, res) => {
+router.get("/", (req, res) => {
   const trackingId = req.query.id;
 
   if (trackingId) {
     // trackingId parameter exists, process it
-    console.log("Tracking ID:", trackingId);
 
     const clientDocRef = doc(db, "client-details", trackingId);
     getDoc(clientDocRef).then((docSnapshot) => {
@@ -42,6 +23,30 @@ router.get("/track-order", (req, res) => {
   } else {
     // trackingId parameter is missing
     res.status(400).send("Tracking ID is required. <a href='/'>Go Home</a>");
+  }
+});
+
+router.get("/data", async (req, res) => {
+  const trackingId = req.query.id;
+  console.log("Tracking ID:", trackingId);
+
+  if (!trackingId) {
+    return res.status(400).json({ error: "Tracking ID is required." });
+  }
+
+  try {
+    const clientDocRef = doc(db, "client-details", trackingId);
+    const docSnapshot = await getDoc(clientDocRef);
+
+    if (docSnapshot.exists()) {
+      const orderData = docSnapshot.data();
+      res.json(orderData); // Send the entire orderData object
+    } else {
+      res.status(404).json({ error: "Order not found." });
+    }
+  } catch (error) {
+    console.error("Error fetching order data:", error);
+    res.status(500).json({ error: "Failed to fetch order data." });
   }
 });
 

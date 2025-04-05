@@ -10,7 +10,7 @@ import multer from "multer";
 import { cloudinary } from "./cloudinary/cloudinaryConfig.js";
 import fs from "fs";
 import { db } from "./firebase/firebaseApp.js"; // Import db
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import nodemailer from "nodemailer";
 import { Readable } from "stream";
 
@@ -100,6 +100,32 @@ app.post("/save-to-firestore", async (req, res) => {
 
     // Add trackingId to necessaryData
     necessaryData.trackingId = trackingId;
+    necessaryData.status = "Order Recieved";
+
+    const productID = necessaryData.productArray.id; // Assuming productId is directly in necessaryData
+    console.log(productID);
+
+    const productOrderAmount = necessaryData.productArray.productOrder;
+
+    // Get current product order amount from Firestore
+    const productDocRef = doc(db, "products", productID);
+    const productDocSnapshot = await getDoc(productDocRef);
+
+    let currentProductOrderAmount = 0;
+    if (productDocSnapshot.exists()) {
+      currentProductOrderAmount = productDocSnapshot.data().order || 0;
+    }
+
+    // Calculate new product order amount
+    const newProductOrderAmount =
+      currentProductOrderAmount + productOrderAmount;
+
+    // Update product order amount in Firestore
+    await setDoc(
+      productDocRef,
+      { order: newProductOrderAmount },
+      { merge: true }
+    );
 
     // Add data to Firestore with trackingId as document name
     const clientDocRef = doc(db, "client-details", trackingId);

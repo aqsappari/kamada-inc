@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import { dashboardContent } from "./admin/admin-helper.js";
 import productRouter from "./products.js";
+import orderRouter from "./orders.js";
 
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -112,6 +113,27 @@ router.use("/products", productRouter);
 router.get("/get-products", async (req, res) => {
   try {
     const productsRef = collection(db, "products");
+    const querySnapshot = await getDocs(productsRef);
+    const products = [];
+
+    querySnapshot.forEach((doc) => {
+      products.push({
+        id: doc.id, // Use Firestore document ID
+        ...doc.data(), // Include all other product data
+      });
+    });
+
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products from Firestore:", error);
+    res.status(500).json({ error: "Failed to fetch products." });
+  }
+});
+
+router.use("/orders", orderRouter);
+router.get("/get-orders", async (req, res) => {
+  try {
+    const productsRef = collection(db, "client-details");
     const querySnapshot = await getDocs(productsRef);
     const products = [];
 

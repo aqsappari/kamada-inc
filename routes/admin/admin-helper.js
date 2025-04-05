@@ -171,4 +171,43 @@ const productsContent = `
 </div>
 `;
 
-export { dashboardContent, productsContent };
+const ordersContent = `
+<div class="h-full flex flex-col gap-4">
+    <header class="p-4 flex justify-between items-center">
+        <h1 class="text-3xl font-semibold">Orders</h1>
+        <button id="sidebarToggle" class="lg:hidden">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="p-4 flex-1 flex flex-col">
+        <div class="w-full flex flex-col lg:flex-row gap-4 items-center lg:justify-between mb-4">
+            <div class="flex items-center space-x-2">
+                <button id="prevPage" class="px-3 py-1 rounded-md border border-gray-300 bg-indigo-200 text-white">&lt;</button>
+                <div id="pageNumbers" class="flex space-x-1"></div>
+                <button id="nextPage" class="px-3 py-1 rounded-md border border-gray-300 bg-indigo-200 text-white">&gt;</button>
+            </div>
+            <div class="flex items-center">
+                <input type="text" id="searchInput" class="border border-gray-300 p-2 rounded-md" placeholder="Search" />
+            </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg shadow-md flex-1 flex flex-col">
+            <table id="ordersTable" class="w-full table table-fixed">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="border-b border-gray-200 p-3 text-left">Tracking ID</th>
+                        <th class="border-b border-gray-200 p-3 text-left hidden xl:table-cell">Client Email</th>
+                        <th class="border-b border-gray-200 p-3 text-left">Status</th>
+                        <th class="border-b border-gray-200 p-3 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody" class="overflow-y-auto w-full">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+`;
+
+export { dashboardContent, productsContent, ordersContent };

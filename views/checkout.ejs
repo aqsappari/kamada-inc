@@ -73,6 +73,10 @@
                 id="designNotesContent"
                 class="border rounded p-2 flex-grow overflow-y-auto h-full"
               ></p>
+
+              <div id="totalPriceBreakdown">
+                <p class="mt-3 text-lg font-bold">Total: Php 0.00</p>
+              </div>
             </div>
           </div>
 
@@ -224,7 +228,7 @@
       <div
         class="container text-white mx-auto flex justify-between items-center"
       >
-        <div id="totalPriceBreakdown">
+        <div id="totalPriceBreakdown2">
           <p>Total: Php 0.00</p>
         </div>
         <button
@@ -240,11 +244,8 @@
       // Get data from sessionStorage
       const designNotes = sessionStorage.getItem("designNotes");
       const filesArray = JSON.parse(sessionStorage.getItem("filesArray"));
-      const orderListItems = JSON.parse(
-        sessionStorage.getItem("orderListItems")
-      );
 
-      if (!designNotes || !filesArray || !orderListItems) {
+      if (!designNotes || !filesArray) {
         window.location.href = "/design-details";
       }
 
@@ -255,6 +256,8 @@
 
       // Function to create a file card
       function createFileCard(fileObj) {
+        console.log(fileObj);
+
         const fileCard = document.createElement("div");
         fileCard.classList.add(
           "flex",
@@ -267,27 +270,27 @@
         );
 
         const fileName =
-          fileObj.name.length > 20
-            ? fileObj.name.substring(0, 20) + "..."
-            : fileObj.name;
+          fileObj.originalName.length > 20
+            ? fileObj.originalName.substring(0, 20) + "..."
+            : fileObj.originalName;
 
         const extensionColor = getExtensionColor(
-          fileObj.extension.toUpperCase()
+          fileObj.originalExtension.toUpperCase()
         );
 
-        const { size, unit } = formatFileSize(fileObj.size);
+        const { size, unit } = formatFileSize(fileObj.originalSize);
 
         fileCard.innerHTML = `
-                <div class="flex items-center">
-                  <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">
-                    ${fileObj.extension.toUpperCase()}
+                  <div class="flex items-center">
+                    <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">
+                      ${fileObj.originalExtension.toUpperCase()}
+                    </div>
+                    <div>
+                      <p>${fileName}</p>
+                      <p class="text-xs text-gray-500">${size} ${unit.toLocaleUpperCase()}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p>${fileName}</p>
-                    <p class="text-xs text-gray-500">${size} ${unit.toLocaleUpperCase()}</p>
-                  </div>
-                </div>
-              `;
+                `;
 
         return fileCard;
       }
@@ -312,6 +315,13 @@
           };
         }
       }
+
+      let product = sessionStorage.getItem("product-details");
+      product = JSON.parse(product);
+
+      let productPrice = product[0].price;
+      let totalQuantity = 0;
+      let calculatedPrice = 0;
 
       // Function to get extension color (same as before)
       function getExtensionColor(extension) {
@@ -354,40 +364,43 @@
       // Get the order list container element
       const orderListContainer = document.getElementById("orderList");
 
+      // Get the orderListItems from sessionStorage
+      const orderListItems =
+        JSON.parse(sessionStorage.getItem("orderListItems")) || [];
+
       // Function to create an order item card (modified)
       function createOrderItemCard(item) {
         const itemCard = document.createElement("div");
         itemCard.classList.add(
           "flex",
-          "items-center",
+          "items-start",
+          "justify-between",
           "p-4",
           "border",
           "rounded-lg",
           "mb-2",
-          "bg-white" // Added white background
+          "bg-white"
         );
 
-        const itemName = item.garment;
+        const productId = product[0].name; // Get productId from URL
+        const variations = item.variations;
         const quantity = item.quantity;
-        const size = item.size; // Assuming you have size in your item object
-        const color = item.color; // Assuming you have color in your item object
-        const fabric = item.fabrics; // Assuming you have fabric in your item object
 
-        // Determine text color based on item color
-        const textColor = color.toLowerCase() === "white" ? "black" : "white";
+        totalQuantity += quantity;
+
+        let variationsText = "";
+        for (const variationName in variations) {
+          variationsText += `<span class="text-gray-500">${variationName}: ${variations[variationName]}, </span>`;
+        }
+        variationsText = variationsText.slice(0, -2); // Remove trailing comma and space
 
         itemCard.innerHTML = `
-        <div class="flex items-center">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4" style="background-color: ${color}; color: ${textColor}; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-                ${size.substring(0, 2).toUpperCase()} 
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Fabric: ${fabric}</p>
-                <p class="font-semibold">${itemName}</p>
-                <p class="text-sm text-gray-500">Size: ${size}, Color: ${color}, Quantity: ${quantity}</p>
-            </div>
-        </div>
-    `;
+          <div class="flex flex-col items-start">
+              <h3 class="font-semibold">${productId}</h3>
+              <div class="font-medium">${variationsText}</div>
+          </div>
+          <div class="font-semibold">Quantity: ${quantity}</div>
+      `;
 
         return itemCard;
       }
@@ -396,6 +409,15 @@
       orderListItems.forEach((item) => {
         const itemCard = createOrderItemCard(item);
         orderListContainer.appendChild(itemCard);
+
+        calculatedPrice = totalQuantity * productPrice;
+        document
+          .querySelector("#totalPriceBreakdown")
+          .querySelector("p").innerHTML = "Total: Php " + calculatedPrice;
+
+        document
+          .querySelector("#totalPriceBreakdown2")
+          .querySelector("p").innerHTML = "Total: Php " + calculatedPrice;
       });
 
       // Initialize the map
@@ -490,12 +512,16 @@
         // If all validations pass, proceed with checkout
         showLoadingModal();
 
+        const productArray = { id: product[0].id, productOrder: totalQuantity };
+
         // Create necessaryData object
         const necessaryData = {
           guestId: sessionStorage.getItem("guestId"),
           filesArray: filesArray, // Assuming filesArray is accessible
           orderItems: orderListItems, // Assuming orderItems is accessible
           designNotes: designNotes, // Assuming designNotes is accessible
+          productArray: productArray,
+          totalAmount: calculatedPrice,
           client: {
             fullName: document.getElementById("fullName").value.trim(),
             companyName: document.getElementById("companyName").value.trim(),

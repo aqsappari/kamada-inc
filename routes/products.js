@@ -26,27 +26,6 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.get("/", async (req, res) => {
   console.log("Products access granted");
   try {
-    const querySnapshot = await getDocs(collection(db, "garments"));
-    const products = {};
-
-    querySnapshot.forEach((doc) => {
-      const garmentName = doc.id;
-      const garmentData = doc.data();
-
-      products[garmentName] = {};
-
-      if (garmentData.fabrics) {
-        for (const fabricName in garmentData.fabrics) {
-          const fabricData = garmentData.fabrics[fabricName];
-          products[garmentName][fabricName] = {
-            price: fabricData.price,
-            sizes: fabricData.sizes || {},
-            colors: fabricData.colors || [],
-          };
-        }
-      }
-    });
-
     const script = `<script src="/js/admin-products.js"></script>`;
 
     res.render("admin-template", {
@@ -61,7 +40,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/add-product", (req, res) => {
-  res.render("add-product", { title: "Add Product", hide: true });
+  res.render("add-product", { title: "Add Product", hide: "true" });
 });
 
 // Multer setup
@@ -214,7 +193,7 @@ router.delete("/delete-firestore/:productId", async (req, res) => {
 
 router.get("/:productId", async (req, res) => {
   const productID = req.params.productId;
-  res.render("add-product", { title: productID, hide: false }); // Pass data to add-product.ejs
+  res.render("add-product", { title: productID, hide: "false" }); // Pass data to add-product.ejs
 });
 
 router.get("/:productId/retrieve", async (req, res) => {
