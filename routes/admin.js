@@ -69,8 +69,8 @@ router.post("/", async (req, res) => {
       req.session.username = username;
       req.session.isAdmin = true;
 
-      console.log("Login successful - redirecting to dashboard");
-      res.redirect("/admin/dashboard");
+      console.log("Login successful - sending JSON response");
+      res.redirect(req.originalUrl); // Send JSON response
     } else {
       console.log("Login failed - redirecting to login page with error");
       req.session.errorMessage = result.message;
@@ -83,19 +83,33 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", (req, res) => {
+  if (req.session && req.session.isAdmin) {
+    return res.redirect("/admin/dashboard"); // Redirect logged-in users
+  }
+
   const errorMessage = req.session.errorMessage;
   delete req.session.errorMessage;
   res.render("login", { errorMessage });
 });
 
 // Apply checkAdminLogin middleware to all /admin/* routes except the root route
-// router.use("/", checkAdminLogin);
+router.use("/", checkAdminLogin);
 
 router.get("/dashboard", (req, res) => {
   console.log("Dashboard access granted");
   try {
     const body = dashboardContent;
-    const script = '<script src="/js/admin-dashboard.js"></script>';
+    const script = `
+            <script>
+                if (window.history && window.history.pushState) {
+                    window.history.pushState(null, document.title, window.location.href);
+                    window.addEventListener('popstate', function (event) {
+                        window.history.pushState(null, document.title, window.location.href);
+                    });
+                }
+            </script>
+            <script src="/js/admin-dashboard.js"></script>
+        `;
 
     res.render("admin-template", {
       body: body,

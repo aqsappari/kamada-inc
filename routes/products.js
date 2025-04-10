@@ -43,9 +43,6 @@ router.get("/add-product", (req, res) => {
   res.render("add-product", { title: "Add Product", hide: "true" });
 });
 
-// Multer setup
-const upload = multer().array("files", 10); // Max 10 files
-
 // Function to generate unique product ID
 async function generateNextProductId() {
   const productsRef = collection(db, "products");
@@ -63,8 +60,35 @@ async function generateNextProductId() {
   }
 }
 
-// Cloudinary upload route
+const FILESIZE_MB = 10;
+const upload = multer({
+  storage: multer.memoryStorage(), // Use memory storage for Cloudinary
+  limits: { fileSize: FILESIZE_MB * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      req.fileValidationError =
+        "Only JPEG, JPG, PNG, GIF, and WEBP image files are allowed!";
+      cb(null, false);
+    }
+  },
+}).array("files", 10);
+
+let uploadPromises = [];
+let uploadInProgress = false; // Flag to track upload status
+
 router.post("/upload", upload, async (req, res) => {
+  uploadInProgress = true; // Set flag to true
+
   try {
     const filesRemoved = JSON.parse(req.body.filesRemoved || "[]");
     if (filesRemoved.length > 0) {
@@ -76,40 +100,80 @@ router.post("/upload", upload, async (req, res) => {
     const uploadedFiles = [];
 
     if (filesToUpload.length > 0) {
-      const productId = req.body.productId; // Get productId from request
+      const productId = req.body.productId;
 
-      const uploadPromises = filesToUpload.map(async (file) => {
+      uploadPromises = filesToUpload.map(async (file) => {
         const publicId = productId ? `${productId}/${uuidv4()}` : uuidv4();
 
-        const result = await new Promise((resolve, reject) => {
-          cloudinary.uploader
-            .upload_stream(
-              { resource_type: "auto", public_id: publicId },
-              (error, result) => {
-                if (error) {
-                  reject(error);
-                } else {
-                  resolve(result);
-                }
+        return new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { resource_type: "auto", public_id: publicId },
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve({
+                  ...result,
+                  publicId,
+                  originalFilename: file.originalname,
+                });
               }
-            )
-            .end(file.buffer);
-        });
+            }
+          );
 
-        return {
-          filename: file.originalname,
-          cloudinaryUrl: result.secure_url,
-          publicId: result.public_id,
-        };
+          // Use Readable.from to create a stream from the file buffer
+          Readable.from(file.buffer).pipe(uploadStream);
+        });
       });
 
-      uploadedFiles.push(...(await Promise.all(uploadPromises)));
+      const results = await Promise.all(uploadPromises);
+
+      uploadedFiles.push(
+        ...results.map((result) => ({
+          filename: result.originalFilename,
+          cloudinaryUrl: result.secure_url,
+          publicId: result.publicId,
+        }))
+      );
+    }
+
+    if (req.fileValidationError) {
+      return res.status(400).json({ error: req.fileValidationError });
     }
 
     res.json({ files: uploadedFiles });
   } catch (error) {
-    console.error("Cloudinary upload error:", error);
-    res.status(500).json({ error: "Cloudinary upload failed." });
+    console.error("Upload error:", error);
+
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({ error: "File size exceeds 10MB." });
+    } else {
+      return res.status(500).json({ error: "Cloudinary upload failed." });
+    }
+  } finally {
+    uploadInProgress = false; // Reset flag
+  }
+});
+// New route to handle cancellation
+router.post("/cancel-upload", async (req, res) => {
+  try {
+    if (uploadInProgress) {
+      // Delete the uploaded images from Cloudinary
+      const publicIds = uploadPromises.map(
+        (promise) => promise.value?.publicId
+      );
+
+      if (publicIds.length > 0) {
+        await cloudinary.api.delete_resources(publicIds);
+      }
+      uploadPromises = []; //clear promises.
+    }
+    res.json({ success: true, message: "Upload cancelled." });
+  } catch (error) {
+    console.error("Cancellation error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  } finally {
+    uploadInProgress = false;
   }
 });
 

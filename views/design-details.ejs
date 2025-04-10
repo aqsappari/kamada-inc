@@ -129,12 +129,20 @@
               id="designUploadPrints"
               class="hidden"
               multiple
-              accept="image/*, application/zip, application/x-photoshop, application/octet-stream"
+              accept="image/jpeg, image/png, image/gif, image/webp, image/svg+xml, image/tiff, image/tif, application/pdf, application/postscript, application/vnd.adobe.illustrator, application/illustrator, application/x-illustrator, application/x-eps, application/coreldraw, application/cdr, image/vnd.adobe.photoshop, application/photoshop, application/x-indesign, application/x-xd, application/sketch, application/zip, application/x-rar-compressed, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation"
             />
             <div
               id="uploadedFilesList"
               class="border border-gray-400 rounded-lg p-4 relative h-full overflow-y-auto"
-            ></div>
+            >
+              <p
+                id="uploadPlaceholder"
+                class="text-gray-500 text-center italic"
+              >
+                For files exceeding 50MB, please provide a Google Drive link in
+                the "Design Notes" section.
+              </p>
+            </div>
             <div
               class="absolute bg-blue-100 border border-gray-300 rounded p-2 text-sm z-10 hidden w-full top-7 right-0 info-box"
             ></div>

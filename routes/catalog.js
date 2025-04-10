@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 import { db } from "../firebase/firebaseApp.js"; // Import db
 import {
   collection,
@@ -16,14 +17,14 @@ import {
   where,
 } from "firebase/firestore";
 
-const router = express.Router();
-router.use(bodyParser.urlencoded({ extended: false }));
+const catalogRouter = express.Router();
+catalogRouter.use(bodyParser.urlencoded({ extended: false }));
 
-router.get("/", async (req, res) => {
+catalogRouter.get("/", async (req, res) => {
   res.render("products");
 });
 
-router.get("/get-products", async (req, res) => {
+catalogRouter.get("/get-products", async (req, res) => {
   try {
     const productsCollection = collection(db, "products");
     const productSnapshot = await getDocs(productsCollection);
@@ -53,7 +54,7 @@ router.get("/get-products", async (req, res) => {
   }
 });
 
-router.get("/get-product/:id", async (req, res) => {
+catalogRouter.get("/get-product/:id", async (req, res) => {
   try {
     const productRef = doc(db, "products", req.params.id);
     const productSnap = await getDoc(productRef);
@@ -83,7 +84,7 @@ router.get("/get-product/:id", async (req, res) => {
 });
 
 // Get product images by product ID
-router.get("/get-product-images/:id", async (req, res) => {
+catalogRouter.get("/get-product-images/:id", async (req, res) => {
   try {
     const productRef = doc(db, "products", req.params.id);
     const productSnap = await getDoc(productRef);
@@ -100,9 +101,87 @@ router.get("/get-product-images/:id", async (req, res) => {
   }
 });
 
-router.get("/:productId", (req, res) => {
+const FILESIZE_MB = 100;
+const tempFileStorage = new Map(); // Store files temporarily
+
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/svg+xml",
+  "image/tiff",
+  "image/tif",
+  "application/pdf",
+  "application/postscript",
+  "application/vnd.adobe.illustrator",
+  "application/illustrator",
+  "application/x-illustrator",
+  "application/x-eps",
+  "application/coreldraw",
+  "application/cdr",
+  "application/x-photoshop",
+  "image/vnd.adobe.photoshop",
+  "application/photoshop",
+  "application/x-indesign",
+  "application/x-xd",
+  "application/sketch",
+  "application/zip",
+  "application/x-rar-compressed",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+];
+
+const validateFileType = (file) => {
+  if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    return true;
+  }
+  return false;
+};
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: FILESIZE_MB * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (validateFileType(file)) {
+      cb(null, true);
+    } else {
+      req.fileValidationError = `Invalid file type. Allowed types are: ${ALLOWED_MIME_TYPES.join(
+        ", "
+      )}.`;
+      cb(null, false);
+    }
+  },
+}).array("files", 10);
+
+catalogRouter.post("/upload", upload, async (req, res) => {
+  try {
+    if (req.fileValidationError) {
+      return res.status(400).json({ error: req.fileValidationError });
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No files were uploaded." });
+    }
+
+    const fileIds = req.files.map((file) => {
+      const fileId = uuidv4();
+      tempFileStorage.set(fileId, file); // Store file data here
+      return fileId;
+    });
+
+    // console.log(tempFileStorage);
+
+    res.json({ fileIds });
+  } catch (error) {
+    console.error("Error uploading files:", error);
+    res.status(500).json({ error: "Failed to upload files." });
+  }
+});
+
+catalogRouter.get("/:productId", (req, res) => {
   const id = req.params.productId;
   res.render("design-details", { id: id });
 });
 
-export default router;
+export { catalogRouter, tempFileStorage };
