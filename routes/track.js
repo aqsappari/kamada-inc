@@ -1,31 +1,33 @@
 import express from "express";
-import bodyParser from "body-parser";
-import { db } from "../firebase/firebaseApp.js"; // Import db
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebaseApp.js";
+import { doc, getDoc } from "firebase/firestore";
 
 const router = express.Router();
-router.use(bodyParser.urlencoded({ extended: false }));
 
-router.get("/", (req, res) => {
+// Route to render the track order page
+router.get("/", async (req, res) => {
   const trackingId = req.query.id;
 
   if (trackingId) {
-    // trackingId parameter exists, process it
+    try {
+      const clientDocRef = doc(db, "client-details", trackingId);
+      const docSnapshot = await getDoc(clientDocRef);
 
-    const clientDocRef = doc(db, "client-details", trackingId);
-    getDoc(clientDocRef).then((docSnapshot) => {
       if (docSnapshot.exists()) {
-        res.render("track-order", { id: trackingId }); // For now, just send the ID back
+        res.render("track-order", { id: trackingId });
       } else {
         res.status(404).json({ message: "Tracking ID not found." });
       }
-    });
+    } catch (error) {
+      console.error("Error fetching order data:", error);
+      res.status(500).send("Internal Server Error");
+    }
   } else {
-    // trackingId parameter is missing
     res.status(400).send("Tracking ID is required. <a href='/'>Go Home</a>");
   }
 });
 
+// Route to get order data by tracking ID (JSON response)
 router.get("/data", async (req, res) => {
   const trackingId = req.query.id;
   console.log("Tracking ID:", trackingId);
@@ -39,8 +41,7 @@ router.get("/data", async (req, res) => {
     const docSnapshot = await getDoc(clientDocRef);
 
     if (docSnapshot.exists()) {
-      const orderData = docSnapshot.data();
-      res.json(orderData); // Send the entire orderData object
+      res.json(docSnapshot.data());
     } else {
       res.status(404).json({ error: "Order not found." });
     }

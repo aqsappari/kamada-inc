@@ -1,44 +1,28 @@
 import express from "express";
-import { db } from "../firebase/firebaseApp.js"; // Import db
-import {
-  collection,
-  doc,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  getDoc,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-  where,
-} from "firebase/firestore"; // Import Firestore functions
-import bodyParser from "body-parser";
+import { db } from "../firebase/firebaseApp.js";
+import { doc, setDoc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { ordersContent } from "./admin/admin-helper.js";
 
 const router = express.Router();
-router.use(bodyParser.urlencoded({ extended: false }));
 
+// Route to render the orders admin page
 router.get("/", async (req, res) => {
-  console.log("Products access granted");
   try {
     const script = `<script src="/js/admin-orders.js"></script>`;
-
     res.render("admin-template", {
       body: ordersContent,
       script: script,
       currentPage: "/admin/orders",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error rendering orders admin page:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
+// Route to get order data by tracking ID
 router.get("/data", async (req, res) => {
   const trackingId = req.query.id;
-  console.log(trackingId);
-
   if (!trackingId) {
     return res.status(400).json({ error: "Tracking ID is required." });
   }
@@ -51,57 +35,45 @@ router.get("/data", async (req, res) => {
       return res.status(404).json({ error: "Order not found." });
     }
 
-    const orderData = orderSnapshot.data();
-    res.json(orderData);
+    res.json(orderSnapshot.data());
   } catch (error) {
     console.error("Error fetching order data:", error);
     res.status(500).json({ error: "Failed to fetch order data." });
   }
 });
-// Firestore save route
+
+// Route to save order data to Firestore (product related)
 router.post("/save-to-firestore", async (req, res) => {
   try {
-    const necessaryData = req.body;
-    let productId = necessaryData.productId; // Check if productId exists in the request
+    const orderData = req.body; // Renamed for clarity
+    const productId = orderData.productId || (await generateNextProductId()); // Generate if missing
 
-    if (!productId) {
-      productId = await generateNextProductId(); // Generate new productId if it doesn't exist
-    }
-
-    const firestoreData = {
-      ...necessaryData,
-      productId: productId,
-    };
-
+    const firestoreData = { ...orderData, productId };
     const productDocRef = doc(db, "products", productId);
     await setDoc(productDocRef, firestoreData);
 
-    res.json({
-      message: "Data saved to Firestore successfully!",
-      productId: productId,
-    });
+    res.json({ message: "Data saved to Firestore successfully!", productId });
   } catch (error) {
     console.error("Error saving to Firestore:", error);
     res.status(500).json({ error: "Failed to save data to Firestore" });
   }
 });
 
-// Example Firestore delete route
-router.delete("/delete-firestore/:trackId", async (req, res) => {
+// Route to delete a product from Firestore by product ID
+router.delete("/delete-firestore/:productId", async (req, res) => {
   const productId = req.params.productId;
 
   try {
     const productRef = doc(db, "products", productId);
-    const prodID = await getDoc(productRef);
+    const productDocSnapshot = await getDoc(productRef);
 
-    if (!prodID.exists) {
+    if (!productDocSnapshot.exists()) {
       return res
         .status(404)
         .json({ success: false, message: "Product not found in Firestore." });
     }
 
-    await deleteDoc(productRef); // Use deleteDoc instead of productRef.delete()
-
+    await deleteDoc(productRef);
     res.json({ success: true, message: "Product deleted from Firestore." });
   } catch (error) {
     console.error("Error deleting product from Firestore:", error);
@@ -109,20 +81,21 @@ router.delete("/delete-firestore/:trackId", async (req, res) => {
   }
 });
 
+// Route to render the view-order page
 router.get("/:trackId", async (req, res) => {
   const trackId = req.params.trackId;
   res.render("view-order", { title: trackId });
 });
 
-router.get("/:trackId/retrieve", async (req, res) => {
+// Route to retrieve product data by product ID
+router.get("/:productId/retrieve", async (req, res) => {
   try {
     const productId = req.params.productId;
     const productDocRef = doc(db, "products", productId);
     const productDocSnapshot = await getDoc(productDocRef);
 
     if (productDocSnapshot.exists()) {
-      const productData = productDocSnapshot.data();
-      res.json(productData); // Send product data as JSON
+      res.json(productDocSnapshot.data());
     } else {
       res.status(404).json({ error: "Product not found" });
     }
@@ -132,7 +105,7 @@ router.get("/:trackId/retrieve", async (req, res) => {
   }
 });
 
-// Update Order Status
+// Route to update order status by tracking ID
 router.put("/:trackingId/status", async (req, res) => {
   const trackingId = req.params.trackingId;
   const newStatus = req.body.status;
@@ -145,17 +118,13 @@ router.put("/:trackingId/status", async (req, res) => {
 
   try {
     const orderDocRef = doc(db, "client-details", trackingId);
-
-    // Check if the document exists before attempting to update
     const orderDocSnapshot = await getDoc(orderDocRef);
+
     if (!orderDocSnapshot.exists()) {
       return res.status(404).json({ error: "Order not found." });
     }
 
-    await updateDoc(orderDocRef, {
-      status: newStatus,
-    });
-
+    await updateDoc(orderDocRef, { status: newStatus });
     res.json({ message: "Order status updated successfully." });
   } catch (error) {
     console.error("Error updating order status:", error);

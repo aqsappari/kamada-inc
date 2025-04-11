@@ -4,7 +4,6 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import nodemailer from "nodemailer";
 import { cloudinary } from "../cloudinary/cloudinaryConfig.js";
 import { Readable } from "stream";
-import { tempFileStorage } from "./catalog.js";
 import path from "path";
 
 const router = express.Router();

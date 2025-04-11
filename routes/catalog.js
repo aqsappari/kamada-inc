@@ -16,6 +16,9 @@ import {
   limit,
   where,
 } from "firebase/firestore";
+import { cloudinary } from "../cloudinary/cloudinaryConfig.js";
+import { Readable } from "stream";
+import path from "path";
 
 const catalogRouter = express.Router();
 catalogRouter.use(bodyParser.urlencoded({ extended: false }));
@@ -101,9 +104,7 @@ catalogRouter.get("/get-product-images/:id", async (req, res) => {
   }
 });
 
-const FILESIZE_MB = 100;
-const tempFileStorage = new Map(); // Store files temporarily
-
+const FILESIZE_MB = 50;
 const ALLOWED_MIME_TYPES = [
   "image/jpeg",
   "image/png",
@@ -120,7 +121,6 @@ const ALLOWED_MIME_TYPES = [
   "application/x-eps",
   "application/coreldraw",
   "application/cdr",
-  "application/x-photoshop",
   "image/vnd.adobe.photoshop",
   "application/photoshop",
   "application/x-indesign",
@@ -164,18 +164,62 @@ catalogRouter.post("/upload", upload, async (req, res) => {
       return res.status(400).json({ error: "No files were uploaded." });
     }
 
-    const fileIds = req.files.map((file) => {
-      const fileId = uuidv4();
-      tempFileStorage.set(fileId, file); // Store file data here
-      return fileId;
+    const uploadedFiles = await Promise.all(
+      req.files.map(async (file) => {
+        const stream = Readable.from(file.buffer);
+
+        const result = await new Promise((resolve, reject) => {
+          const cloudinaryStream = cloudinary.uploader.upload_stream(
+            { resource_type: "auto" },
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result);
+              }
+            }
+          );
+
+          stream.pipe(cloudinaryStream);
+        });
+
+        return {
+          url: result.secure_url,
+          public_id: result.public_id,
+          resource_type: result.resource_type,
+        };
+      })
+    );
+
+    res.json(uploadedFiles);
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    res.status(500).json({ error: "Cloudinary upload failed." });
+  }
+});
+
+catalogRouter.post("/delete-cloudinary", async (req, res) => {
+  try {
+    const { public_id, resource_type } = req.body;
+
+    if (!public_id || !resource_type) {
+      return res
+        .status(400)
+        .json({ error: "Public ID and resource type are required." });
+    }
+
+    const result = await cloudinary.uploader.destroy(public_id, {
+      resource_type: resource_type,
     });
 
-    // console.log(tempFileStorage);
-
-    res.json({ fileIds });
+    if (result.result === "ok") {
+      res.json({ success: true });
+    } else {
+      res.status(500).json({ error: "Cloudinary deletion failed." });
+    }
   } catch (error) {
-    console.error("Error uploading files:", error);
-    res.status(500).json({ error: "Failed to upload files." });
+    console.error("Cloudinary delete error:", error);
+    res.status(500).json({ error: "Cloudinary deletion failed." });
   }
 });
 
@@ -184,4 +228,4 @@ catalogRouter.get("/:productId", (req, res) => {
   res.render("design-details", { id: id });
 });
 
-export { catalogRouter, tempFileStorage };
+export { catalogRouter };

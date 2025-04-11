@@ -4,8 +4,7 @@
 const designNotes = sessionStorage.getItem("designNotes");
 const fileIds = JSON.parse(sessionStorage.getItem("fileIds"));
 const product = JSON.parse(sessionStorage.getItem("product-details"));
-const orderListItems =
-  JSON.parse(sessionStorage.getItem("orderListItems")) || [];
+const orderListItems = JSON.parse(sessionStorage.getItem("orderList")) || [];
 
 // --- 2. Product and Price Calculations ---
 const productPrice = product[0].price;
@@ -106,33 +105,17 @@ function getExtensionColor(extension) {
 
 // --- 7. Fetch and Render Uploaded Files ---
 function fetchAndRenderUploadedFiles() {
-  if (fileIds && fileIds.length > 0) {
-    fetch("/checkout/fileuploaded", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fileIds }),
-    })
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        return response.json();
-      })
-      .then((uploadedFiles) => {
-        if (uploadedFiles && Array.isArray(uploadedFiles)) {
-          uploadedFiles.forEach((file) => {
-            const fileCard = createFileCard(file);
-            if (fileCard) uploadedFilesContainer.appendChild(fileCard);
-          });
-        } else {
-          console.error(
-            "Invalid response from /checkout/fileuploaded:",
-            uploadedFiles
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching uploaded files:", error);
-      });
+  const fileInfoArray = JSON.parse(sessionStorage.getItem("fileInfoArray"));
+
+  if (fileInfoArray && Array.isArray(fileInfoArray)) {
+    fileInfoArray.forEach((file) => {
+      const fileCard = createFileCard(file);
+      if (fileCard) {
+        uploadedFilesContainer.appendChild(fileCard);
+      }
+    });
+  } else {
+    console.error("No file information found in sessionStorage.");
   }
 }
 

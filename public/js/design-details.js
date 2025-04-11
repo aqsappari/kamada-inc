@@ -356,15 +356,14 @@ function handleFileUpload(files) {
 
   Array.from(files).forEach((file) => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
-    if (allowedMimeTypes.includes(file.type) || fileExtension === "psd") {
+    if (allowedMimeTypes.includes(file.type)) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const { size, unit } = formatFileSize(file.size);
         filesArray.push({
           file: file,
           dataURL: e.target.result,
           name: file.name,
-          size: `${size} ${unit}`,
+          size: file.size,
           extension: fileExtension.toUpperCase(),
         });
         renderFiles();
@@ -380,12 +379,26 @@ function handleFileUpload(files) {
 
 function renderFiles() {
   uploadedFilesList.innerHTML = "";
-  filesArray.forEach((fileObj, index) => {
-    uploadedFilesList.appendChild(createFileCard(fileObj, index));
+
+  const fileInfoArray =
+    JSON.parse(sessionStorage.getItem("fileInfoArray")) || [];
+  const localFiles = filesArray.map((fileObj) => ({
+    url: fileObj.dataURL,
+    originalName: fileObj.name,
+    originalSize: fileObj.size,
+    originalExtension: fileObj.extension,
+  }));
+
+  const allFiles = [...localFiles, ...fileInfoArray];
+
+  allFiles.forEach((fileObj, index) => {
+    uploadedFilesList.appendChild(
+      createFileCard(fileObj, index, fileObj.url ? true : false)
+    );
   });
 }
 
-function createFileCard(fileObj, index) {
+function createFileCard(fileObj, index, isCloudinary = false) {
   const fileCard = document.createElement("div");
   fileCard.classList.add(
     "flex",
@@ -396,29 +409,36 @@ function createFileCard(fileObj, index) {
     "rounded-lg",
     "mb-2"
   );
+
   const fileName =
-    fileObj.name.length > 20
-      ? fileObj.name.substring(0, 20) + "..."
-      : fileObj.name;
-  const extensionColor = getExtensionColor(fileObj.extension);
+    fileObj.originalName.length > 20
+      ? fileObj.originalName.substring(0, 20) + "..."
+      : fileObj.originalName;
+  const extensionColor = getExtensionColor(fileObj.originalExtension);
+
+  const { size, unit } = formatFileSize(fileObj.originalSize);
 
   fileCard.innerHTML = `
-        <div class="flex items-center">
-            <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">${fileObj.extension}</div>
-            <div>
-                <p>${fileName}</p>
-                <p class="text-xs text-gray-500">${fileObj.size}</p>
-            </div>
-        </div>
-        <i class="ri-delete-bin-line cursor-pointer text-red-500" data-index="${index}"></i>
-    `;
+      <div class="flex items-center">
+          <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">${fileObj.originalExtension}</div>
+          <div>
+              <p>${fileName}</p>
+              <p class="text-xs text-gray-500">${size} ${unit}</p>
+          </div>
+      </div>
+      <i class="ri-delete-bin-line cursor-pointer text-red-500" data-index="${index}" data-is-cloudinary="${isCloudinary}"></i>
+  `;
 
   fileCard
     .querySelector(".ri-delete-bin-line")
-    .addEventListener("click", () => removeFile(index));
+    .addEventListener("click", (event) => {
+      const isCloudinaryFile =
+        event.target.getAttribute("data-is-cloudinary") === "true";
+      removeFile(index, isCloudinaryFile);
+    });
+
   return fileCard;
 }
-
 function formatFileSize(bytes) {
   const units = ["B", "KB", "MB", "GB", "TB"];
   let size = bytes;
@@ -460,8 +480,65 @@ function getExtensionColor(extension) {
   return colors[extension] || "#808080";
 }
 
-function removeFile(index) {
-  filesArray.splice(index, 1);
+function removeFile(index, isCloudinary = false) {
+  if (isCloudinary) {
+    Swal.fire({
+      title: "Deleting File...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    const fileInfoArray =
+      JSON.parse(sessionStorage.getItem("fileInfoArray")) || [];
+    const fileToDelete = fileInfoArray[index];
+
+    if (fileToDelete && fileToDelete.public_id) {
+      fetch("/products/delete-cloudinary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          public_id: fileToDelete.public_id,
+          resource_type: fileToDelete.resource_type,
+        }),
+      })
+        .then((response) => {
+          Swal.close();
+          if (response.ok) {
+            fileInfoArray.splice(index, 1);
+            sessionStorage.setItem(
+              "fileInfoArray",
+              JSON.stringify(fileInfoArray)
+            );
+            renderFiles();
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Deletion Failed",
+              text: "Failed to delete file from Cloudinary.",
+            });
+          }
+        })
+        .catch(() => {
+          Swal.close();
+          Swal.fire({
+            icon: "error",
+            title: "Deletion Failed",
+            text: "Failed to delete file from Cloudinary.",
+          });
+        });
+    } else {
+      Swal.close();
+    }
+  } else {
+    filesArray.splice(index, 1);
+    renderFiles();
+  }
+}
+
+const fileInfoArrayCheck = sessionStorage.getItem("fileInfoArray");
+if (fileInfoArrayCheck && fileInfoArrayCheck != "[]") {
   renderFiles();
 }
 
@@ -603,101 +680,92 @@ const checkoutButton = document.querySelector("#checkoutButton");
 checkoutButton.addEventListener("click", handleCheckout);
 
 async function handleCheckout() {
-  const designPrints = filesArray.map((fileObj) => ({
-    name: fileObj.name,
-    type: fileObj.file.type,
-    size: fileObj.file.size,
-    file: fileObj.file,
-  }));
   const designNotes =
     document.getElementById("designNotes").value.trim() ||
     "The user left this empty.";
-
-  // Use the consolidated validateOrder function
-  const isValid = await validateOrder(); // Use await because validateOrder returns a Promise
+  const isValid = await validateOrder();
 
   if (!isValid) {
-    // Validation failed, Swal.fire messages are already handled in validateOrder
-    return; // Stop further processing
+    return;
   }
 
-  // Check if filesArray is empty (user agreed to continue without files)
   if (filesArray.length === 0) {
-    // Skip file upload and proceed directly to checkout
     Swal.fire({
       title: "Proceeding to Checkout",
       text: "You are proceeding to checkout without uploading design files.",
       icon: "info",
       showConfirmButton: false,
-      timer: 2000, // Optional: Auto-close after 2 seconds
+      timer: 2000,
     });
 
-    // Proceed directly to checkout without file upload
     sessionStorage.setItem("designNotes", designNotes);
-    sessionStorage.setItem("orderListItems", JSON.stringify(orderListArray));
-    sessionStorage.removeItem("orderList");
+    sessionStorage.setItem("orderList", JSON.stringify(orderListArray));
     window.location.href = "/checkout";
-
-    return; // Stop further processing in this function
+    return;
   }
 
-  // If filesArray is not empty, proceed with file upload
   Swal.fire({
-    title: "Loading...",
+    title: "Uploading Files...",
     allowOutsideClick: false,
     didOpen: () => {
       Swal.showLoading();
-      uploadFilesAndRedirect({
-        guestId: sessionStorage.getItem("guestId"),
-        productId: window.location.pathname.split("/").pop(),
-        designPrints,
-        designNotes,
-        orderList: orderListArray,
-      });
+      uploadFilesToCloudinary(designNotes);
     },
   });
 }
 
-async function uploadFilesAndRedirect(firestoreData) {
+async function uploadFilesToCloudinary(designNotes) {
   try {
-    const formData = new FormData();
-    formData.append("guestId", firestoreData.guestId);
-    firestoreData.designPrints.forEach((fileObj) =>
-      formData.append("files", fileObj.file)
+    const cloudinaryUploads = await Promise.all(
+      filesArray.map((fileObj) => {
+        const formData = new FormData();
+        formData.append("files", fileObj.file);
+
+        return fetch("/products/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+          })
+          .then((data) => {
+            console.log("Server Response Data:", data);
+            return {
+              url: data[0].url,
+              public_id: data[0].public_id,
+              resource_type: data[0].resource_type,
+              originalName: fileObj.name,
+              originalSize: fileObj.file.size,
+              originalExtension: fileObj.name.split(".").pop().toUpperCase(),
+            };
+          });
+      })
     );
 
-    const response = await fetch("/products/upload", {
-      method: "POST",
-      body: formData,
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    console.log("Cloudinary Uploads:", cloudinaryUploads);
 
-    const data = await response.json();
+    // Merge with existing fileInfoArray
+    const existingFileInfo =
+      JSON.parse(sessionStorage.getItem("fileInfoArray")) || [];
+    const updatedFileInfo = [...existingFileInfo, ...cloudinaryUploads];
+
+    sessionStorage.setItem("fileInfoArray", JSON.stringify(updatedFileInfo));
+    sessionStorage.setItem("designNotes", designNotes);
+    sessionStorage.setItem("orderList", JSON.stringify(orderListArray));
+
     Swal.close();
-
-    if (data && data.fileIds && data.fileIds.length > 0) {
-      sessionStorage.setItem("fileIds", JSON.stringify(data.fileIds));
-      sessionStorage.setItem("designNotes", firestoreData.designNotes);
-      sessionStorage.setItem(
-        "orderListItems",
-        JSON.stringify(firestoreData.orderList)
-      );
-      sessionStorage.removeItem("orderList");
-      window.location.href = "/checkout";
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Upload Failed",
-        text: "File upload failed or no fileIds in response",
-      });
-    }
+    window.location.href = "/checkout";
   } catch (error) {
+    console.error("Cloudinary upload failed:", error);
     Swal.close();
-    console.error("File upload failed:", error);
-    const errorMessage =
-      error instanceof TypeError
-        ? "Network error during file upload. Please check your connection."
-        : "Server error during file upload. Please try again later.";
-    Swal.fire({ icon: "error", title: "Upload Failed", text: errorMessage });
+    Swal.fire({
+      icon: "error",
+      title: "Upload Failed",
+      text: "Failed to upload files. Please try again.",
+    });
+    return;
   }
 }
