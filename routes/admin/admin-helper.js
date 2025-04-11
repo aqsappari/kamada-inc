@@ -25,28 +25,22 @@ const dashboardContent = `
 </header>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-  <div class="bg-white rounded-md shadow-md p-4">
-    <h3 class="text-lg font-semibold text-gray-700 mb-2">
-      Total Orders
-    </h3>
-    <p class="text-2xl font-bold text-cyan-600">800</p>
-  </div>
-  <div class="bg-white rounded-md shadow-md p-4">
-    <h3 class="text-lg font-semibold text-gray-700 mb-2">
-      Pending Orders
-    </h3>
-    <p class="text-2xl font-bold text-yellow-600">150</p>
-  </div>
-  <div class="bg-white rounded-md shadow-md p-4">
-    <h3 class="text-lg font-semibold text-gray-700 mb-2">
-      Completed Orders
-    </h3>
-    <p class="text-2xl font-bold text-green-600">650</p>
-  </div>
-  <div class="bg-white rounded-md shadow-md p-4">
-    <h3 class="text-lg font-semibold text-gray-700 mb-2">Revenue</h3>
-    <p class="text-2xl font-bold text-blue-600">$45,000</p>
-  </div>
+    <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Orders</h3>
+        <p class="text-2xl font-bold text-cyan-600" id="totalOrders">0</p>
+    </div>
+    <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Pending Orders</h3>
+        <p class="text-2xl font-bold text-yellow-600" id="pendingOrders">0</p>
+    </div>
+    <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Completed Orders</h3>
+        <p class="text-2xl font-bold text-green-600" id="completedOrders">0</p>
+    </div>
+    <div class="bg-white rounded-md shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Revenue</h3>
+        <p class="text-2xl font-bold text-blue-600" id="revenue">$0</p>
+    </div>
 </div>
 
 <div class="bg-white rounded-md shadow-md p-6 mb-8">
@@ -60,11 +54,6 @@ const dashboardContent = `
     >
       <thead class="bg-gray-200 text-gray-700">
         <tr>
-          <th
-            class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
-          >
-            Order ID
-          </th>
           <th
             class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold uppercase tracking-wider"
           >
@@ -108,21 +97,23 @@ const dashboardContent = `
 </div>
 
 <div class="bg-white rounded-md shadow-md p-6">
-  <h3 class="text-xl font-semibold text-gray-800 mb-4">
-    Quick Actions
-  </h3>
-  <div class="flex space-x-4">
-    <button
-      class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Add Product
-    </button>
-    <button
-      class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-    >
-      View Orders
-    </button>
-  </div>
+    <h3 class="text-xl font-semibold text-gray-800 mb-4">
+        Quick Actions
+    </h3>
+    <div class="flex space-x-4">
+        <button
+            class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded"
+            onclick="window.location.href='/admin/products';"
+        >
+            Add Product
+        </button>
+        <button
+            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            onclick="window.location.href='/admin/orders';"
+        >
+            View Orders
+        </button>
+    </div>
 </div>
 `;
 

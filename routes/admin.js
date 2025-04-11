@@ -122,6 +122,34 @@ router.get("/dashboard", (req, res) => {
   }
 });
 
+router.get("/dashboard/order-list", async (req, res) => {
+  try {
+    const ordersCollection = db.collection("client-details");
+    const snapshot = await ordersCollection.get();
+    const orders = [];
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      orders.push({
+        trackingId: data.trackingId,
+        client: data.client,
+        status: data.status,
+        totalAmount: data.totalAmount,
+        guestId: data.guestId,
+        orderItems: data.orderItems,
+        productArray: data.productArray,
+        designNotes: data.designNotes,
+        filesArray: data.filesArray,
+      });
+    });
+
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders from Firebase:", error);
+    res.status(500).json({ error: "Failed to fetch orders." });
+  }
+});
+
 router.use("/products", productRouter);
 
 router.get("/get-products", async (req, res) => {

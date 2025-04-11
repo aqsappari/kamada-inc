@@ -67,8 +67,16 @@ router.post("/save-to-firestore", async (req, res) => {
     const necessaryData = req.body;
     const trackingId = generateTrackingId();
 
+    // Get current date and time
+    const now = new Date();
+    const currentDate = now.toISOString().split("T")[0]; // YYYY-MM-DD
+    const currentTime = now.toTimeString().split(" ")[0]; // HH:MM:SS
+
     necessaryData.trackingId = trackingId;
     necessaryData.status = "Order Received";
+    necessaryData.date = currentDate;
+    necessaryData.time = currentTime;
+    necessaryData.timestamp = now.toISOString(); // Full timestamp for more precision
 
     const productID = necessaryData.productArray.id;
     console.log(productID);
@@ -90,25 +98,38 @@ router.post("/save-to-firestore", async (req, res) => {
       to: necessaryData.client.email,
       subject: "Your Order Tracking ID",
       html: `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Your Order Tracking ID</title>
-                </head>
-                <body>
-                    <div style="font-family: Arial, sans-serif; padding: 20px;">
-                        <h1 style="font-weight: bold; text-style: italic">KAMADA</h1>
-                        <h2>Your Order Tracking ID</h2>
-                        <p>Dear ${necessaryData.client.fullName},</p>
-                        <p>Thank you for your order! Your tracking ID is:</p>
-                        <h3 style="background-color: #f0f0f0; padding: 10px;">${trackingId}</h3>
-                        <p>You can use this ID to track your order on our website.</p>
-                        <p>If you have any questions, please contact us.</p>
-                        <p>Sincerely,<br>KAMADA ZC</p>
-                    </div>
-                </body>
-                </html>
-            `,
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Your Order Tracking ID</title>
+                    </head>
+                    <body>
+                        <div style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h1 style="font-weight: bold; text-style: italic">KAMADA</h1>
+                            <h2>Your Order Tracking ID</h2>
+                            <p>Dear ${necessaryData.client.fullName},</p>
+                            <p>Thank you for your order!</p>
+                            <p>Your tracking ID is:</p>
+                            <h3 style="background-color: #f0f0f0; padding: 10px;">${trackingId}</h3>
+                            <p>
+                                To track your order:
+                                <ol>
+                                    <li>Copy the tracking ID above.</li>
+                                    <li>Go to the KAMADA ZC website homepage.</li>
+                                    <li>Locate the "Track Your Order" section.</li>
+                                    <li>Paste your tracking ID into the provided field.</li>
+                                    <li>Click the "Submit" or "Track" button.</li>
+                                </ol>
+                            </p>
+                            <p>If you have any questions, please contact us.</p>
+                            <p>
+                                <strong>KAMADA ZC - Track with Ease, Receive with Speed!</strong>
+                            </p>
+                            <p>Sincerely,<br>KAMADA ZC</p>
+                        </div>
+                    </body>
+                    </html>
+                `,
     };
 
     await transporter.sendMail(mailOptions);

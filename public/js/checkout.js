@@ -5,6 +5,7 @@ const designNotes = sessionStorage.getItem("designNotes");
 const fileIds = JSON.parse(sessionStorage.getItem("fileIds"));
 const product = JSON.parse(sessionStorage.getItem("product-details"));
 const orderListItems = JSON.parse(sessionStorage.getItem("orderList")) || [];
+const fileInfoArray = JSON.parse(sessionStorage.getItem("fileInfoArray")) || [];
 
 // --- 2. Product and Price Calculations ---
 const productPrice = product[0].price;
@@ -342,7 +343,7 @@ async function processCheckout() {
     if (locationType === "address") {
       necessaryData = {
         guestId: sessionStorage.getItem("guestId"),
-        cloudinaryUrls: cloudinaryUrls,
+        filesArray: fileInfoArray,
         orderItems: orderListItems,
         designNotes: designNotes,
         productArray: {
@@ -367,7 +368,7 @@ async function processCheckout() {
     } else {
       necessaryData = {
         guestId: sessionStorage.getItem("guestId"),
-        cloudinaryUrls: cloudinaryUrls,
+        filesArray: fileInfoArray,
         orderItems: orderListItems,
         designNotes: designNotes,
         productArray: {
