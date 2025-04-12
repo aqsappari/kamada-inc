@@ -40,7 +40,7 @@ function populateStatusDropdown(currentStatus) {
   }
 }
 
-async function fetchOrderDetails(trackingId) {
+async function fetchOrderDetails(trackingId, skipMapInit = false) {
   try {
     const orderResponse = await fetch(`/admin/orders/data?id=${trackingId}`);
     if (!orderResponse.ok) {
@@ -59,41 +59,34 @@ async function fetchOrderDetails(trackingId) {
     const productData = await productResponse.json();
     console.log(productData);
 
-    displayOrderDetails(orderData, productData);
+    displayOrderDetails(orderData, productData, skipMapInit);
   } catch (error) {
     alert(error.message);
   }
 }
 
-function displayOrderDetails(orderData, productData) {
-  // Populate Uploaded Files
+function displayOrderDetails(orderData, productData, skipMapInit = false) {
   const uploadedFilesContainer = document.getElementById(
     "uploadedFilesContainer"
   );
   uploadedFilesContainer.innerHTML = "";
   if (orderData.filesArray && orderData.filesArray.length > 0) {
-    // added null check
     orderData.filesArray.forEach((file) => {
       const fileCard = createFileCard(file);
       if (fileCard) {
-        // added null check
         uploadedFilesContainer.appendChild(fileCard);
       }
     });
   }
 
-  // Populate Design Notes
   document.getElementById("designNotesContent").textContent =
     orderData.designNotes;
-
-  // Populate Total Price
   document
     .getElementById("totalPriceBreakdown")
     .querySelector(
       "p"
     ).textContent = `Total: Php ${orderData.totalAmount.toFixed(2)}`;
 
-  // Populate Gallery Image and Product Details
   const galleryImage = document.getElementById("galleryImage");
   galleryImage.src = productData.images[0].cloudinaryUrl;
   galleryImage.alt = productData.name;
@@ -102,29 +95,29 @@ function displayOrderDetails(orderData, productData) {
   document.getElementById(
     "productPrice"
   ).textContent = `Php ${productData.price}.00`;
+  document.getElementById("productDetails").innerText = productData.details;
 
-  // Populate Product Details
-  const productDetails = document.getElementById("productDetails");
-  productDetails.innerText = productData.details;
-
-  // Populate Order List
   const orderList = document.getElementById("orderList");
   orderList.innerHTML = "";
   const orderItems = orderData.orderItems;
-  let totalQuantity = 0; // Initialize totalQuantity
+  let totalQuantity = 0;
   orderItems.forEach((item) => {
-    const orderCard = createOrderItemCard(item, productData); // Pass productData
+    const orderCard = createOrderItemCard(item, productData);
     orderList.appendChild(orderCard);
     totalQuantity += item.quantity;
   });
 
-  // Add total quantity
-  const totalQuantityDiv = document.createElement("div");
-  totalQuantityDiv.classList.add("mt-4", "font-bold", "text-right");
-  totalQuantityDiv.textContent = `Total Quantity: ${totalQuantity}`;
-  orderList.parentElement.appendChild(totalQuantityDiv);
+  let totalQuantityDiv = document.getElementById("totalQuantityDiv");
 
-  // Populate Personal Data
+  if (!totalQuantityDiv) {
+    totalQuantityDiv = document.createElement("div");
+    totalQuantityDiv.id = "totalQuantityDiv";
+    totalQuantityDiv.classList.add("mt-4", "font-bold", "text-right");
+    orderList.parentElement.appendChild(totalQuantityDiv);
+  }
+
+  totalQuantityDiv.textContent = `Total Quantity: ${totalQuantity}`;
+
   document.getElementById("fullNameDisplay").innerText =
     orderData.client.fullName;
   document.getElementById("companyNameDisplay").innerText =
@@ -132,14 +125,15 @@ function displayOrderDetails(orderData, productData) {
   document.getElementById("emailDisplay").innerText = orderData.client.email;
   document.getElementById("phoneDisplay").innerText = orderData.client.phone;
 
-  // Address Handling
   const addressDisplay = document.getElementById("addressDisplay");
   const mapDiv = document.getElementById("map");
 
   if (orderData.client.addressType === "coordinates") {
     mapDiv.style.display = "block";
     addressDisplay.style.display = "none";
-    initMap(orderData.client.coordinates);
+    if (!skipMapInit) {
+      initMap(orderData.client.coordinates);
+    }
   } else {
     mapDiv.style.display = "none";
     addressDisplay.style.display = "block";
@@ -151,10 +145,7 @@ function displayOrderDetails(orderData, productData) {
       `;
   }
 
-  // Populate Status Dropdown
   populateStatusDropdown(orderData.status);
-
-  // Update Status Button Event Listener
   document
     .getElementById("updateStatusButton")
     .addEventListener("click", () => {
@@ -163,9 +154,7 @@ function displayOrderDetails(orderData, productData) {
     });
 }
 
-// --- 8. Order Item Rendering ---
 function createOrderItemCard(item, product) {
-  // Added product parameter
   const itemCard = document.createElement("div");
   itemCard.classList.add(
     "flex",
@@ -178,7 +167,7 @@ function createOrderItemCard(item, product) {
     "bg-white"
   );
 
-  const productId = product.name; // Access product name from product parameter.
+  const productId = product.name;
   const variations = item.variations;
   const quantity = item.quantity;
 
@@ -228,9 +217,8 @@ function createFileCard(fileObj) {
     "rounded-lg",
     "mb-2",
     "bg-white",
-    "cursor-pointer" // Add cursor pointer for clickability
+    "cursor-pointer"
   );
-
   fileCard.innerHTML = `
       <div class="flex items-center">
           <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">
@@ -243,7 +231,6 @@ function createFileCard(fileObj) {
       </div>
   `;
 
-  // Add click event listener to download the file
   fileCard.addEventListener("click", () => {
     downloadFile(fileObj.url, fileObj.originalName);
   });
@@ -251,23 +238,6 @@ function createFileCard(fileObj) {
   return fileCard;
 }
 
-// Function to download the file
-function downloadFile(fileUrl, fileName) {
-  // Check if the URL is a Cloudinary URL
-  if (fileUrl.includes("cloudinary.com")) {
-    // Modify the Cloudinary URL to force download
-    fileUrl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
-  }
-
-  const link = document.createElement("a");
-  link.href = fileUrl;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-// --- 5. File Size Formatting ---
 function formatFileSize(bytes) {
   const units = ["B", "KB", "MB", "GB", "TB"];
   let size = bytes;
@@ -281,7 +251,6 @@ function formatFileSize(bytes) {
   return { size: size.toFixed(2), unit: units[unitIndex] };
 }
 
-// --- 6. Extension Color Mapping ---
 function getExtensionColor(extension) {
   const colors = {
     PSD: "#29ABE2",
@@ -325,7 +294,7 @@ async function updateOrderStatus(trackingId, newStatus) {
     }
 
     alert("Order status updated successfully!");
-    fetchOrderDetails(trackingId); // Reload the order details
+    fetchOrderDetails(trackingId, true);
   } catch (error) {
     alert(error.message);
   }
@@ -360,4 +329,17 @@ function initMap(coordinates) {
   L.marker([parseFloat(lat), parseFloat(lng)]).addTo(map);
 
   console.log("Map initialized with coordinates:", coordinates);
+}
+
+function downloadFile(fileUrl, fileName) {
+  if (fileUrl.includes("cloudinary.com")) {
+    fileUrl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
+  }
+
+  const link = document.createElement("a");
+  link.href = fileUrl;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
