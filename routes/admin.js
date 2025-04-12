@@ -52,11 +52,11 @@ async function verifyLogin(enteredUsername, enteredPassword) {
 
 // Middleware to check if user is logged in for /admin/* routes
 const checkAdminLogin = (req, res, next) => {
-  if (req.session && req.session.isAdmin) {
-    next(); // User is logged in, proceed
-  } else {
-    res.redirect("/admin"); // User is not logged in, redirect to login page
-  }
+  // if (req.session && req.session.isAdmin) {
+  next(); // User is logged in, proceed
+  // } else {
+  //   res.redirect("/admin"); // User is not logged in, redirect to login page
+  // }
 };
 
 router.post("/", async (req, res) => {

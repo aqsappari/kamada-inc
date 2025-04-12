@@ -26,16 +26,6 @@
         width: 100% !important;
         height: 100% !important;
       }
-      .my-custom-marker {
-        width: 30px;
-        height: 42px;
-        background-image: url("https://maps.google.com/mapfiles/ms/icons/red-dot.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        cursor: pointer;
-        transform: translateY(-42px);
-        transform-origin: 50% 100%;
-      }
     </style>
   </head>
   <body class="bg-gray-100">
@@ -219,50 +209,16 @@
                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700"
               ></div>
             </div>
-            <div class="w-full">
-              <label
-                for="street"
-                class="block text-sm font-medium text-gray-700"
-                >Street</label
-              >
-              <div
-                id="streetDisplay"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700"
-              ></div>
-            </div>
-            <div class="w-full">
-              <label
-                for="barangay"
-                class="block text-sm font-medium text-gray-700"
-                >Barangay</label
-              >
-              <div
-                id="barangayDisplay"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700"
-              ></div>
-            </div>
-            <div class="w-full">
-              <label for="city" class="block text-sm font-medium text-gray-700"
-                >City</label
-              >
-              <div
-                id="cityDisplay"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700"
-              ></div>
-            </div>
-            <div class="w-full">
-              <label
-                for="postalCode"
-                class="block text-sm font-medium text-gray-700"
-                >Postal Code</label
-              >
-              <div
-                id="postalCodeDisplay"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-gray-700"
-              ></div>
-            </div>
           </div>
-          <div id="map" class="w-full h-[600px] mt-8 rounded-lg"></div>
+          <div id="addressDetails" class="mt-4">
+            <h3 class="font-semibold mb-2">Address:</h3>
+            <div id="addressDisplay" class="mt-1"></div>
+            <div
+              id="map"
+              class="w-full h-[600px] mt-8 rounded-lg"
+              style="display: none"
+            ></div>
+          </div>
         </section>
       </main>
     </div>
