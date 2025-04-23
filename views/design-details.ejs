@@ -51,10 +51,10 @@
     </nav>
 
     <div
-      class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-md min-h-[60vh]"
+      class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-md h-fit"
     >
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="relative min-h-[50vh] max-h-[50vh] w-full">
+        <div class="relative min-min-h-[300px] h-[480px] w-full">
           <div
             id="galleryImageContainer"
             class="relative min-h-full max-h-full w-full overflow-hidden"
@@ -63,7 +63,7 @@
               id="galleryImage"
               src=""
               alt="Product Image"
-              class="w-full h-[50vh] object-contain transition-opacity duration-300 border"
+              class="w-full min-h-[300px] h-[480px] object-contain transition-opacity duration-300 border"
             />
             <div
               id="galleryControls"
@@ -95,7 +95,11 @@
             ></h1>
             <p id="productPrice" class="text-xl text-green-600 font-bold"></p>
           </div>
-          <div id="productDetails" class="text-gray-700"></div>
+          <textarea
+            id="productDetails"
+            class="text-gray-700 w-full min-h-[300px] h-[430px] resize-none overflow-y-auto border rounded p-3 bg-gray-100"
+            readonly
+          ></textarea>
         </div>
       </div>
     </div>

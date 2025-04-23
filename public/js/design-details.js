@@ -6,6 +6,7 @@ const productDetails = document.getElementById("productDetails");
 let currentImageIndex = 0;
 let productImages = [];
 let productData = [];
+let isProductDesignable = true; // Default to true
 
 function updateGalleryImage() {
   if (productImages && productImages.length > 0) {
@@ -281,7 +282,7 @@ async function fetchProductDetails() {
     const product = await response.json();
     productName.textContent = product.name;
     productPrice.textContent = `${product.price}PHP`;
-    productDetails.textContent = product.details;
+    productDetails.value = product.details;
     productImages = product.images?.map((img) => img.cloudinaryUrl) || [];
     updateGalleryImage();
 
@@ -292,8 +293,31 @@ async function fetchProductDetails() {
       name: product.name,
       id: productId,
       price: product.price,
+      isDesignable: product.isDesignable, // Store isDesignable
     });
+    isProductDesignable = product.isDesignable; // Update global variable
     sessionStorage.setItem("product-details", JSON.stringify(productData));
+
+    // --- Check if the product is designable ---
+    const designHeader = document.querySelector(".text-3xl.font-semibold.mb-6");
+    const designUploadSection = document.querySelector(
+      ".order-1.lg\\:order-none.relative.h-\\[33vh\\]"
+    );
+    const designNotesSection = document.querySelector(
+      ".order-2.lg\\:order-none.relative.h-\\[33vh\\]"
+    );
+
+    if (product.isDesignable === false) {
+      if (designHeader) {
+        designHeader.style.display = "none";
+      }
+      if (designUploadSection) {
+        designUploadSection.style.display = "none";
+      }
+      if (designNotesSection) {
+        designNotesSection.style.display = "none";
+      }
+    }
   } catch (error) {
     console.error("Error fetching product details:", error);
   }
@@ -419,15 +443,15 @@ function createFileCard(fileObj, index, isCloudinary = false) {
   const { size, unit } = formatFileSize(fileObj.originalSize);
 
   fileCard.innerHTML = `
-      <div class="flex items-center">
-          <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: ${extensionColor};">${fileObj.originalExtension}</div>
-          <div>
-              <p>${fileName}</p>
-              <p class="text-xs text-gray-500">${size} ${unit}</p>
-          </div>
-      </div>
-      <i class="ri-delete-bin-line cursor-pointer text-red-500" data-index="${index}" data-is-cloudinary="${isCloudinary}"></i>
-  `;
+        <div class="flex items-center">
+            <div class="w-16 h-10 rounded-lg flex items-center justify-center text-white mr-4 font-medium" style="background-color: <span class="math-inline">\{extensionColor\};"\></span>{fileObj.originalExtension}</div>
+            <div>
+                <p><span class="math-inline">\{fileName\}</p\>
+<p class\="text\-xs text\-gray\-500"\></span>{size} <span class="math-inline">\{unit\}</p\>
+</div\>
+</div\>
+<i class\="ri\-delete\-bin\-line cursor\-pointer text\-red\-500" data\-index\="</span>{index}" data-is-cloudinary="${isCloudinary}"></i>
+    `;
 
   fileCard
     .querySelector(".ri-delete-bin-line")
@@ -443,7 +467,6 @@ function formatFileSize(bytes) {
   const units = ["B", "KB", "MB", "GB", "TB"];
   let size = bytes;
   let unitIndex = 0;
-
   while (size >= 1024 && unitIndex < units.length - 1) {
     size /= 1024;
     unitIndex++;
@@ -542,10 +565,10 @@ if (fileInfoArrayCheck && fileInfoArrayCheck != "[]") {
   renderFiles();
 }
 
-// --- 6. Order Validation and Cart Management ---
+// --- 6. Order Validation ---
 function validateOrder() {
-  // Check filesArray.length directly
-  if (!filesArray || filesArray.length === 0) {
+  // Only validate uploaded files if the product is designable
+  if (isProductDesignable && (!filesArray || filesArray.length === 0)) {
     return Swal.fire({
       title: "No Design Files Uploaded",
       text: "You haven't uploaded any design files. Are you sure you want to continue?",
@@ -579,102 +602,6 @@ function validateOrderList() {
   return Promise.resolve(true);
 }
 
-let cartItems = JSON.parse(sessionStorage.getItem("cartItems")) || [];
-
-async function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
-
-function areDesignPrintsEqual(prints1, prints2) {
-  if (prints1.length !== prints2.length) return false;
-  for (let i = 0; i < prints1.length; i++) {
-    if (
-      prints1[i].name !== prints2[i].name ||
-      prints1[i].type !== prints2[i].type ||
-      prints1[i].size !== prints2[i].size
-    )
-      return false;
-  }
-  return true;
-}
-
-function addToCart() {
-  if (!validateOrder()) return;
-
-  const productId = window.location.pathname.split("/").pop();
-  const quantity = parseInt(quantityInput.value);
-  const variationSelections = Array.from(
-    document.querySelectorAll(
-      "#variationsContainer > div:not(:last-child) button.bg-blue-200"
-    )
-  ).map((element) => element.textContent);
-  const designPrints = Array.from(
-    document.getElementById("designUploadPrints").files
-  ).map((file) => ({ name: file.name, type: file.type, size: file.size }));
-  const designNotes =
-    document.getElementById("designNotes").value.trim() ||
-    "The user left this empty.";
-
-  const cartItem = {
-    productId,
-    quantity,
-    variations: variationSelections,
-    designPrints,
-    designNotes,
-  };
-  const existingItemIndex = cartItems.findIndex(
-    (item) =>
-      item.productId === productId &&
-      areDesignPrintsEqual(item.designPrints, designPrints) &&
-      item.designNotes === designNotes
-  );
-
-  if (existingItemIndex !== -1) {
-    cartItems[existingItemIndex].variations.push(...variationSelections);
-    cartItems[existingItemIndex].quantity += quantity;
-  } else {
-    cartItems.push(cartItem);
-  }
-
-  sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-  Swal.fire({
-    icon: "success",
-    title: "Added to Cart",
-    text: "Your item has been added to the cart.",
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Add another variation",
-    denyButtonText: `Add another design`,
-    cancelButtonText: "Proceed to Checkout",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      console.log("Add another variation");
-    } else if (result.isDenied) {
-      clearFormFields();
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      window.location.href = "/cart";
-    } else {
-      window.location.href = "/products";
-    }
-  });
-}
-
-function clearFormFields() {
-  document
-    .querySelectorAll("#variationsContainer button.bg-blue-200")
-    .forEach((button) => button.classList.remove("bg-blue-200"));
-  quantityInput.value = "";
-  document.getElementById("designUploadPrints").value = "";
-  uploadedFilesList.innerHTML = "";
-  document.getElementById("designNotes").value = "";
-}
-
 // --- 7. Checkout Process ---
 const checkoutButton = document.querySelector("#checkoutButton");
 checkoutButton.addEventListener("click", handleCheckout);
@@ -689,7 +616,7 @@ async function handleCheckout() {
     return;
   }
 
-  if (filesArray.length === 0) {
+  if (isProductDesignable && filesArray.length === 0) {
     Swal.fire({
       title: "Proceeding to Checkout",
       text: "You are proceeding to checkout without uploading design files.",
@@ -698,6 +625,11 @@ async function handleCheckout() {
       timer: 2000,
     });
 
+    sessionStorage.setItem("designNotes", designNotes);
+    sessionStorage.setItem("orderList", JSON.stringify(orderListArray));
+    window.location.href = "/checkout";
+    return;
+  } else if (!isProductDesignable) {
     sessionStorage.setItem("designNotes", designNotes);
     sessionStorage.setItem("orderList", JSON.stringify(orderListArray));
     window.location.href = "/checkout";
