@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KAMADA - Custom T-Shirt Printing</title>
+    <title>KAMADA - Your Custom Printing Partner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -20,22 +20,26 @@
     <style>
       body {
         font-family: "Poppins", sans-serif;
+        background-color: #f9fafb;
       }
       .navbar-blend {
         background-color: transparent;
         transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
       }
       .navbar-scrolled {
-        background-color: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
       }
       .navbar-scrolled .nav-link,
       .navbar-scrolled .nav-link:hover,
       .navbar-scrolled .nav-link.active {
-        color: black;
+        color: #0f172a;
       }
       .navbar-scrolled .italic-bold-logo {
-        color: black;
+        color: #0e7490;
+      }
+      .navbar-scrolled #mobile-menu-button {
+        color: #0f172a; /* Change mobile menu button color on scroll */
       }
       .nav-link {
         color: white;
@@ -45,101 +49,98 @@
         transition: color 0.2s ease;
       }
       .nav-link:hover {
-        color: #ddd;
+        color: #67e8f9;
       }
       .nav-link.active {
-        color: #fff;
+        color: #22d3ee;
         font-weight: 600;
+      }
+      #mobile-menu {
+        background-color: white; /* Ensure a solid background for the mobile menu */
+      }
+      #mobile-menu .nav-link {
+        color: #0f172a; /* Ensure mobile menu links are dark */
+        margin-left: 0; /* Remove left margin for stacked links */
+        padding: 0.75rem 1.5rem; /* Add some padding for better touch targets */
+        display: block; /* Make each link take full width */
+      }
+      #mobile-menu .nav-link:hover {
+        background-color: #e0f2fe; /* Add a subtle hover background */
+        color: #0e7490;
       }
     </style>
   </head>
-  <body class="bg-gray-100">
-    <nav id="navbar" class="navbar-blend fixed top-0 w-full p-4 z-10">
+  <body class="text-gray-800">
+    <nav id="navbar" class="navbar-blend fixed top-0 w-full p-4 z-50 shadow">
       <div class="container mx-auto flex justify-between items-center">
         <a
           href="/"
-          class="text-3xl font-bold text-white italic italic-bold-logo"
+          class="text-3xl text-white font-bold italic italic-bold-logo"
           >KAMADA</a
         >
-        <div class="hidden md:flex">
+        <div class="hidden md:flex space-x-6">
           <a href="#home" class="nav-link active">Home</a>
           <a href="#why-choose-us" class="nav-link">Why Us</a>
           <a href="#our-services" class="nav-link">Services</a>
           <a href="/products" class="nav-link">Catalog</a>
         </div>
-        <div class="md:hidden">
-          <button
-            id="mobile-menu-button"
-            class="text-white focus:outline-none"
-            aria-label="Toggle Mobile Menu"
-          >
-            <i class="ri-menu-line text-2xl"></i>
-          </button>
-          <div
-            id="mobile-menu"
-            class="hidden absolute top-16 right-0 bg-gray-800 shadow-lg rounded-md py-2 px-4 w-48"
-          >
-            <a
-              href="#home"
-              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
-              >Home</a
-            >
-            <a
-              href="#why-choose-us"
-              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
-              >Why Us</a
-            >
-            <a
-              href="#our-services"
-              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
-              >Services</a
-            >
-            <a
-              href="/design-details"
-              class="block px-4 py-2 text-white hover:bg-gray-700 rounded-md"
-              >Design</a
-            >
-          </div>
+        <button id="mobile-menu-button" class="md:hidden text-2xl text-white">
+          <i class="ri-menu-line"></i>
+        </button>
+      </div>
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden absolute top-full w-full bg-white z-10 shadow-md py-4"
+      >
+        <div class="flex flex-col items-center space-y-2">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#why-choose-us" class="nav-link">Why Us</a>
+          <a href="#our-services" class="nav-link">Services</a>
+          <a href="/products" class="nav-link">Catalog</a>
         </div>
       </div>
     </nav>
 
-    <header id="home" class="bg-cyan-800 py-24 md:py-40 relative">
-      <div class="container mx-auto text-center px-4">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
-          Your Vision, Printed by KAMADA
+    <header
+      id="home"
+      class="bg-cyan-700 text-white h-[100dvh] md:h-[70dvh] flex justify-center items-center text-center md:text-left relative overflow-hidden"
+    >
+      <div class="container mx-auto px-4 relative z-10">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <span class="text-cyan-200">Your Vision</span>, Printed Here in
+          Zamboanga!
         </h1>
-        <p class="text-lg md:text-xl text-white mb-10">
-          KAMADA brings your designs to life. From custom apparel to diverse
-          printed materials, we serve Zamboanga City with quality and precision.
+        <p class="text-lg md:text-xl mb-8">
+          High-quality custom printing solutions, fast and easy right here in
+          Zamboanga City.
         </p>
         <a
           href="/products"
-          class="bg-white text-cyan-500 font-bold py-3 px-6 rounded-full"
+          class="bg-cyan-500 text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-cyan-600 transition"
         >
-          View Our Products
+          Explore Our Printed Products
         </a>
       </div>
     </header>
 
-    <section class="bg-black py-12 px-4">
-      <div class="container mx-auto text-center">
-        <h2 class="text-2xl font-semibold text-white mb-6">Track Your Order</h2>
-        <p class="text-gray-300 mb-4">
-          Enter your tracking ID for order updates in Zamboanga City.
+    <section class="bg-gray-100 py-16 text-center px-4">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="text-3xl font-semibold mb-4 text-cyan-700">
+          Track Your Order
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Enter your tracking ID to check your order status
         </p>
-        <div
-          class="flex flex-col sm:flex-row justify-center items-center gap-4"
-        >
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <input
-            type="text"
             id="trackingIdInput"
+            type="text"
             placeholder="Tracking ID"
-            class="w-full sm:w-auto px-4 py-2 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-600 w-full sm:w-auto"
           />
           <button
             id="trackOrderButton"
-            class="bg-cyan-500 text-white font-bold py-2 px-6 rounded-md hover:bg-cyan-600 focus:outline-none focus:shadow-outline"
+            class="bg-cyan-600 text-white px-6 py-2 rounded hover:bg-cyan-700 transition"
           >
             Track
           </button>
@@ -147,104 +148,177 @@
       </div>
     </section>
 
-    <section id="why-choose-us" class="py-16 px-4">
-      <div class="container mx-auto text-center">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-8">Why KAMADA?</h2>
-        <p class="text-gray-700 mb-8">
-          We deliver exceptional printing solutions in Zamboanga City.
+    <section id="why-choose-us" class="py-20 bg-white text-center px-4">
+      <div class="container mx-auto">
+        <h2 class="text-3xl font-bold mb-6 text-cyan-700">Why KAMADA?</h2>
+        <p class="text-gray-600 mb-12">
+          Your trusted partner for high-quality custom printing in Zamboanga
+          City.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
+        <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div class="bg-gray-50 p-6 rounded-lg shadow">
             <i class="ri-printer-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Quality Prints
-            </h3>
-            <p class="text-gray-600">
-              Premium printing for vibrant, lasting results.
-            </p>
+            <h3 class="text-xl font-semibold mb-2">Exceptional Quality</h3>
+            <p>Sharp, vibrant results across all our printed products.</p>
           </div>
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
+          <div class="bg-gray-50 p-6 rounded-lg shadow">
             <i class="ri-upload-2-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Easy Uploads
-            </h3>
-            <p class="text-gray-600">Simple design uploads and previews.</p>
+            <h3 class="text-xl font-semibold mb-2">Easy File Uploads</h3>
+            <p>Submit your designs and files with ease.</p>
           </div>
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
+          <div class="bg-gray-50 p-6 rounded-lg shadow">
             <i class="ri-timer-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Fast Service
-            </h3>
-            <p class="text-gray-600">
-              Quick turnaround without sacrificing quality.
-            </p>
+            <h3 class="text-xl font-semibold mb-2">Efficient Turnaround</h3>
+            <p>Reliable and quick delivery for all your printing needs.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="our-services" class="py-16 bg-gray-200 px-4">
-      <div class="container mx-auto text-center">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-8">Our Services</h2>
-        <p class="text-gray-700 mb-8">
-          We offer a wide range of printing services in Zamboanga City.
+    <section id="our-services" class="py-20 bg-gray-100 text-center px-4">
+      <div class="container mx-auto">
+        <h2 class="text-3xl font-bold mb-6 text-cyan-700">
+          Our Printing Services
+        </h2>
+        <p class="text-gray-600 mb-12">
+          Explore our diverse range of custom printing solutions.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="bg-white p-6 rounded-lg shadow">
             <i class="ri-image-add-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Custom Uploads
-            </h3>
-            <p class="text-gray-600">Upload your designs easily.</p>
+            <h3 class="text-xl font-semibold mb-2">Custom File Printing</h3>
+            <p>Print your unique designs on various materials.</p>
           </div>
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
-            <i class="ri-t-shirt-air-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Bulk Orders
-            </h3>
-            <p class="text-gray-600">
-              Mass production for events and businesses.
-            </p>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <i class="ri-shirt-fill text-4xl text-cyan-500 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Apparel Printing</h3>
+            <p>Customize t-shirts, uniforms, and more.</p>
           </div>
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
-            <i class="ri-chat-check-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Design Help
-            </h3>
-            <p class="text-gray-600">Expert design consultation.</p>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <i class="ri-layout-4-fill text-4xl text-cyan-500 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Promotional Items</h3>
+            <p>Brand your mugs, banners, and other items.</p>
           </div>
-          <div
-            class="p-6 bg-white rounded-lg shadow-md flex flex-col items-center"
-          >
+          <div class="bg-white p-6 rounded-lg shadow">
             <i class="ri-truck-fill text-4xl text-cyan-500 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">
-              Order Tracking
-            </h3>
-            <p class="text-gray-600">Track your order's progress.</p>
+            <h3 class="text-xl font-semibold mb-2">Order Tracking</h3>
+            <p>Monitor your print order from start to finish.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="bg-gray-200 py-8 text-center">
-      <p class="text-gray-600">
-        &copy; <%= new Date().getFullYear() %> KAMADA. All rights reserved.
-        Serving Zamboanga City.
+    <footer class="bg-slate-900 text-white py-6 text-center">
+      <p class="text-sm">
+        &copy; <span id="currentYear"></span> KAMADA. Your Printing Partner in
+        Zamboanga City.
       </p>
     </footer>
 
-    <script src="/js/index.js"></script>
+    <script>
+      sessionStorage.clear();
+
+      function uniqid(prefix = "", random = false) {
+        const sec = Date.now() * 1000 + Math.random() * 1000;
+        const id = sec.toString(16).replace(/\./g, "").padEnd(14, "0");
+        return `${prefix}${id}${
+          random ? `.${Math.trunc(Math.random() * 100000000)}` : ""
+        }`;
+      }
+      sessionStorage.setItem("guestId", uniqid("guest_", true));
+
+      const navLinks = document.querySelectorAll(".nav-link");
+      const sections = document.querySelectorAll("section");
+
+      function updateActiveNavLink() {
+        let currentSectionId = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (
+            window.scrollY >= sectionTop - 100 &&
+            window.scrollY < sectionTop + sectionHeight - 100
+          ) {
+            currentSectionId = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href").slice(1) === currentSectionId) {
+            link.classList.add("active");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", () => {
+        updateActiveNavLink();
+        const navbar = document.getElementById("navbar");
+        const logo = document.querySelector(".italic-bold-logo");
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        if (window.scrollY > 100) {
+          navbar.classList.add("navbar-scrolled");
+          logo.classList.remove("text-white");
+          logo.classList.add("text-cyan-700");
+          mobileMenuButton.classList.remove(
+            "text-white"
+          ); /* Change button color on scroll */
+          mobileMenuButton.classList.add(
+            "text-gray-800"
+          ); /* To match the scrolled nav links */
+        } else {
+          navbar.classList.remove("navbar-scrolled");
+          logo.classList.remove("text-cyan-700");
+          logo.classList.add("text-white");
+          mobileMenuButton.classList.remove(
+            "text-gray-800"
+          ); /* Revert button color */
+          mobileMenuButton.classList.add("text-white");
+        }
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      const trackingIdInput = document.getElementById("trackingIdInput");
+      const trackOrderButton = document.getElementById("trackOrderButton");
+
+      trackOrderButton.addEventListener("click", () => {
+        const trackingId = trackingIdInput.value.trim();
+        if (trackingId) {
+          window.location.href = `/track-order?id=${trackingId}`;
+        } else {
+          Swal.fire("Oops!", "Please enter your tracking ID.", "warning");
+        }
+      });
+
+      const mobileMenuButtonElement =
+        document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+
+      if (mobileMenuButtonElement && mobileMenu) {
+        mobileMenuButtonElement.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+      }
+
+      if (mobileMenu) {
+        const mobileLinks = mobileMenu.querySelectorAll("a");
+        mobileLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.add("hidden");
+          });
+        });
+      }
+
+      document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
+    </script>
   </body>
 </html>
